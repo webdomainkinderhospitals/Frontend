@@ -1,6 +1,6 @@
 export default function Locations({ locations = [] }) {
   return (
-    <section className="locations">
+    <section className="locations" id="hospitals">
       <div className="container">
         <div className="section-head">
           <div>

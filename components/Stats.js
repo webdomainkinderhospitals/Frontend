@@ -1,8 +1,65 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+/**
+ * Animated count-up for stat values like "13,000+", "6L+", "98%".
+ * Parses the leading number, animates it in, and keeps prefix/suffix intact.
+ * Falls back to static text when reduced motion is requested.
+ */
+function StatValue({ value }) {
+  const ref = useRef(null);
+  const [text, setText] = useState(value);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const match = String(value).match(/^([^\d]*)([\d,.]+)(.*)$/);
+    if (!match) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+
+    const [, prefix, numStr, suffix] = match;
+    const hasCommas = numStr.includes(',');
+    const target = parseFloat(numStr.replace(/,/g, ''));
+    if (!isFinite(target)) return;
+
+    const fmt = (n) => {
+      const v = Math.round(n);
+      return prefix + (hasCommas ? v.toLocaleString('en-IN') : String(v)) + suffix;
+    };
+
+    setText(fmt(0));
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        const dur = 1400;
+        const start = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - start) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          setText(fmt(target * eased));
+          if (p < 1) requestAnimationFrame(tick);
+          else setText(value);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [value]);
+
+  return <strong ref={ref}>{text}</strong>;
+}
+
 export default function Stats({ settings }) {
   const stats = settings.stats || [];
 
   return (
-    <section className="overview">
+    <section className="overview" id="about">
       <div className="container">
         <div className="overview-grid">
           <div className="overview-img">
@@ -34,7 +91,7 @@ export default function Stats({ settings }) {
             <div className="stats-row">
               {stats.map((stat, i) => (
                 <div className="stat" key={i}>
-                  <strong>{stat.value}</strong>
+                  <StatValue value={stat.value} />
                   <span>{stat.label}</span>
                 </div>
               ))}

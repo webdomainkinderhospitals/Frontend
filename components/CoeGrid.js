@@ -12,7 +12,7 @@ const SERVICES = [
 
 export default function CoeGrid() {
   return (
-    <section>
+    <section id="services">
       <div className="container">
         <div className="section-head">
           <div>
@@ -25,7 +25,7 @@ export default function CoeGrid() {
               visit to your child&apos;s first steps, and everything in between.
             </p>
           </div>
-          <a href="#" className="view-all">View All Services →</a>
+          <a href="#specialities" className="view-all">View All Services →</a>
         </div>
         <div className="coe-grid">
           {SERVICES.map(([title, text]) => (
@@ -33,7 +33,7 @@ export default function CoeGrid() {
               <div className="coe-content">
                 <h3>{title}</h3>
                 <p>{text}</p>
-                <a href="#">Know More →</a>
+                <a href="#specialities">Know More →</a>
               </div>
             </div>
           ))}

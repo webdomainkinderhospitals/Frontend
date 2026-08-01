@@ -17,7 +17,7 @@
     --display-weight: 700;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
   body {
     font-family: var(--body);
     background: var(--bg);
@@ -2172,3 +2172,8 @@ html.js .testi-card.reveal-in{ opacity:1; transform:none; }
   .coe-card:hover, .loc-card:hover, .doctor-card:hover, .blog-card:hover{ transform:none !important; }
 }
 
+
+/* clickable quick-bar tiles: keep the original tile look, add a lively lift */
+a.quick-item { color: inherit; text-decoration: none; }
+a.quick-item:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(17, 94, 89, 0.12); }
+a.quick-item:hover .quick-text strong { color: var(--primary, inherit); }

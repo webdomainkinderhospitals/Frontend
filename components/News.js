@@ -7,7 +7,7 @@ function formatDate(value) {
 
 export default function News({ news = [] }) {
   return (
-    <section style={{ background: 'var(--bg-soft)' }}>
+    <section id="news" style={{ background: 'var(--bg-soft)' }}>
       <div className="container">
         <div className="section-head">
           <div>
@@ -20,7 +20,7 @@ export default function News({ news = [] }) {
               clinical teams at Kinder Hospital.
             </p>
           </div>
-          <a href="#" className="view-all">View All →</a>
+          <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener" className="view-all">View All →</a>
         </div>
         <div className="blog-grid">
           {news.map((item, i) => (

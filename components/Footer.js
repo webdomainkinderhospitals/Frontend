@@ -19,7 +19,7 @@ export default function Footer({ settings, locations = [] }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="footer">
+    <footer className="footer" id="contact">
       {/* Top CTA strip */}
       <div className="footer-cta">
         <div className="container">
@@ -34,7 +34,7 @@ export default function Footer({ settings, locations = [] }) {
               </p>
             </div>
             <div className="footer-cta-actions">
-              <a href="#" className="footer-cta-btn primary">Book Appointment →</a>
+              <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener" className="footer-cta-btn primary">Book Appointment →</a>
               <a
                 href={`tel:${(settings.emergencyPhone || '').replace(/\s/g, '')}`}
                 className="footer-cta-btn secondary"
@@ -114,13 +114,13 @@ export default function Footer({ settings, locations = [] }) {
             <div>
               <h5>Our Services</h5>
               <ul>
-                <li><a href="#">Maternity &amp; Obstetrics</a></li>
-                <li><a href="#">IVF &amp; Fertility</a></li>
-                <li><a href="#">Gynaecology</a></li>
-                <li><a href="#">Neonatology &amp; NICU</a></li>
-                <li><a href="#">Paediatrics</a></li>
-                <li><a href="#">Fetal Medicine</a></li>
-                <li><a href="#">Health Packages</a></li>
+                <li><a href="#specialities">Maternity &amp; Obstetrics</a></li>
+                <li><a href="#specialities">IVF &amp; Fertility</a></li>
+                <li><a href="#specialities">Gynaecology</a></li>
+                <li><a href="#specialities">Neonatology &amp; NICU</a></li>
+                <li><a href="#specialities">Paediatrics</a></li>
+                <li><a href="#specialities">Fetal Medicine</a></li>
+                <li><a href="#packages">Health Packages</a></li>
               </ul>
             </div>
 
@@ -128,13 +128,13 @@ export default function Footer({ settings, locations = [] }) {
             <div>
               <h5>Quick Links</h5>
               <ul>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Chairman&apos;s Message</a></li>
-                <li><a href="#">Our Doctors</a></li>
-                <li><a href="#">ANC Class Booking</a></li>
-                <li><a href="#">Online Consultation</a></li>
-                <li><a href="#">Patient Testimonials</a></li>
-                <li><a href="#">Careers at Kinder</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#about">Chairman&apos;s Message</a></li>
+                <li><a href="#doctors">Our Doctors</a></li>
+                <li><a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">ANC Class Booking</a></li>
+                <li><a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Online Consultation</a></li>
+                <li><a href="#testimonials">Patient Testimonials</a></li>
+                <li><a href={`mailto:${settings.email}?subject=Careers%20at%20Kinder`}>Careers at Kinder</a></li>
               </ul>
             </div>
 
@@ -203,10 +203,10 @@ export default function Footer({ settings, locations = [] }) {
             reserved.
           </span>
           <div className="footer-bottom-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms &amp; Conditions</a>
-            <a href="#">Cookies</a>
-            <a href="#">Sitemap</a>
+            <a href="#home">Privacy Policy</a>
+            <a href="#home">Terms &amp; Conditions</a>
+            <a href="#home">Cookies</a>
+            <a href="#home">Sitemap</a>
           </div>
         </div>
       </div>

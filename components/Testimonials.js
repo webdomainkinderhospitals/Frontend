@@ -1,6 +1,6 @@
 export default function Testimonials({ testimonials = [] }) {
   return (
-    <section className="testimonials">
+    <section className="testimonials" id="testimonials">
       <div className="container">
         <div className="section-head">
           <div>
@@ -13,7 +13,7 @@ export default function Testimonials({ testimonials = [] }) {
               and the kinder care that made the difference.
             </p>
           </div>
-          <a href="#" className="view-all">View All Stories →</a>
+          <a href="#testimonials" className="view-all">View All Stories →</a>
         </div>
         <div className="testi-grid">
           {testimonials.map((t, i) => (

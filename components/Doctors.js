@@ -71,7 +71,7 @@ export default function Doctors({ doctors = [] }) {
     Math.round((index / Math.max(1, maxIndex)) * (dotCount - 1)) || 0;
 
   return (
-    <section className="doctors">
+    <section className="doctors" id="doctors">
       <div className="container">
         <div className="section-head">
           <div>

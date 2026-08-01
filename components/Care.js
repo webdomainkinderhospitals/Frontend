@@ -60,7 +60,7 @@ export default function Care() {
               <div className="care-icon">{item.icon}</div>
               <h4>{item.title}</h4>
               <p>{item.text}</p>
-              <a href="#">Know More →</a>
+              <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener">Know More →</a>
             </div>
           ))}
         </div>

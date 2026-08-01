@@ -2,12 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+const WHATSAPP_BOOK =
+  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+
 const STATIC_SLIDES = [
   {
     eyebrow: 'Group-Wide Expertise',
     titleHtml: '60+ specialists, <em>one trusted brand</em>',
     text: 'Senior consultants across Obstetrics, IVF, Neonatology, Paediatric Surgery, and Reproductive Medicine — practicing under shared protocols, audit, and clinical governance across all Kinder hospitals.',
-    ctas: [{ label: 'Meet Our Doctors →', className: 'btn btn-primary' }],
+    ctas: [{ label: 'Meet Our Doctors →', className: 'btn btn-primary', href: '#doctors' }],
     imageUrl:
       'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=1920&q=80',
   },
@@ -15,7 +19,7 @@ const STATIC_SLIDES = [
     eyebrow: 'Kinder Jananimitra Package',
     titleHtml: "Let's celebrate your <em>pregnancy journey</em>",
     text: "Comprehensive maternity packages — from your first scan to your baby's first vaccines. Available across our Cherthala, Kochi, and Bengaluru hospitals.",
-    ctas: [{ label: 'Explore Maternity Packages →', className: 'btn btn-primary' }],
+    ctas: [{ label: 'Explore Maternity Packages →', className: 'btn btn-primary', href: '#packages' }],
     imageUrl:
       'https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=1920&q=80',
   },
@@ -31,8 +35,8 @@ export default function Hero({ settings }) {
         settings.heroSubtitle ||
         "A women's & children's healthcare network spanning 5 hospitals across Cherthala, Kochi, Bengaluru, Alappuzha and Singapore.",
       ctas: [
-        { label: 'Find Your Nearest Hospital →', className: 'btn btn-primary' },
-        { label: 'Book an Appointment', className: 'btn btn-outline' },
+        { label: 'Find Your Nearest Hospital →', className: 'btn btn-primary', href: '#hospitals' },
+        { label: 'Book an Appointment', className: 'btn btn-outline', href: WHATSAPP_BOOK, external: true },
       ],
       imageUrl:
         settings.heroImageUrl ||
@@ -78,7 +82,7 @@ export default function Hero({ settings }) {
   }
 
   return (
-    <section className={`hero${ready ? ' is-ready' : ''}`} style={{ padding: 0 }}>
+    <section id="home" className={`hero${ready ? ' is-ready' : ''}`} style={{ padding: 0 }}>
       {slides.map((slide, i) => (
         <div
           key={i}
@@ -100,7 +104,12 @@ export default function Hero({ settings }) {
               />
               <p className="hero-text">{slide.text}</p>
               {slide.ctas.map((cta, j) => (
-                <a key={j} href="#" className={cta.className}>
+                <a
+                  key={j}
+                  href={cta.href || '#hospitals'}
+                  className={cta.className}
+                  {...(cta.external ? { target: '_blank', rel: 'noopener' } : {})}
+                >
                   {cta.label}
                 </a>
               ))}
