@@ -114,13 +114,13 @@ export default function Footer({ settings, locations = [] }) {
             <div>
               <h5>Our Services</h5>
               <ul>
-                <li><a href="#specialities">Maternity &amp; Obstetrics</a></li>
-                <li><a href="#specialities">IVF &amp; Fertility</a></li>
-                <li><a href="#specialities">Gynaecology</a></li>
-                <li><a href="#specialities">Neonatology &amp; NICU</a></li>
-                <li><a href="#specialities">Paediatrics</a></li>
-                <li><a href="#specialities">Fetal Medicine</a></li>
-                <li><a href="#packages">Health Packages</a></li>
+                <li><a href="/#specialities">Maternity &amp; Obstetrics</a></li>
+                <li><a href="/#specialities">IVF &amp; Fertility</a></li>
+                <li><a href="/#specialities">Gynaecology</a></li>
+                <li><a href="/#specialities">Neonatology &amp; NICU</a></li>
+                <li><a href="/#specialities">Paediatrics</a></li>
+                <li><a href="/#specialities">Fetal Medicine</a></li>
+                <li><a href="/#packages">Health Packages</a></li>
               </ul>
             </div>
 
@@ -128,12 +128,12 @@ export default function Footer({ settings, locations = [] }) {
             <div>
               <h5>Quick Links</h5>
               <ul>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#about">Chairman&apos;s Message</a></li>
-                <li><a href="#doctors">Our Doctors</a></li>
+                <li><a href="/#about">About Us</a></li>
+                <li><a href="/#about">Chairman&apos;s Message</a></li>
+                <li><a href="/#doctors">Our Doctors</a></li>
                 <li><a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">ANC Class Booking</a></li>
                 <li><a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Online Consultation</a></li>
-                <li><a href="#testimonials">Patient Testimonials</a></li>
+                <li><a href="/#testimonials">Patient Testimonials</a></li>
                 <li><a href={`mailto:${settings.email}?subject=Careers%20at%20Kinder`}>Careers at Kinder</a></li>
               </ul>
             </div>
@@ -203,10 +203,10 @@ export default function Footer({ settings, locations = [] }) {
             reserved.
           </span>
           <div className="footer-bottom-links">
-            <a href="#home">Privacy Policy</a>
-            <a href="#home">Terms &amp; Conditions</a>
-            <a href="#home">Cookies</a>
-            <a href="#home">Sitemap</a>
+            <a href="/#home">Privacy Policy</a>
+            <a href="/#home">Terms &amp; Conditions</a>
+            <a href="/#home">Cookies</a>
+            <a href="/#home">Sitemap</a>
           </div>
         </div>
       </div>
