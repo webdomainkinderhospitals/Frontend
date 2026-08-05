@@ -13,7 +13,7 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, doctors = [], procedures = [], testimonials = [], news = [], others = [], settings }) {
+export default function HospitalPage({ loc, doctors = [], procedures = [], testimonials = [], news = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -90,7 +90,7 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
       </div>
 
       {/* About + highlights */}
-      <section>
+      <section id="about">
         <div className="container">
           <div className="hosp-about-grid">
             <div className="hosp-about-text">
@@ -118,7 +118,7 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
 
       {/* Doctors at this centre */}
       {doctors.length > 0 && (
-        <section style={{ background: 'var(--bg-soft)' }}>
+        <section id="doctors" style={{ background: 'var(--bg-soft)' }}>
           <div className="container">
             <div className="section-head">
               <div>
@@ -151,7 +151,7 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
 
       {/* Procedures at this centre */}
       {procedures.length > 0 && (
-        <section>
+        <section id="procedures">
           <div className="container">
             <div className="section-head">
               <div>
@@ -175,7 +175,7 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
 
       {/* Patient stories at this centre */}
       {testimonials.length > 0 && (
-        <section style={{ background: 'var(--bg-soft)' }}>
+        <section id="testimonials" style={{ background: 'var(--bg-soft)' }}>
           <div className="container">
             <div className="section-head">
               <div>
@@ -202,7 +202,7 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
 
       {/* News from this centre */}
       {news.length > 0 && (
-        <section>
+        <section id="news">
           <div className="container">
             <div className="section-head">
               <div>
@@ -230,30 +230,6 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
         </section>
       )}
 
-      {/* Other centres */}
-      {others.length > 0 && (
-        <section>
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <span className="section-eyebrow">The Kinder network</span>
-                <h2 className="section-title">
-                  Our other <em>centres</em>
-                </h2>
-              </div>
-            </div>
-            <div className="hosp-others">
-              {others.map((o, i) => (
-                <a className="hosp-other-card" href={`/hospitals/${slugOf(o)}`} key={o.id ?? i}>
-                  <span className="hosp-other-since">{o.since || o.country}</span>
-                  <strong>Kinder {o.name}</strong>
-                  <span className="hosp-other-city">{o.city} · {o.country}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* CTA */}
       <section className="hosp-cta-wrap">
