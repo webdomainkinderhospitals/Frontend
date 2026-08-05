@@ -1,12 +1,11 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 
-import TopBar from '@/components/TopBar';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
 import HospitalPage from '@/components/HospitalPage';
+import SubSiteHeader from '@/components/SubSiteHeader';
+import SubSiteFooter from '@/components/SubSiteFooter';
 
 export const revalidate = 60;
 
@@ -43,14 +42,19 @@ export default async function HospitalDetail({ params }) {
   const procedures = content.procedures.filter(at);
   const testimonials = content.testimonials.filter(at);
   const news = content.news.filter(at);
-  const others = content.locations.filter((l) => slugOf(l) !== slug);
+
+  const sections = {
+    doctors: doctors.length > 0,
+    procedures: procedures.length > 0,
+    testimonials: testimonials.length > 0,
+    news: news.length > 0,
+  };
 
   return (
     <>
-      <TopBar settings={content.settings} locations={content.locations} />
-      <Header settings={content.settings} locations={content.locations} />
-      <HospitalPage loc={loc} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} others={others} settings={content.settings} />
-      <Footer settings={content.settings} locations={content.locations} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
+      <HospitalPage loc={loc} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
+      <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <ScrollEffects />
     </>
