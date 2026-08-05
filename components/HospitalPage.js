@@ -13,7 +13,7 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, doctors = [], others = [], settings }) {
+export default function HospitalPage({ loc, doctors = [], procedures = [], testimonials = [], news = [], others = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -141,6 +141,87 @@ export default function HospitalPage({ loc, doctors = [], others = [], settings 
                     <h4>{doc.name}</h4>
                     <span>{doc.designation}</span>
                     {doc.bio && <p>{doc.bio}</p>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Procedures at this centre */}
+      {procedures.length > 0 && (
+        <section>
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Treatments at Kinder {loc.name}</span>
+                <h2 className="section-title">
+                  Procedures <em>at this centre</em>
+                </h2>
+              </div>
+            </div>
+            <div className="hosp-proc-grid">
+              {procedures.map((proc, i) => (
+                <article className="hosp-proc-card" key={proc.id ?? i}>
+                  <h4>{proc.name}</h4>
+                  <p>{proc.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Patient stories at this centre */}
+      {testimonials.length > 0 && (
+        <section style={{ background: 'var(--bg-soft)' }}>
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Patient stories · Kinder {loc.name}</span>
+                <h2 className="section-title">
+                  Stories of <em>joy from this centre</em>
+                </h2>
+              </div>
+            </div>
+            <div className="hosp-testi-grid">
+              {testimonials.map((t, i) => (
+                <blockquote className="hosp-testi-card" key={t.id ?? i}>
+                  <p>“{t.quote}”</p>
+                  <footer>
+                    <strong>{t.patientName}</strong>
+                    <span>{t.relation}</span>
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* News from this centre */}
+      {news.length > 0 && (
+        <section>
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Updates from Kinder {loc.name}</span>
+                <h2 className="section-title">
+                  News &amp; <em>events here</em>
+                </h2>
+              </div>
+            </div>
+            <div className="hosp-news-grid">
+              {news.map((item, i) => (
+                <article className="hosp-news-card" key={item.id ?? i}>
+                  {item.imageUrl && (
+                    <div className="hosp-news-img" style={{ backgroundImage: `url('${item.imageUrl}')` }}></div>
+                  )}
+                  <div className="hosp-news-meta">
+                    <span className="hosp-news-cat">{item.category}</span>
+                    <h4>{item.title}</h4>
+                    {item.excerpt && <p>{item.excerpt}</p>}
                   </div>
                 </article>
               ))}
