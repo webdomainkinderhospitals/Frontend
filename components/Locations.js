@@ -11,7 +11,7 @@ export default function Locations({ locations = [] }) {
             <p className="section-intro">
               From our first centre in Cherthala (2011) to Singapore — a growing family of
               hospitals delivering the same trusted Kinder standard wherever you are. Click any
-              centre to visit its dedicated website.
+              centre to explore its doctors, facilities and contact details.
             </p>
           </div>
         </div>
@@ -42,8 +42,11 @@ export default function Locations({ locations = [] }) {
                 ) : (
                   <a href={loc.website || '#'} className="loc-phone">🌐 Visit website</a>
                 )}
-                <a href={loc.website || loc.mapUrl || '#'} className="loc-visit">
-                  {loc.websiteLabel || `Visit Kinder ${loc.name} →`}
+                <a
+                  href={`/hospitals/${loc.slug || String(loc.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                  className="loc-visit"
+                >
+                  Explore Kinder {loc.name} →
                 </a>
               </div>
             </div>

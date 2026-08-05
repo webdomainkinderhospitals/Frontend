@@ -125,7 +125,7 @@ export default function Header({ settings, locations = [] }) {
                   {locations.map((loc) => (
                     <a
                       key={loc.id}
-                      href={loc.website || loc.mapUrl || '#'}
+                      href={`/hospitals/${loc.slug || String(loc.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
                       className={`hospital-card${loc.international ? ' hospital-international' : ''}`}
                       onClick={onLeafClick}
                     >
@@ -144,7 +144,7 @@ export default function Header({ settings, locations = [] }) {
                         <h6>Kinder {loc.name}</h6>
                         <p>{loc.address}</p>
                         <span className="hospital-link">
-                          {loc.websiteLabel || `Visit Kinder ${loc.name} →`}
+                          {`Explore Kinder ${loc.name} →`}
                         </span>
                       </div>
                     </a>
