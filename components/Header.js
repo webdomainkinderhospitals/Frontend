@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -13,6 +14,21 @@ const HOSPITAL_TAGS = {
 export default function Header({ settings, locations = [] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const pathname = usePathname() || '/';
+
+  // Which top-level menu item owns the current page.
+  const sectionOf = (p) => {
+    if (p.startsWith('/about')) return 'about';
+    if (p.startsWith('/services')) return 'services';
+    if (p.startsWith('/doctors')) return 'doctors';
+    if (p.startsWith('/packages')) return 'packages';
+    if (p.startsWith('/news') || p.startsWith('/stories')) return 'resources';
+    if (p.startsWith('/contact')) return 'contact';
+    if (p.startsWith('/hospitals')) return 'hospitals';
+    return 'home';
+  };
+  const active = sectionOf(pathname);
+  const act = (key) => (active === key ? ' is-active' : '');
 
   // Mirror the original: body.menu-open drives the off-canvas nav + backdrop.
   useEffect(() => {
@@ -102,9 +118,9 @@ export default function Header({ settings, locations = [] }) {
         <nav className="nav" id="mainNav">
           <div className="container">
             <ul className="nav-list">
-              <li><a href="/#home" onClick={onLeafClick}>Home</a></li>
+              <li className={act('home')}><a href="/#home" onClick={onLeafClick}>Home</a></li>
 
-              <li className={dd('about')}>
+              <li className={dd('about') + act('about')}>
                 <a href="/about" onClick={(e) => toggleDropdown(e, 'about')}>
                   About Us <span className="caret">▾</span>
                 </a>
@@ -117,7 +133,7 @@ export default function Header({ settings, locations = [] }) {
                 </div>
               </li>
 
-              <li className={`${dd('hospitals')} has-mega`}>
+              <li className={`${dd('hospitals')} has-mega` + act('hospitals')}>
                 <a href="/#hospitals" onClick={(e) => toggleDropdown(e, 'hospitals')}>
                   Our Hospitals <span className="caret">▾</span>
                 </a>
@@ -152,7 +168,7 @@ export default function Header({ settings, locations = [] }) {
                 </div>
               </li>
 
-              <li className={`${dd('services')} has-mega`}>
+              <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
                   Services <span className="caret">▾</span>
                 </a>
@@ -210,9 +226,9 @@ export default function Header({ settings, locations = [] }) {
                 </div>
               </li>
 
-              <li><a href="/doctors" onClick={onLeafClick}>Doctors</a></li>
+              <li className={act('doctors')}><a href="/doctors" onClick={onLeafClick}>Doctors</a></li>
 
-              <li className={dd('packages')}>
+              <li className={dd('packages') + act('packages')}>
                 <a href="/packages" onClick={(e) => toggleDropdown(e, 'packages')}>
                   Packages <span className="caret">▾</span>
                 </a>
@@ -225,7 +241,7 @@ export default function Header({ settings, locations = [] }) {
                 </div>
               </li>
 
-              <li className={dd('resources')}>
+              <li className={dd('resources') + act('resources')}>
                 <a href="/news" onClick={(e) => toggleDropdown(e, 'resources')}>
                   Resources <span className="caret">▾</span>
                 </a>
@@ -239,7 +255,7 @@ export default function Header({ settings, locations = [] }) {
                 </div>
               </li>
 
-              <li><a href="/contact" onClick={onLeafClick}>Contact</a></li>
+              <li className={act('contact')}><a href="/contact" onClick={onLeafClick}>Contact</a></li>
 
               <li className="nav-cta-wrap">
                 <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener" className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
