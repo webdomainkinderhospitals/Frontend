@@ -87,12 +87,16 @@ export default function Hero({ settings }) {
         <div
           key={i}
           className={`hero-slide${i === current ? ' active' : ''}`}
-          style={{
-            backgroundImage: slide.imageUrl
-              ? `url('${slide.imageUrl}'), var(--mesh-hero)`
-              : 'var(--mesh-hero)',
-          }}
         >
+          <div
+            className="hero-bg"
+            aria-hidden="true"
+            style={{
+              backgroundImage: slide.imageUrl
+                ? `url('${slide.imageUrl}'), var(--mesh-hero)`
+                : 'var(--mesh-hero)',
+            }}
+          ></div>
           <span className="hero-blob b1" aria-hidden="true"></span>
           <span className="hero-blob b2" aria-hidden="true"></span>
           <div className="container">
