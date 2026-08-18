@@ -28,7 +28,7 @@ export default async function HomePage() {
   return (
     <>
       <TopBar settings={settings} locations={locations} />
-      <Header settings={settings} locations={locations} />
+      <Header settings={settings} locations={locations} specialities={specialities} />
       <Hero settings={settings} />
       <QuickBar />
       <Stats settings={settings} />

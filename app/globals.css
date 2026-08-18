@@ -2736,3 +2736,20 @@ html { scroll-behavior: smooth; }
   body.menu-open .nav-list > li:nth-child(9) { animation-delay: 0.37s; }
 }
 @keyframes navItemIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+
+/* Services page — specialists under each service group */
+.svc-team { margin-top: 34px; }
+.svc-team-title {
+  font-family: var(--body);
+  font-size: 13px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--primary);
+  margin-bottom: 18px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.svc-doc-loc { color: var(--muted); font-size: 12.5px; margin: 6px 0 0; }
+.svc-doc-book {
+  display: inline-block; margin-top: 10px;
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  transition: color .2s, gap .2s;
+}
+.svc-doc-book:hover { color: var(--primary); }

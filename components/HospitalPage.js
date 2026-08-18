@@ -13,7 +13,7 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+export default function HospitalPage({ loc, specialities = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -115,6 +115,30 @@ export default function HospitalPage({ loc, doctors = [], procedures = [], testi
           </div>
         </div>
       </section>
+
+      {/* Specialities at this centre */}
+      {specialities.length > 0 && (
+        <section id="specialities">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Departments at Kinder {loc.name}</span>
+                <h2 className="section-title">
+                  Specialities <em>at this centre</em>
+                </h2>
+              </div>
+            </div>
+            <div className="svc-grid">
+              {specialities.map((spec, i) => (
+                <div className="svc-card" key={spec.id ?? i} title={spec.description || undefined}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                  <span>{spec.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Doctors at this centre */}
       {doctors.length > 0 && (
