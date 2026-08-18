@@ -204,7 +204,8 @@
   .nav-cta:hover { background: var(--ink) !important; color: white !important; }
   .nav-cta::after { display: none !important; }
 
-  /* STANDARD DROPDOWN */
+  /* STANDARD DROPDOWN — hover-intent: opens instantly with a soft eased slide,
+     closes with a short grace delay so diagonal cursor paths never flicker */
   .dropdown {
     position: absolute; top: 100%; left: 0;
     min-width: 280px;
@@ -214,14 +215,61 @@
     padding: 12px;
     box-shadow: 0 24px 60px rgba(20,40,54,0.12);
     opacity: 0; visibility: hidden;
-    transform: translateY(8px);
-    transition: opacity .25s, visibility .25s, transform .25s;
+    transform: translateY(14px) scale(.985);
+    transform-origin: top center;
+    pointer-events: none;
+    /* closing state: .16s grace before the fade starts */
+    transition:
+      opacity .22s var(--ease-out) .16s,
+      transform .26s var(--ease-out) .16s,
+      visibility 0s linear .42s;
     z-index: 60;
+  }
+  /* invisible bridge across the gap between the nav link and the panel */
+  .dropdown::before {
+    content: ''; position: absolute;
+    top: -16px; left: 0; right: 0; height: 16px;
   }
   .has-dropdown:hover > .dropdown,
   .has-dropdown.is-open > .dropdown {
-    opacity: 1; visibility: visible; transform: translateY(0);
+    opacity: 1; visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    /* opening state: no delay, slightly longer glide */
+    transition:
+      opacity .28s var(--ease-out),
+      transform .34s var(--ease-out),
+      visibility 0s;
   }
+  /* items cascade in as the panel opens */
+  .dropdown > a,
+  .dropdown .mega-col,
+  .dropdown .hospital-card {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .3s var(--ease-out), transform .3s var(--ease-out),
+      background .2s, border-color .25s, box-shadow .25s;
+  }
+  .has-dropdown:hover > .dropdown > a,
+  .has-dropdown.is-open > .dropdown > a,
+  .has-dropdown:hover > .dropdown .mega-col,
+  .has-dropdown.is-open > .dropdown .mega-col,
+  .has-dropdown:hover > .dropdown .hospital-card,
+  .has-dropdown.is-open > .dropdown .hospital-card {
+    opacity: 1; transform: translateY(0);
+  }
+  .has-dropdown:hover > .dropdown > :nth-child(2),
+  .has-dropdown.is-open > .dropdown > :nth-child(2) { transition-delay: .04s; }
+  .has-dropdown:hover > .dropdown > :nth-child(3),
+  .has-dropdown.is-open > .dropdown > :nth-child(3) { transition-delay: .08s; }
+  .has-dropdown:hover > .dropdown > :nth-child(4),
+  .has-dropdown.is-open > .dropdown > :nth-child(4) { transition-delay: .12s; }
+  .has-dropdown:hover > .dropdown > :nth-child(5),
+  .has-dropdown.is-open > .dropdown > :nth-child(5) { transition-delay: .16s; }
+  .has-dropdown:hover > .dropdown > :nth-child(6),
+  .has-dropdown.is-open > .dropdown > :nth-child(6) { transition-delay: .2s; }
+  .has-dropdown:hover > .dropdown > :nth-child(7),
+  .has-dropdown.is-open > .dropdown > :nth-child(7) { transition-delay: .24s; }
   .dropdown a {
     display: block; padding: 12px 14px;
     border-radius: 8px;
@@ -245,15 +293,21 @@
   /* MEGA MENU */
   .dropdown.mega {
     left: 0; right: 0;
-    transform: translateY(8px);
+    transform: translateY(14px) scale(.99);
     width: auto;
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 24px; padding: 28px;
   }
   .has-dropdown:hover > .dropdown.mega,
   .has-dropdown.is-open > .dropdown.mega {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
+  .has-dropdown:hover > .dropdown .mega-col:nth-child(2),
+  .has-dropdown.is-open > .dropdown .mega-col:nth-child(2) { transition-delay: .05s; }
+  .has-dropdown:hover > .dropdown .mega-col:nth-child(3),
+  .has-dropdown.is-open > .dropdown .mega-col:nth-child(3) { transition-delay: .1s; }
+  .has-dropdown:hover > .dropdown .mega-col:nth-child(4),
+  .has-dropdown.is-open > .dropdown .mega-col:nth-child(4) { transition-delay: .15s; }
   .mega-col h6 {
     font-family: var(--body);
     font-size: 11px; font-weight: 700;
@@ -290,10 +344,11 @@
     background: var(--bg);
     border: 1px solid var(--line);
     border-radius: 12px; overflow: hidden;
-    transition: all .25s !important;
     text-decoration: none;
   }
-  .hospital-card:hover {
+  .hospital-card:hover,
+  .has-dropdown:hover > .dropdown .hospital-card:hover,
+  .has-dropdown.is-open > .dropdown .hospital-card:hover {
     background: white !important;
     border-color: var(--primary) !important;
     transform: translateY(-3px);
@@ -409,21 +464,33 @@
   .hero-slide {
     position: absolute; inset: 0;
     display: flex; align-items: center;
-    opacity: 0; transition: opacity 1s;
+    opacity: 0; transition: opacity 1.2s var(--ease-out, ease);
     background-size: cover; background-position: center;
   }
   .hero-slide.active { opacity: 1; }
+  /* Image layer — separate from content so it can drift (Ken Burns) without scaling text */
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background-size: cover; background-position: center;
+    transform: scale(1);
+    will-change: transform;
+  }
+  .hero-slide.active .hero-bg { animation: heroKenBurns 9s var(--ease-out, ease) both; }
+  @keyframes heroKenBurns {
+    from { transform: scale(1.08); }
+    to   { transform: scale(1); }
+  }
   .hero-slide::before {
-    content: ''; position: absolute; inset: 0;
+    content: ''; position: absolute; inset: 0; z-index: 1;
     background: linear-gradient(105deg, rgba(36,27,51,0.92) 0%, rgba(36,27,51,0.55) 50%, transparent 80%);
   }
-  .hero-slide:nth-child(1) {
+  .hero-slide:nth-child(1) .hero-bg {
     background-image: url('https://images.unsplash.com/photo-1519824145371-296894a0daa9?auto=format&fit=crop&w=1920&q=80'), var(--mesh-hero);
   }
-  .hero-slide:nth-child(2) {
+  .hero-slide:nth-child(2) .hero-bg {
     background-image: url('https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=1920&q=80'), var(--mesh-hero);
   }
-  .hero-slide:nth-child(3) {
+  .hero-slide:nth-child(3) .hero-bg {
     background-image: url('https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=1920&q=80'), var(--mesh-hero);
   }
   .hero-content {
@@ -1694,6 +1761,20 @@
       transition: max-height .35s ease, padding .35s ease, margin .35s ease;
     }
     .dropdown { display: block; }
+    .dropdown::before { display: none; }
+    /* drawer links cascade in as the off-canvas menu opens */
+    body.menu-open .nav-list > li {
+      animation: drawerItemIn .45s var(--ease-out) both;
+    }
+    body.menu-open .nav-list > li:nth-child(1) { animation-delay: .05s; }
+    body.menu-open .nav-list > li:nth-child(2) { animation-delay: .09s; }
+    body.menu-open .nav-list > li:nth-child(3) { animation-delay: .13s; }
+    body.menu-open .nav-list > li:nth-child(4) { animation-delay: .17s; }
+    body.menu-open .nav-list > li:nth-child(5) { animation-delay: .21s; }
+    body.menu-open .nav-list > li:nth-child(6) { animation-delay: .25s; }
+    body.menu-open .nav-list > li:nth-child(7) { animation-delay: .29s; }
+    body.menu-open .nav-list > li:nth-child(8) { animation-delay: .33s; }
+    body.menu-open .nav-list > li:nth-child(9) { animation-delay: .37s; }
     .has-dropdown.is-open > .dropdown {
       max-height: 1200px;
       padding: 12px;
@@ -1903,12 +1984,17 @@ html.js [data-reveal]{
 html.js [data-reveal].reveal-in{ opacity:1; transform:none; }
 html.js [data-reveal].reveal-now{ transition:none !important; }
 
-/* hero entrance — staggered, only when JS present */
-html.js .hero.is-ready .hero-eyebrow{ animation: heroUp .8s var(--ease-out) both; }
-html.js .hero.is-ready .hero-title  { animation: heroUp .8s var(--ease-out) .08s both; }
-html.js .hero.is-ready .hero-text   { animation: heroUp .8s var(--ease-out) .16s both; }
-html.js .hero.is-ready .hero-content .btn{ animation: heroUp .8s var(--ease-out) .24s both; }
-@keyframes heroUp{ from{opacity:0; transform:translate3d(0,22px,0);} to{opacity:1; transform:none;} }
+/* hero entrance — staggered, replays on every slide change, only when JS present */
+html.js .hero.is-ready .hero-slide.active .hero-eyebrow{ animation: heroUp .9s var(--ease-out) .1s both; }
+html.js .hero.is-ready .hero-slide.active .hero-title  { animation: heroUp .9s var(--ease-out) .22s both; }
+html.js .hero.is-ready .hero-slide.active .hero-text   { animation: heroUp .9s var(--ease-out) .34s both; }
+html.js .hero.is-ready .hero-slide.active .hero-content .btn{ animation: heroUp .9s var(--ease-out) .46s both; }
+@keyframes heroUp{ from{opacity:0; transform:translate3d(0,26px,0);} to{opacity:1; transform:none;} }
+
+/* page open — every route fades up softly (template.js re-mounts per navigation) */
+@keyframes pageEnter{ from{opacity:0; transform:translate3d(0,14px,0);} to{opacity:1; transform:none;} }
+.page-enter{ animation: pageEnter .5s var(--ease-out) both; }
+@keyframes drawerItemIn{ from{opacity:0; transform:translate3d(18px,0,0);} to{opacity:1; transform:none;} }
 
 /* ---- Bulletproof photo surfaces: tasteful branded fallback + subtle texture ---- */
 .hero{ background: var(--mesh-hero) !important; }
@@ -2000,6 +2086,8 @@ img.img-failed{ opacity:0; }          /* hide the broken-image glyph; mesh shows
 @media (prefers-reduced-motion: reduce){
   html.js [data-reveal]{ opacity:1 !important; transform:none !important; transition:none !important; }
   html.js .hero.is-ready *{ animation:none !important; }
+  .page-enter, .hero-bg, body.menu-open .nav-list > li{ animation:none !important; }
+  .dropdown, .dropdown > a, .dropdown .mega-col, .dropdown .hospital-card{ transition:none !important; }
   .btn::after{ display:none; }
   *{ scroll-behavior:auto !important; }
   .doctor-card:hover .doctor-photo, .blog-card:hover .blog-img img,
