@@ -38,12 +38,14 @@ export default async function HospitalDetail({ params }) {
   if (!loc) notFound();
 
   const at = (item) => (item.location || '').toLowerCase() === (loc.name || '').toLowerCase();
+  const specialities = content.specialities.filter(at);
   const doctors = content.doctors.filter(at);
   const procedures = content.procedures.filter(at);
   const testimonials = content.testimonials.filter(at);
   const news = content.news.filter(at);
 
   const sections = {
+    specialities: specialities.length > 0,
     doctors: doctors.length > 0,
     procedures: procedures.length > 0,
     testimonials: testimonials.length > 0,
@@ -53,7 +55,7 @@ export default async function HospitalDetail({ params }) {
   return (
     <>
       <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
-      <HospitalPage loc={loc} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
+      <HospitalPage loc={loc} specialities={specialities} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <ScrollEffects />

@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { groupServices, doctorsForGroup } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 
@@ -13,35 +14,9 @@ const WHATSAPP =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to know more about a service.');
 
-const CATEGORIES = [
-  {
-    id: 'maternity',
-    title: 'Maternity & Pregnancy',
-    intro: 'From your first scan to your baby’s first vaccines — one seamless journey.',
-    items: ['Obstetrics', 'Maternity', 'High Risk Pregnancy', 'Mother & Child Care Programme', 'Fetal Medicine', 'Labor & Delivery Pain Management', 'Lactation Support', 'ANC Classes'],
-  },
-  {
-    id: 'fertility',
-    title: 'Fertility & Gynaecology',
-    intro: 'ART-certified IVF laboratories and senior fertility specialists.',
-    items: ['Infertility Treatment', 'IVF', 'IUI', 'ICSI', 'Gynecology & Laparoscopic Surgery', 'Reproductive Medicine', 'Gynaec Oncology', "Women's Wellness"],
-  },
-  {
-    id: 'children',
-    title: "Children's Care",
-    intro: 'From Level III NICU intensive care to everyday paediatrics.',
-    items: ['Paediatrics', 'General Paediatrics', 'Paediatric Surgery', 'Neonatology', 'Pediatric Intensivist (PICU)', 'Pediatric Anesthesia', 'Pediatric Nephrology', 'Audiology & Speech Therapy'],
-  },
-  {
-    id: 'allied',
-    title: 'Allied & Wellness',
-    intro: 'Complete care for the whole family, under one roof.',
-    items: ['General Medicine', 'General Surgery', 'Dermatology & Cosmetology', 'Orthopaedics & Sports Med', 'Plastic & Cosmetic Surgery', 'General ENT', 'Anesthesiology & Pain', 'Dietetics & Nutrition', 'Physiotherapy'],
-  },
-];
-
 export default async function ServicesPage() {
   const content = await getContent();
+  const groups = groupServices(content.specialities);
   return (
     <SiteChrome content={content}>
       <main>
@@ -52,27 +27,59 @@ export default async function ServicesPage() {
           intro="Comprehensive women's and children's healthcare — maternity, fertility, neonatology, paediatrics and allied specialities across all Kinder centres."
         />
 
-        {CATEGORIES.map((cat, idx) => (
-          <section key={cat.id} id={cat.id} style={idx % 2 ? { background: 'var(--bg-soft)' } : undefined}>
-            <div className="container">
-              <div className="section-head">
-                <div>
-                  <span className="section-eyebrow">{cat.title}</span>
-                  <h2 className="section-title">{cat.title}</h2>
-                  <p className="section-intro">{cat.intro}</p>
+        {groups.map((cat, idx) => {
+          const team = doctorsForGroup(cat, content.doctors);
+          return (
+            <section key={cat.id} id={cat.id} style={idx % 2 ? { background: 'var(--bg-soft)' } : undefined}>
+              <div className="container">
+                <div className="section-head">
+                  <div>
+                    <span className="section-eyebrow">{cat.title}</span>
+                    <h2 className="section-title">{cat.title}</h2>
+                    <p className="section-intro">{cat.intro}</p>
+                  </div>
                 </div>
+                <div className="svc-grid">
+                  {cat.items.map((item) => (
+                    <a
+                      key={item.name}
+                      className="svc-card"
+                      href={WHATSAPP}
+                      target="_blank"
+                      rel="noopener"
+                      title={item.description || undefined}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                      <span>{item.name}</span>
+                    </a>
+                  ))}
+                </div>
+
+                {team.length > 0 && (
+                  <div className="svc-team">
+                    <h3 className="svc-team-title">Our {cat.title} specialists</h3>
+                    <div className="hosp-doctor-grid">
+                      {team.map((doc) => (
+                        <article className="hosp-doctor-card" key={doc.id}>
+                          <div
+                            className="hosp-doctor-img"
+                            style={{ backgroundImage: doc.imageUrl ? `url('${doc.imageUrl}')` : 'var(--mesh-card)' }}
+                          ></div>
+                          <div className="hosp-doctor-meta">
+                            <h4>{doc.name}</h4>
+                            <span>{[doc.designation, doc.speciality].filter(Boolean).join(' · ')}</span>
+                            {doc.location && <p className="svc-doc-loc">Kinder {doc.location}</p>}
+                            <a className="svc-doc-book" href={WHATSAPP} target="_blank" rel="noopener">Book Appointment →</a>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="svc-grid">
-                {cat.items.map((item) => (
-                  <a key={item} className="svc-card" href={WHATSAPP} target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                    <span>{item}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </section>
-        ))}
+            </section>
+          );
+        })}
 
         <section className="hosp-cta-wrap">
           <div className="container">

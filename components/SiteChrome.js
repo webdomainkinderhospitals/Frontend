@@ -9,7 +9,7 @@ export default function SiteChrome({ content, children }) {
   return (
     <>
       <TopBar settings={content.settings} locations={content.locations} />
-      <Header settings={content.settings} locations={content.locations} />
+      <Header settings={content.settings} locations={content.locations} specialities={content.specialities} />
       {children}
       <Footer settings={content.settings} locations={content.locations} />
       <WhatsAppFloat />

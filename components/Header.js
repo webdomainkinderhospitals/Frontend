@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { groupServices } from '@/lib/services';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -11,7 +12,8 @@ const HOSPITAL_TAGS = {
   Singapore: 'International · HQ',
 };
 
-export default function Header({ settings, locations = [] }) {
+export default function Header({ settings, locations = [], specialities = [] }) {
+  const serviceGroups = groupServices(specialities);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname() || '/';
@@ -173,50 +175,19 @@ export default function Header({ settings, locations = [] }) {
                   Services <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega">
-                  <div className="mega-col">
-                    <h6>Maternity &amp; Pregnancy</h6>
-                    <a href="/services" onClick={onLeafClick}>Obstetrics</a>
-                    <a href="/services" onClick={onLeafClick}>Maternity</a>
-                    <a href="/services" onClick={onLeafClick}>High Risk Pregnancy</a>
-                    <a href="/services" onClick={onLeafClick}>Mother &amp; Child Care Programme</a>
-                    <a href="/services" onClick={onLeafClick}>Fetal Medicine</a>
-                    <a href="/services" onClick={onLeafClick}>Labor &amp; Delivery Pain Management</a>
-                    <a href="/services" onClick={onLeafClick}>Lactation Support</a>
-                    <a href="/services" onClick={onLeafClick}>ANC Classes</a>
-                  </div>
-                  <div className="mega-col">
-                    <h6>Fertility &amp; Gynaecology</h6>
-                    <a href="/services" onClick={onLeafClick}>Infertility Treatment</a>
-                    <a href="/services" onClick={onLeafClick}>IVF</a>
-                    <a href="/services" onClick={onLeafClick}>IUI</a>
-                    <a href="/services" onClick={onLeafClick}>ICSI</a>
-                    <a href="/services" onClick={onLeafClick}>Gynecology &amp; Laparoscopic Surgery</a>
-                    <a href="/services" onClick={onLeafClick}>Reproductive Medicine</a>
-                    <a href="/services" onClick={onLeafClick}>Gynaec Oncology</a>
-                    <a href="/services" onClick={onLeafClick}>Women&apos;s Wellness</a>
-                  </div>
-                  <div className="mega-col">
-                    <h6>Children&apos;s Care</h6>
-                    <a href="/services" onClick={onLeafClick}>Paediatrics</a>
-                    <a href="/services" onClick={onLeafClick}>General Paediatrics</a>
-                    <a href="/services" onClick={onLeafClick}>Paediatric Surgery</a>
-                    <a href="/services" onClick={onLeafClick}>Neonatology</a>
-                    <a href="/services" onClick={onLeafClick}>Pediatric Intensivist (PICU)</a>
-                    <a href="/services" onClick={onLeafClick}>Pediatric Anesthesia</a>
-                    <a href="/services" onClick={onLeafClick}>Pediatric Nephrology</a>
-                    <a href="/services" onClick={onLeafClick}>Audiology &amp; Speech Therapy</a>
-                  </div>
+                  {serviceGroups.slice(0, 3).map((group) => (
+                    <div className="mega-col" key={group.id}>
+                      <h6>{group.title}</h6>
+                      {group.items.slice(0, 8).map((item) => (
+                        <a key={item.name} href={`/services#${group.id}`} onClick={onLeafClick}>{item.name}</a>
+                      ))}
+                    </div>
+                  ))}
                   <div className="mega-col mega-feature">
-                    <h6>Allied &amp; Wellness</h6>
-                    <a href="/services" onClick={onLeafClick}>General Medicine</a>
-                    <a href="/services" onClick={onLeafClick}>General Surgery</a>
-                    <a href="/services" onClick={onLeafClick}>Dermatology &amp; Cosmetology</a>
-                    <a href="/services" onClick={onLeafClick}>Orthopaedics &amp; Sports Med</a>
-                    <a href="/services" onClick={onLeafClick}>Plastic &amp; Cosmetic Surgery</a>
-                    <a href="/services" onClick={onLeafClick}>General ENT</a>
-                    <a href="/services" onClick={onLeafClick}>Anesthesiology &amp; Pain</a>
-                    <a href="/services" onClick={onLeafClick}>Dietetics &amp; Nutrition</a>
-                    <a href="/services" onClick={onLeafClick}>Physiotherapy</a>
+                    <h6>{serviceGroups[3].title}</h6>
+                    {serviceGroups[3].items.slice(0, 9).map((item) => (
+                      <a key={item.name} href={`/services#${serviceGroups[3].id}`} onClick={onLeafClick}>{item.name}</a>
+                    ))}
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
                       <p>Our care coordinators will guide you to the right Kinder doctor.</p>
