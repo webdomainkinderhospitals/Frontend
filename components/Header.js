@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { groupServices } from '@/lib/services';
+import { groupServices, slugify } from '@/lib/services';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -179,14 +179,14 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                     <div className="mega-col" key={group.id}>
                       <h6>{group.title}</h6>
                       {group.items.slice(0, 8).map((item) => (
-                        <a key={item.name} href={`/services#${group.id}`} onClick={onLeafClick}>{item.name}</a>
+                        <a key={item.name} href={`/services/${slugify(item.name)}`} onClick={onLeafClick}>{item.name}</a>
                       ))}
                     </div>
                   ))}
                   <div className="mega-col mega-feature">
                     <h6>{serviceGroups[3].title}</h6>
                     {serviceGroups[3].items.slice(0, 9).map((item) => (
-                      <a key={item.name} href={`/services#${serviceGroups[3].id}`} onClick={onLeafClick}>{item.name}</a>
+                      <a key={item.name} href={`/services/${slugify(item.name)}`} onClick={onLeafClick}>{item.name}</a>
                     ))}
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>

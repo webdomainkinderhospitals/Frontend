@@ -13,7 +13,7 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, specialities = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+export default function HospitalPage({ loc, specialities = [], servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -129,12 +129,16 @@ export default function HospitalPage({ loc, specialities = [], doctors = [], pro
               </div>
             </div>
             <div className="svc-grid">
-              {specialities.map((spec, i) => (
-                <div className="svc-card" key={spec.id ?? i} title={spec.description || undefined}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                  <span>{spec.name}</span>
-                </div>
-              ))}
+              {specialities.map((spec, i) => {
+                const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                const Tag = servicePages.includes(slug) ? 'a' : 'div';
+                return (
+                  <Tag className="svc-card" key={spec.id ?? i} title={spec.description || undefined} {...(Tag === 'a' ? { href: `/services/${slug}` } : {})}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                    <span>{spec.name}</span>
+                  </Tag>
+                );
+              })}
             </div>
           </div>
         </section>

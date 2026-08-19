@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
+import { allServices } from '@/lib/services';
 
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
@@ -55,7 +56,7 @@ export default async function HospitalDetail({ params }) {
   return (
     <>
       <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
-      <HospitalPage loc={loc} specialities={specialities} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
+      <HospitalPage loc={loc} specialities={specialities} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <ScrollEffects />
