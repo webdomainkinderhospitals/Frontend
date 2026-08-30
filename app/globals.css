@@ -445,8 +445,7 @@
   /* MOBILE NAV BACKDROP */
   .nav-backdrop {
     position: fixed; inset: 0;
-    background: rgba(16, 37, 48, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(16, 37, 48, 0.55);
     opacity: 0; visibility: hidden;
     transition: all .3s;
     z-index: 45;
@@ -835,8 +834,7 @@
   .doctor-branch {
     position: absolute; top: 12px; left: 12px;
     padding: 4px 10px;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(4px);
+    background: var(--white);
     color: var(--primary);
     border-radius: 999px;
     font-size: 11px; font-weight: 700;
@@ -2406,60 +2404,15 @@ a.quick-item:hover .quick-text strong { color: var(--primary, inherit); }
 .hosp-news-meta h4 { color: var(--primary-dark); font-size: 15.5px; margin-top: 4px; }
 .hosp-news-meta p { color: var(--muted); font-size: 13px; margin-top: 6px; }
 
-/* ============ Glass layer ============ */
+/* Corporate landing chrome is intentionally solid (glassmorphism removed).
+   Hospital sub-sites keep their own styling below. */
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .header {
-    background: rgba(255, 255, 255, 0.78);
-    -webkit-backdrop-filter: blur(16px) saturate(1.5);
-    backdrop-filter: blur(16px) saturate(1.5);
-    border-bottom: 1px solid rgba(230, 222, 243, 0.7);
-  }
-  .nav {
-    background: rgba(255, 255, 255, 0.55);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    backdrop-filter: blur(16px) saturate(1.4);
-    border-top: 1px solid rgba(230, 222, 243, 0.6);
-  }
-  .dropdown {
-    background: rgba(255, 255, 255, 0.86);
-    -webkit-backdrop-filter: blur(18px) saturate(1.6);
-    backdrop-filter: blur(18px) saturate(1.6);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 24px 60px rgba(44, 29, 94, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  .quick-bar {
-    background: rgba(255, 255, 255, 0.72);
-    -webkit-backdrop-filter: blur(16px) saturate(1.5);
-    backdrop-filter: blur(16px) saturate(1.5);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 20px 60px rgba(44, 29, 94, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  }
   .hosp-contact-bar {
     background: rgba(255, 255, 255, 0.78);
     -webkit-backdrop-filter: blur(16px) saturate(1.5);
     backdrop-filter: blur(16px) saturate(1.5);
     border: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 18px 40px rgba(44, 29, 94, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  }
-  .hero-content {
-    background: rgba(255, 255, 255, 0.10);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    padding: 28px 30px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  }
-  @media (max-width: 1024px) {
-    body.menu-open .nav {
-      background: rgba(255, 255, 255, 0.92);
-      -webkit-backdrop-filter: blur(20px) saturate(1.5);
-      backdrop-filter: blur(20px) saturate(1.5);
-    }
-  }
-  .nav-backdrop {
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
   }
 }
 
