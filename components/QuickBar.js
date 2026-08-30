@@ -4,13 +4,13 @@ const WHATSAPP_BOOK =
 
 const ITEMS = [
   {
-    href: '#specialities',
+    href: '/services',
     title: 'Maternity Care',
     sub: '13,000+ births delivered',
     icon: <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />,
   },
   {
-    href: '#specialities',
+    href: '/services',
     title: 'Kinder IVF',
     sub: '1,500+ successful IVFs',
     icon: (

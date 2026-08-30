@@ -7,7 +7,6 @@ import QuickBar from '@/components/QuickBar';
 import Stats from '@/components/Stats';
 import CoeGrid from '@/components/CoeGrid';
 import Doctors from '@/components/Doctors';
-import Specialities from '@/components/Specialities';
 import Procedures from '@/components/Procedures';
 import Care from '@/components/Care';
 import Support from '@/components/Support';
@@ -34,7 +33,6 @@ export default async function HomePage() {
       <Stats settings={settings} />
       <CoeGrid />
       <Doctors doctors={doctors} />
-      <Specialities specialities={specialities} />
       <Procedures procedures={procedures} />
       <Care />
       <Support />
