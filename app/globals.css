@@ -654,10 +654,12 @@
     font-size: 22px; margin-bottom: 8px;
   }
   .coe-content p { font-size: 13px; opacity: 0.92; margin-bottom: 12px; line-height: 1.5; }
-  .coe-content a {
+  .coe-content a, .coe-content .coe-more {
     font-size: 13px; font-weight: 600; color: var(--accent);
     display: inline-flex; align-items: center; gap: 6px;
+    transition: gap .25s var(--ease-out, ease);
   }
+  .coe-card:hover .coe-more { gap: 12px; }
 
   /* DOCTORS */
   .doctors { background: var(--bg-soft); }
