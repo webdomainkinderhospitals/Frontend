@@ -3,7 +3,7 @@ import './globals.css';
 export const metadata = {
   title: 'Kinder Hospitals — Medical Group · India · Singapore',
   description:
-    "Kinder Medical Group (Kindorama Healthcare Pvt Ltd) — a women's & children's healthcare network operating in Cherthala, Kochi, Bengaluru, Alappuzha, and Singapore. NABH accredited maternity, IVF, neonatology, and paediatrics. 6 lakh+ women treated, 13,000+ births since 2011.",
+    "Kinder Medical Group (Kindorama Healthcare Pvt Ltd) — a multi-centre women's & children's healthcare network across India and Singapore. NABH accredited maternity, IVF, neonatology, and paediatrics. 6 lakh+ women treated, 13,000+ births since 2011.",
   icons: { icon: '/favicon.png' },
 };
 

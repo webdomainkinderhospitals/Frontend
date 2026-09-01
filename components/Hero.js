@@ -18,22 +18,29 @@ const STATIC_SLIDES = [
   {
     eyebrow: 'Kinder Jananimitra Package',
     titleHtml: "Let's celebrate your <em>pregnancy journey</em>",
-    text: "Comprehensive maternity packages — from your first scan to your baby's first vaccines. Available across our Cherthala, Kochi, and Bengaluru hospitals.",
+    text: "Comprehensive maternity packages — from your first scan to your baby's first vaccines. Available across our Kinder maternity hospitals.",
     ctas: [{ label: 'Explore Maternity Packages →', className: 'btn btn-primary', href: '#packages' }],
     imageUrl:
       'https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=1920&q=80',
   },
 ];
 
-export default function Hero({ settings }) {
+export default function Hero({ settings, locations = [] }) {
+  // Subtitle built from the LIVE hospital list, so admin visibility toggles
+  // are reflected here. A custom subtitle set in Site Settings still wins —
+  // only the original seeded default (with its fixed city list) is replaced.
+  const names = locations.map((l) => l.name).filter(Boolean);
+  const liveSubtitle = names.length
+    ? `A women's & children's healthcare network spanning ${names.length} hospitals across ${names.join(', ')}. From IVF to neonatology — one promise of kindness, in every city we serve.`
+    : "A women's & children's healthcare network — one promise of kindness, in every city we serve.";
+  const isSeededDefault = /spanning 5 hospitals across Cherthala/.test(settings.heroSubtitle || '');
+
   const slides = [
     {
       eyebrow: 'Welcome to Kinder Medical Group',
       titleHtml:
         settings.heroTitle || 'Kindness at the heart of <em>every tiny heartbeat</em>',
-      text:
-        settings.heroSubtitle ||
-        "A women's & children's healthcare network spanning 5 hospitals across Cherthala, Kochi, Bengaluru, Alappuzha and Singapore.",
+      text: (!settings.heroSubtitle || isSeededDefault) ? liveSubtitle : settings.heroSubtitle,
       ctas: [
         { label: 'Find Your Nearest Hospital →', className: 'btn btn-primary', href: '#hospitals' },
         { label: 'Book an Appointment', className: 'btn btn-outline', href: WHATSAPP_BOOK, external: true },

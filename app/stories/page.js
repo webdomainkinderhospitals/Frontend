@@ -6,7 +6,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: 'Patient Stories · Kinder Hospitals',
-  description: 'Real stories of joy from Kinder families across Cherthala, Kochi, Bengaluru, Alappuzha and Singapore.',
+  description: 'Real stories of joy from Kinder families across all our centres in India and Singapore.',
 };
 
 export default async function StoriesPage() {
