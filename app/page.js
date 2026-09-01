@@ -29,7 +29,7 @@ export default async function HomePage() {
     <>
       <TopBar settings={settings} locations={locations} />
       <Header settings={settings} locations={locations} specialities={specialities} />
-      <Hero settings={settings} />
+      <Hero settings={settings} locations={locations} />
       <QuickBar />
       <Stats settings={settings} />
       <CoeGrid />
