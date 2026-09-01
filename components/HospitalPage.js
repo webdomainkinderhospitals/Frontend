@@ -13,7 +13,9 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+import CentreSpecialities from './CentreSpecialities';
+
+export default function HospitalPage({ loc, slug, specialities = [], catalogue = null, centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -117,7 +119,7 @@ export default function HospitalPage({ loc, specialities = [], centreSpecific = 
       </section>
 
       {/* Specialities at this centre */}
-      {specialities.length > 0 && (
+      {(catalogue || specialities.length > 0) && (
         <section id="specialities">
           <div className="container">
             <div className="section-head">
@@ -132,18 +134,37 @@ export default function HospitalPage({ loc, specialities = [], centreSpecific = 
                 </h2>
               </div>
             </div>
-            <div className="svc-grid">
-              {specialities.map((spec, i) => {
-                const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                const Tag = servicePages.includes(slug) ? 'a' : 'div';
-                return (
-                  <Tag className="svc-card" key={spec.id ?? i} title={spec.description || undefined} {...(Tag === 'a' ? { href: `/services/${slug}` } : {})}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                    <span>{spec.name}</span>
-                  </Tag>
-                );
-              })}
-            </div>
+            {catalogue ? (
+              <CentreSpecialities
+                facilities={catalogue.facilities}
+                base={`/hospitals/${slug}/specialities`}
+              />
+            ) : (
+              <div className="spec-grid">
+                {/* Every card opens the sub-site detail page for that
+                    speciality, which lists only its related doctors. */}
+                {specialities.map((spec, i) => {
+                  const specSlug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                  return (
+                    <a className="spec-card" key={spec.id ?? i} href={`/hospitals/${slug}/specialities/${specSlug}`}>
+                      <span className="spec-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 5v14M5 12h14" />
+                        </svg>
+                      </span>
+                      <span className="spec-card-body">
+                        <strong>{spec.name}</strong>
+                        {spec.description && <small>{spec.description}</small>}
+                      </span>
+                      <span className="spec-card-more">
+                        View doctors &amp; details
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                      </span>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </section>
       )}
