@@ -208,22 +208,48 @@ function buildReply(text, content) {
   );
 }
 
-// Friendly doctor-robot mascot: robot head with antenna, medical cross and
-// a stethoscope — drawn in currentColor so it adapts anywhere it's used.
+// Dr. Kinder — a robot in a doctor's white coat: glowing face-screen,
+// antenna, stethoscope around the neck and a medical badge on the pocket.
+// Brand tokens via CSS variables (with fallbacks) so it stays on-palette.
 function DoctorBot(props) {
   return (
-    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true" {...props}>
-      <circle cx="32" cy="7" r="3" fill="currentColor" />
-      <path d="M32 10v4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-      <rect x="13" y="14" width="38" height="30" rx="11" fill="currentColor" opacity=".14" />
-      <rect x="13" y="14" width="38" height="30" rx="11" stroke="currentColor" strokeWidth="2.6" />
-      <path d="M9 25v8M55 25v8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-      <path d="M32 19v6M29 22h6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <circle cx="24.5" cy="32" r="3" fill="currentColor" />
-      <circle cx="39.5" cy="32" r="3" fill="currentColor" />
-      <path d="M25.5 38.5c2 2.4 11 2.4 13 0" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M24 44v3.5c0 5.5 3.6 8.5 8.4 8.5 4.1 0 7.1-2.2 7.9-5.7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="41.5" cy="47" r="3.4" stroke="currentColor" strokeWidth="2.4" />
+    <svg viewBox="0 0 72 88" fill="none" aria-hidden="true" {...props}>
+      {/* antenna */}
+      <rect x="34.6" y="8" width="2.8" height="7" rx="1.4" fill="#fff" opacity=".9" />
+      <circle cx="36" cy="6" r="4" fill="var(--accent, #F26D8B)" />
+      <circle cx="36" cy="6" r="6.5" stroke="var(--accent, #F26D8B)" strokeWidth="1.2" opacity=".35" />
+      {/* head */}
+      <rect x="16" y="14" width="40" height="31" rx="13" fill="#fff" />
+      <rect x="16.9" y="14.9" width="38.2" height="29.2" rx="12.2" stroke="var(--primary, #6D49C9)" strokeOpacity=".22" strokeWidth="1.8" />
+      {/* ear caps */}
+      <rect x="11" y="24" width="5" height="11" rx="2.5" fill="var(--accent, #F26D8B)" />
+      <rect x="56" y="24" width="5" height="11" rx="2.5" fill="var(--accent, #F26D8B)" />
+      {/* glowing face screen */}
+      <rect x="21.5" y="19.5" width="29" height="20" rx="9" fill="var(--primary-dark, #3F2A86)" />
+      <circle cx="30" cy="28.5" r="3" fill="#A5F3FF" />
+      <circle cx="42" cy="28.5" r="3" fill="#A5F3FF" />
+      <circle cx="31" cy="27.5" r="1" fill="#fff" />
+      <circle cx="43" cy="27.5" r="1" fill="#fff" />
+      <path d="M31 34c1.7 1.9 8.3 1.9 10 0" stroke="#A5F3FF" strokeWidth="2.2" strokeLinecap="round" />
+      {/* neck */}
+      <rect x="30" y="45" width="12" height="5" rx="2.5" fill="#E4DCF5" />
+      {/* white doctor's coat */}
+      <path d="M14 88V64c0-9.5 9-15 22-15s22 5.5 22 15v24H14Z" fill="#fff" />
+      <path d="M14.9 88V64c0-9 8.6-14.1 21.1-14.1S57.1 55 57.1 64v24" stroke="var(--primary, #6D49C9)" strokeOpacity=".18" strokeWidth="1.8" />
+      {/* shirt opening + lapels */}
+      <path d="M36 49.5 32 57l4 31 4-31-4-7.5Z" fill="var(--primary-light, #ECE6FA)" />
+      <path d="m36 49.5-7.5 2.5 5 8.5 2.5-11Z" fill="#E4DCF5" />
+      <path d="m36 49.5 7.5 2.5-5 8.5-2.5-11Z" fill="#E4DCF5" />
+      {/* stethoscope */}
+      <path d="M28.5 52.5c-1 8 1.5 13.5 7.5 13.5 5.5 0 8-5 7.5-12" stroke="var(--primary, #6D49C9)" strokeWidth="2.7" strokeLinecap="round" />
+      <circle cx="36" cy="71" r="4.4" stroke="var(--primary, #6D49C9)" strokeWidth="2.7" />
+      <path d="M36 66v.6" stroke="var(--primary, #6D49C9)" strokeWidth="2.7" strokeLinecap="round" />
+      {/* pocket with medical cross */}
+      <rect x="18.5" y="66" width="10.5" height="9.5" rx="2.5" fill="var(--primary-light, #ECE6FA)" />
+      <path d="M23.75 68.2v5.1M21.2 70.75h5.1" stroke="var(--accent, #F26D8B)" strokeWidth="2.1" strokeLinecap="round" />
+      {/* coat buttons */}
+      <circle cx="47.5" cy="67" r="1.7" fill="#CBBFE9" />
+      <circle cx="47.5" cy="74" r="1.7" fill="#CBBFE9" />
     </svg>
   );
 }
@@ -276,8 +302,8 @@ export default function KinderChat({ content }) {
         aria-label="Chat with Kinder Assistant"
         onClick={() => setOpen(true)}
       >
-        <DoctorBot className="kc-bot-icon" />
-        <span className="kc-launcher-label">Chat with Dr. Kinder</span>
+        <span className="kc-bot-wrap"><DoctorBot className="kc-bot-icon" /></span>
+        <span className="kc-launcher-label">Chat with Dr.&nbsp;Kinder</span>
       </button>
 
       {open && (
