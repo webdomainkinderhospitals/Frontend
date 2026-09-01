@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { slugify } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 
@@ -61,9 +62,12 @@ export default async function DoctorsPage() {
                       <h4>{doc.name}</h4>
                       <span>{doc.designation}</span>
                       {doc.bio && <p>{doc.bio}</p>}
-                      <a href={WHATSAPP_BOOK} target="_blank" rel="noopener" className="doctor-book-link">
-                        Book appointment →
-                      </a>
+                      <div className="doc-card-links">
+                        <a href={`/doctors/${slugify(doc.name)}`} className="svc-doc-book">View Profile →</a>
+                        <a href={WHATSAPP_BOOK} target="_blank" rel="noopener" className="doctor-book-link">
+                          Book appointment →
+                        </a>
+                      </div>
                     </div>
                   </article>
                 ))}
