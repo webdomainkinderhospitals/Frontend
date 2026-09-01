@@ -40,7 +40,12 @@ export default async function HospitalDetail({ params }) {
   if (!loc) notFound();
 
   const at = (item) => (item.location || '').toLowerCase() === (loc.name || '').toLowerCase();
-  const specialities = content.specialities.filter(at);
+  // Every sub-site shows a Specialities menu: centres without their own
+  // location-tagged list fall back to the group-wide catalogue.
+  const ownSpecialities = content.specialities.filter(at);
+  const specialities = ownSpecialities.length
+    ? ownSpecialities
+    : allServices(content.specialities).map((s) => ({ name: s.name, description: s.description }));
   const doctors = content.doctors.filter(at);
   const procedures = content.procedures.filter(at);
   const testimonials = content.testimonials.filter(at);
@@ -57,7 +62,7 @@ export default async function HospitalDetail({ params }) {
   return (
     <>
       <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
-      <HospitalPage loc={loc} specialities={specialities} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
+      <HospitalPage loc={loc} specialities={specialities} centreSpecific={ownSpecialities.length > 0} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <KinderChat content={content} />

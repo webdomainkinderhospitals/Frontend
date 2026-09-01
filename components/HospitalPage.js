@@ -13,7 +13,7 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, specialities = [], servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+export default function HospitalPage({ loc, specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -124,7 +124,11 @@ export default function HospitalPage({ loc, specialities = [], servicePages = []
               <div>
                 <span className="section-eyebrow">Departments at Kinder {loc.name}</span>
                 <h2 className="section-title">
-                  Specialities <em>at this centre</em>
+                  {centreSpecific ? (
+                    <>Specialities <em>at this centre</em></>
+                  ) : (
+                    <>Specialities <em>across our group</em></>
+                  )}
                 </h2>
               </div>
             </div>
