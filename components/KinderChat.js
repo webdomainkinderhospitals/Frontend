@@ -208,6 +208,26 @@ function buildReply(text, content) {
   );
 }
 
+// Friendly doctor-robot mascot: robot head with antenna, medical cross and
+// a stethoscope — drawn in currentColor so it adapts anywhere it's used.
+function DoctorBot(props) {
+  return (
+    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true" {...props}>
+      <circle cx="32" cy="7" r="3" fill="currentColor" />
+      <path d="M32 10v4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="13" y="14" width="38" height="30" rx="11" fill="currentColor" opacity=".14" />
+      <rect x="13" y="14" width="38" height="30" rx="11" stroke="currentColor" strokeWidth="2.6" />
+      <path d="M9 25v8M55 25v8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path d="M32 19v6M29 22h6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="24.5" cy="32" r="3" fill="currentColor" />
+      <circle cx="39.5" cy="32" r="3" fill="currentColor" />
+      <path d="M25.5 38.5c2 2.4 11 2.4 13 0" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M24 44v3.5c0 5.5 3.6 8.5 8.4 8.5 4.1 0 7.1-2.2 7.9-5.7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="41.5" cy="47" r="3.4" stroke="currentColor" strokeWidth="2.4" />
+    </svg>
+  );
+}
+
 export default function KinderChat({ content }) {
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState([]);
@@ -220,7 +240,7 @@ export default function KinderChat({ content }) {
     if (open && msgs.length === 0) {
       setMsgs([{
         from: 'bot',
-        text: `Hello! I'm the Kinder Assistant. Ask me about our doctors, services, hospitals or packages — or use a shortcut below.`,
+        text: `Hello! I'm Dr. Kinder, your robot guide. Ask me about our doctors, services, hospitals or packages — or use a shortcut below.`,
         actions: [],
       }]);
     }
@@ -256,20 +276,18 @@ export default function KinderChat({ content }) {
         aria-label="Chat with Kinder Assistant"
         onClick={() => setOpen(true)}
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-        </svg>
-        <span className="kc-launcher-label">Chat with us</span>
+        <DoctorBot className="kc-bot-icon" />
+        <span className="kc-launcher-label">Chat with Dr. Kinder</span>
       </button>
 
       {open && (
         <section className="kc-panel" role="dialog" aria-label="Kinder Assistant chat">
           <header className="kc-head">
             <span className="kc-avatar" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <DoctorBot />
             </span>
             <div className="kc-head-text">
-              <strong>Kinder Assistant</strong>
+              <strong>Dr. Kinder · Assistant</strong>
               <span><i className="kc-dot" aria-hidden="true"></i> Online · replies instantly</span>
             </div>
             <button className="kc-close" aria-label="Close chat" onClick={() => setOpen(false)}>
