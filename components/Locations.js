@@ -6,7 +6,7 @@ export default function Locations({ locations = [] }) {
           <div>
             <span className="section-eyebrow">Our Hospitals</span>
             <h2 className="section-title">
-              Five centres, <em>one promise of kindness</em>
+              Multiple centres, <em>one promise of kindness</em>
             </h2>
             <p className="section-intro">
               From our first centre in Cherthala (2011) to Singapore — a growing family of
