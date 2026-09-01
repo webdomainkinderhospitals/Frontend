@@ -15,6 +15,13 @@ function initials(name) {
     .toUpperCase();
 }
 
+const docSlug = (name) =>
+  String(name || '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 export default function Doctors({ doctors = [] }) {
   const trackRef = useRef(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -75,16 +82,16 @@ export default function Doctors({ doctors = [] }) {
       <div className="container">
         <div className="section-head">
           <div>
-            <span className="section-eyebrow">Featured Specialists · Kochi</span>
+            <span className="section-eyebrow">Featured Specialists</span>
             <h2 className="section-title">
               Meet our <em>senior consultants</em>
             </h2>
             <p className="section-intro">
-              Skilled specialists at Kinder Hospital Kochi — bringing decades of expertise in
-              medicine, surgery, and women&apos;s health under one roof.
+              Skilled specialists from across the Kinder network — bringing decades of expertise
+              in medicine, surgery, and women&apos;s and children&apos;s health under one roof.
             </p>
           </div>
-          <a href="https://www.kinderkochi.com/doctors" className="view-all">
+          <a href="/doctors" className="view-all">
             View All Doctors →
           </a>
         </div>
@@ -153,8 +160,15 @@ export default function Doctors({ doctors = [] }) {
                     <span className="doctor-creds">{doc.bio}</span>
                   </div>
                   <div className="doctor-cta">
-                    <button>Book</button>
-                    <button>Profile</button>
+                    <a
+                      className="doctor-cta-book"
+                      href={`https://api.whatsapp.com/send?phone=919446654500&text=${encodeURIComponent(`Hello Kinder Hospitals, I would like to book an appointment with ${doc.name}.`)}`}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Book
+                    </a>
+                    <a className="doctor-cta-profile" href={`/doctors/${docSlug(doc.name)}`}>Profile</a>
                   </div>
                 </article>
               ))}
