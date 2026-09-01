@@ -7,6 +7,7 @@ import ScrollEffects from '@/components/ScrollEffects';
 import HospitalPage from '@/components/HospitalPage';
 import SubSiteHeader from '@/components/SubSiteHeader';
 import SubSiteFooter from '@/components/SubSiteFooter';
+import KinderChat from '@/components/KinderChat';
 
 export const revalidate = 60;
 
@@ -59,6 +60,7 @@ export default async function HospitalDetail({ params }) {
       <HospitalPage loc={loc} specialities={specialities} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
+      <KinderChat content={content} />
       <ScrollEffects />
     </>
   );

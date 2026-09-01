@@ -15,6 +15,7 @@ import News from '@/components/News';
 import Accreditations from '@/components/Accreditations';
 import Locations from '@/components/Locations';
 import Footer from '@/components/Footer';
+import KinderChat from '@/components/KinderChat';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
 
@@ -41,6 +42,7 @@ export default async function HomePage() {
       <Accreditations />
       <Locations locations={locations} />
       <Footer settings={settings} locations={locations} />
+      <KinderChat content={content} />
       <WhatsAppFloat />
       <ScrollEffects />
     </>

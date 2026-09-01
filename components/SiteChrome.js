@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
+import KinderChat from '@/components/KinderChat';
 
 // Standard corporate-site chrome wrapped around every inner page.
 export default function SiteChrome({ content, children }) {
@@ -13,6 +14,7 @@ export default function SiteChrome({ content, children }) {
       {children}
       <Footer settings={content.settings} locations={content.locations} />
       <WhatsAppFloat />
+      <KinderChat content={content} />
       <ScrollEffects />
     </>
   );
