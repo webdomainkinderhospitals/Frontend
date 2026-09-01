@@ -169,6 +169,7 @@ export default function HospitalPage({ loc, specialities = [], servicePages = []
                     <h4>{doc.name}</h4>
                     <span>{doc.designation}</span>
                     {doc.bio && <p>{doc.bio}</p>}
+                    <a className="svc-doc-book" href={`/doctors/${String(doc.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`}>View Profile →</a>
                   </div>
                 </article>
               ))}

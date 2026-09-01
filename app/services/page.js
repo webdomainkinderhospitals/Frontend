@@ -67,7 +67,10 @@ export default async function ServicesPage() {
                             <h4>{doc.name}</h4>
                             <span>{[doc.designation, doc.speciality].filter(Boolean).join(' · ')}</span>
                             {doc.location && <p className="svc-doc-loc">Kinder {doc.location}</p>}
-                            <a className="svc-doc-book" href={WHATSAPP} target="_blank" rel="noopener">Book Appointment →</a>
+                            <div className="doc-card-links">
+                              <a className="svc-doc-book" href={`/doctors/${slugify(doc.name)}`}>View Profile →</a>
+                              <a className="svc-doc-book" href={WHATSAPP} target="_blank" rel="noopener">Book →</a>
+                            </div>
                           </div>
                         </article>
                       ))}

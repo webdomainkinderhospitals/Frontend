@@ -2840,3 +2840,35 @@ html { scroll-behavior: smooth; }
   .kc-panel, .kc-msg, .kc-typing span, .kc-launcher .kc-bot-icon, .kc-launcher { animation: none; }
   .kc-launcher:hover, .kc-action:hover { transform: none; }
 }
+
+/* ============ Doctor profile page ============ */
+.doc-profile {
+  display: grid; grid-template-columns: minmax(260px, 380px) 1fr;
+  gap: 44px; align-items: start;
+}
+.doc-profile-photo {
+  aspect-ratio: 4 / 5; border-radius: 20px;
+  background-size: cover; background-position: center top;
+  background-color: var(--primary-light);
+  box-shadow: 0 24px 50px -24px rgba(44, 29, 94, 0.35);
+}
+.doc-profile-role { color: var(--muted); font-weight: 600; margin: -8px 0 14px; }
+.doc-profile-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.doc-tag {
+  display: inline-block; padding: 7px 14px; border-radius: 999px;
+  background: var(--primary-light); color: var(--primary-dark);
+  font-size: 13px; font-weight: 700;
+  transition: background .2s, color .2s;
+}
+a.doc-tag:hover { background: var(--primary); color: #fff; }
+.doc-profile-text { color: var(--ink-soft); line-height: 1.75; margin-bottom: 14px; max-width: 62ch; }
+.doc-profile-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.btn-soft {
+  background: var(--primary-light); color: var(--primary-dark);
+}
+.btn-soft:hover { background: var(--primary); color: #fff; }
+.doc-card-links { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+@media (max-width: 860px) {
+  .doc-profile { grid-template-columns: 1fr; gap: 26px; }
+  .doc-profile-photo { max-width: 420px; }
+}
