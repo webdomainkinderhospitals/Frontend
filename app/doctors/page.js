@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { atLocation, locationsOf } from '@/lib/locations';
 import { slugify } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -20,13 +21,12 @@ export default async function DoctorsPage() {
 
   const groups = [];
   for (const loc of locations) {
-    const team = doctors.filter(
-      (d) => (d.location || '').toLowerCase() === (loc.name || '').toLowerCase()
-    );
+    // A consultant who practises at several centres is listed under each.
+    const team = doctors.filter((d) => atLocation(d, loc.name));
     if (team.length) groups.push({ name: loc.name, team });
   }
   const unassigned = doctors.filter(
-    (d) => !locations.some((l) => (l.name || '').toLowerCase() === (d.location || '').toLowerCase())
+    (d) => !locations.some((l) => atLocation(d, l.name))
   );
   if (unassigned.length) groups.push({ name: 'Kinder Medical Group', team: unassigned });
 

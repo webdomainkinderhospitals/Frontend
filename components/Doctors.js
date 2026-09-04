@@ -1,5 +1,6 @@
 'use client';
 
+import { locationsOf } from '@/lib/locations';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 function initials(name) {
@@ -116,7 +117,7 @@ export default function Doctors({ doctors = [] }) {
               {doctors.map((doc, i) => (
                 <article className="doctor-card slider-card" key={doc.id ?? i}>
                   <div className="doctor-img">
-                    <span className="doctor-branch">{doc.location}</span>
+                    <span className="doctor-branch">{locationsOf(doc).join(' · ')}</span>
                     {doc.imageUrl ? (
                       <img
                         src={doc.imageUrl}

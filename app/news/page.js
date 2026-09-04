@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { locationLabel } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 
@@ -45,7 +46,7 @@ export default async function NewsPage() {
                       <h4>{item.title}</h4>
                       {item.excerpt && <p>{item.excerpt}</p>}
                       <small className="news-byline">
-                        {[item.author, formatDate(item.publishedAt), item.location && `Kinder ${item.location}`]
+                        {[item.author, formatDate(item.publishedAt), locationLabel(item)]
                           .filter(Boolean)
                           .join(' · ')}
                       </small>

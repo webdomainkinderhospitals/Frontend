@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
+import { atLocation } from '@/lib/locations';
 import { allServices } from '@/lib/services';
 
 import WhatsAppFloat from '@/components/WhatsAppFloat';
@@ -39,7 +40,8 @@ export default async function HospitalDetail({ params }) {
   const loc = content.locations.find((l) => slugOf(l) === slug);
   if (!loc) notFound();
 
-  const at = (item) => (item.location || '').toLowerCase() === (loc.name || '').toLowerCase();
+  // Doctors (and anything else) may be tagged with several hospitals.
+  const at = (item) => atLocation(item, loc.name);
   // Every sub-site shows a Specialities menu: centres without their own
   // location-tagged list fall back to the group-wide catalogue.
   const ownSpecialities = content.specialities.filter(at);

@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { locationLabel } from '@/lib/locations';
 import { groupServices, doctorsForGroup, slugify } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -66,7 +67,7 @@ export default async function ServicesPage() {
                           <div className="hosp-doctor-meta">
                             <h4>{doc.name}</h4>
                             <span>{[doc.designation, doc.speciality].filter(Boolean).join(' · ')}</span>
-                            {doc.location && <p className="svc-doc-loc">Kinder {doc.location}</p>}
+                            {locationLabel(doc) && <p className="svc-doc-loc">{locationLabel(doc)}</p>}
                             <div className="doc-card-links">
                               <a className="svc-doc-book" href={`/doctors/${slugify(doc.name)}`}>View Profile →</a>
                               <a className="svc-doc-book" href={WHATSAPP} target="_blank" rel="noopener">Book →</a>
