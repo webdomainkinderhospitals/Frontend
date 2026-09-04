@@ -1,3 +1,4 @@
+import DoctorCard from '@/components/DoctorCard';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
@@ -162,20 +163,7 @@ export default function HospitalPage({ loc, specialities = [], centreSpecific = 
             </div>
             <div className="hosp-doctor-grid">
               {doctors.map((doc, i) => (
-                <article className="hosp-doctor-card" key={doc.id ?? i}>
-                  <div
-                    className="hosp-doctor-img"
-                    style={{
-                      backgroundImage: doc.imageUrl ? `url('${doc.imageUrl}')` : 'var(--mesh-card)',
-                    }}
-                  ></div>
-                  <div className="hosp-doctor-meta">
-                    <h4>{doc.name}</h4>
-                    <span>{doc.designation}</span>
-                    {doc.bio && <p>{doc.bio}</p>}
-                    <a className="svc-doc-book" href={`/doctors/${String(doc.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`}>View Profile →</a>
-                  </div>
-                </article>
+                <DoctorCard doc={doc} key={doc.id} hideHospitals servicePages={servicePages} />
               ))}
             </div>
           </div>

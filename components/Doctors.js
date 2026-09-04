@@ -1,31 +1,21 @@
 'use client';
 
-import { locationsOf } from '@/lib/locations';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { atLocation, locationsOf } from '@/lib/locations';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import DoctorCard from './DoctorCard';
 
-function initials(name) {
-  return (name || '')
-    .replace(/^(Brigadier|Brig\.?|Dr\.?|\(Dr\.\))\s*/gi, '')
-    .replace(/[()]/g, '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0])
-    .filter((c) => /[A-Za-z]/.test(c))
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-}
+const norm = (s) => String(s || '').trim().toLowerCase();
 
-const docSlug = (name) =>
-  String(name || '')
-    .toLowerCase()
-    .replace(/&/g, ' and ')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-export default function Doctors({ doctors = [] }) {
+export default function Doctors({ doctors: all = [], locations = [] }) {
   const trackRef = useRef(null);
   const [pageIndex, setPageIndex] = useState(0);
+  const [hospital, setHospital] = useState('');
+  // Group-wide doctors ("" location) practise at every centre.
+  const doctors = useMemo(
+    () => all.filter((d) => !hospital || locationsOf(d).length === 0 || atLocation(d, hospital)),
+    [all, hospital]
+  );
+  const pick = (name) => { setHospital(norm(name) === norm(hospital) ? '' : name); setPageIndex(0); };
   const [cardsPerView, setCardsPerView] = useState(4);
   const touchStartX = useRef(0);
 
@@ -97,6 +87,26 @@ export default function Doctors({ doctors = [] }) {
           </a>
         </div>
 
+        {locations.length > 1 && (
+          <div className="doctor-filters" role="group" aria-label="Filter featured doctors by hospital">
+            <button type="button" className={`doctor-filter${hospital === '' ? ' active' : ''}`} onClick={() => pick('')}>All hospitals</button>
+            {locations.map((l) => (
+              <button
+                key={l.id ?? l.name}
+                type="button"
+                className={`doctor-filter${norm(hospital) === norm(l.name) ? ' active' : ''}`}
+                onClick={() => pick(l.name)}
+              >
+                Kinder {l.name}
+              </button>
+            ))}
+            <a className="doctor-filter" href={`/doctors${hospital ? `?hospital=${encodeURIComponent(hospital)}` : ''}`}>Filter by speciality →</a>
+          </div>
+        )}
+
+        {doctors.length === 0 && (
+          <p className="section-intro" style={{ marginBottom: 24 }}>No doctors listed for this hospital yet — see <a href="/doctors">all doctors</a>.</p>
+        )}
         <div className="doctor-slider" aria-label="Featured Kinder specialists">
           <button
             className="slider-arrow slider-prev"
@@ -115,63 +125,9 @@ export default function Doctors({ doctors = [] }) {
               onTouchEnd={onTouchEnd}
             >
               {doctors.map((doc, i) => (
-                <article className="doctor-card slider-card" key={doc.id ?? i}>
-                  <div className="doctor-img">
-                    <span className="doctor-branch">{locationsOf(doc).join(' · ')}</span>
-                    {doc.imageUrl ? (
-                      <img
-                        src={doc.imageUrl}
-                        alt={doc.name}
-                        className="doctor-photo"
-                        referrerPolicy="no-referrer"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    ) : null}
-                    <svg
-                      className="doctor-watermark"
-                      viewBox="0 0 100 100"
-                      preserveAspectRatio="xMidYMid slice"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                    >
-                      <defs>
-                        <pattern id={`dgrid-${i}`} x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
-                          <circle cx="7" cy="7" r="1" fill="currentColor" />
-                        </pattern>
-                      </defs>
-                      <rect width="100" height="100" fill={`url(#dgrid-${i})`} />
-                      <path
-                        d="M50 78 C 30 62, 22 50, 30 38 C 36 30, 46 32, 50 40 C 54 32, 64 30, 70 38 C 78 50, 70 62, 50 78 Z"
-                        fill="currentColor"
-                        opacity="0.5"
-                      />
-                    </svg>
-                    <div className="doctor-initials">
-                      <span className="ini">{initials(doc.name)}</span>
-                      <span className="role-mini">{(doc.speciality || '').toUpperCase()}</span>
-                    </div>
-                  </div>
-                  <div className="doctor-info">
-                    <h4>{doc.name}</h4>
-                    <p>{doc.designation}</p>
-                    <span className="doctor-creds">{doc.bio}</span>
-                  </div>
-                  <div className="doctor-cta">
-                    <a
-                      className="doctor-cta-book"
-                      href={`https://api.whatsapp.com/send?phone=919446654500&text=${encodeURIComponent(`Hello Kinder Hospitals, I would like to book an appointment with ${doc.name}.`)}`}
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Book
-                    </a>
-                    <a className="doctor-cta-profile" href={`/doctors/${docSlug(doc.name)}`}>Profile</a>
-                  </div>
-                </article>
+                <div className="slider-card" key={doc.id ?? i}>
+                  <DoctorCard doc={doc} compact />
+                </div>
               ))}
             </div>
           </div>

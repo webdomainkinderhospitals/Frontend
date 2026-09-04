@@ -33,7 +33,7 @@ export default async function HomePage() {
       <QuickBar />
       <Stats settings={settings} />
       <CoeGrid />
-      <Doctors doctors={doctors} />
+      <Doctors doctors={doctors} locations={locations} />
       <Procedures procedures={procedures} />
       <Care />
       <Support />

@@ -4,6 +4,7 @@ import { slugify, matchesService, allServices } from '@/lib/services';
 import { atLocation, locationLabel } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
+import DoctorCard from '@/components/DoctorCard';
 
 export const revalidate = 60;
 
@@ -111,18 +112,7 @@ export default async function DoctorProfilePage({ params }) {
               </div>
               <div className="hosp-doctor-grid">
                 {colleagues.map((d) => (
-                  <article className="hosp-doctor-card" key={d.id}>
-                    <div
-                      className="hosp-doctor-img"
-                      style={{ backgroundImage: d.imageUrl ? `url('${d.imageUrl}')` : 'var(--mesh-card)' }}
-                    ></div>
-                    <div className="hosp-doctor-meta">
-                      <h4>{d.name}</h4>
-                      <span>{d.designation}</span>
-                      {locationLabel(d) && <p className="svc-doc-loc">{locationLabel(d)}</p>}
-                      <a className="svc-doc-book" href={`/doctors/${slugify(d.name)}`}>View Profile →</a>
-                    </div>
-                  </article>
+                  <DoctorCard doc={d} key={d.id} />
                 ))}
               </div>
             </div>
