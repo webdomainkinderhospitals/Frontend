@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { locationLabel } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 
@@ -32,7 +33,7 @@ export default async function StoriesPage() {
                     <p>“{t.quote}”</p>
                     <footer>
                       <strong>{t.patientName}</strong>
-                      <span>{[t.relation, t.location && `Kinder ${t.location}`].filter(Boolean).join(' · ')}</span>
+                      <span>{[t.relation, locationLabel(t)].filter(Boolean).join(' · ')}</span>
                     </footer>
                   </blockquote>
                 ))}

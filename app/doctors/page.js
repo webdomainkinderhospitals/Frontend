@@ -1,7 +1,8 @@
 import { getContent } from '@/lib/api';
-import { slugify } from '@/lib/services';
+import { allServices } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
+import DoctorDirectory from '@/components/DoctorDirectory';
 
 export const revalidate = 60;
 
@@ -17,18 +18,7 @@ const WHATSAPP_BOOK =
 export default async function DoctorsPage() {
   const content = await getContent();
   const { doctors, locations } = content;
-
-  const groups = [];
-  for (const loc of locations) {
-    const team = doctors.filter(
-      (d) => (d.location || '').toLowerCase() === (loc.name || '').toLowerCase()
-    );
-    if (team.length) groups.push({ name: loc.name, team });
-  }
-  const unassigned = doctors.filter(
-    (d) => !locations.some((l) => (l.name || '').toLowerCase() === (d.location || '').toLowerCase())
-  );
-  if (unassigned.length) groups.push({ name: 'Kinder Medical Group', team: unassigned });
+  const servicePages = allServices(content.specialities).map((s) => s.slug);
 
   return (
     <SiteChrome content={content}>
@@ -37,44 +27,14 @@ export default async function DoctorsPage() {
           crumb="Doctors"
           eyebrow="Our Specialists"
           titleHtml="Meet the <em>Kinder family of doctors</em>"
-          intro="Senior consultants practising under shared protocols, audit and clinical governance across every Kinder centre."
+          intro="Senior consultants practising under shared protocols, audit and clinical governance across every Kinder centre. Filter by hospital or speciality to find yours."
         />
 
-        {groups.map((group) => (
-          <section key={group.name}>
-            <div className="container">
-              <div className="section-head">
-                <div>
-                  <span className="section-eyebrow">Kinder {group.name}</span>
-                  <h2 className="section-title">
-                    Specialists at <em>{group.name}</em>
-                  </h2>
-                </div>
-              </div>
-              <div className="hosp-doctor-grid">
-                {group.team.map((doc, i) => (
-                  <article className="hosp-doctor-card" key={doc.id ?? i}>
-                    <div
-                      className="hosp-doctor-img"
-                      style={{ backgroundImage: doc.imageUrl ? `url('${doc.imageUrl}')` : 'var(--mesh-card)' }}
-                    ></div>
-                    <div className="hosp-doctor-meta">
-                      <h4>{doc.name}</h4>
-                      <span>{doc.designation}</span>
-                      {doc.bio && <p>{doc.bio}</p>}
-                      <div className="doc-card-links">
-                        <a href={`/doctors/${slugify(doc.name)}`} className="svc-doc-book">View Profile →</a>
-                        <a href={WHATSAPP_BOOK} target="_blank" rel="noopener" className="doctor-book-link">
-                          Book appointment →
-                        </a>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        ))}
+        <section className="dd-section">
+          <div className="container">
+            <DoctorDirectory doctors={doctors} locations={locations} servicePages={servicePages} />
+          </div>
+        </section>
 
         <section className="hosp-cta-wrap">
           <div className="container">

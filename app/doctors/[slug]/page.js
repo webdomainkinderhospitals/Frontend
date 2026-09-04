@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { slugify, matchesService, allServices } from '@/lib/services';
+import { atLocation, locationLabel } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
+import DoctorCard from '@/components/DoctorCard';
 
 export const revalidate = 60;
 
@@ -33,10 +35,8 @@ export default async function DoctorProfilePage({ params }) {
   if (!doc) notFound();
 
   const service = allServices(content.specialities).find((s) => matchesService(doc.speciality, s.name));
-  const loc = content.locations.find(
-    (l) => (l.name || '').toLowerCase() === (doc.location || '').toLowerCase()
-  );
-  const locSlug = loc && (loc.slug || slugify(loc.name));
+  // Every centre this doctor practises at.
+  const docLocs = content.locations.filter((l) => atLocation(doc, l.name));
   const bioText = doc.fullBio || doc.bio || '';
   const paragraphs = bioText.split(/\n\s*\n|\n/).map((p) => p.trim()).filter(Boolean);
   const colleagues = content.doctors
@@ -50,7 +50,7 @@ export default async function DoctorProfilePage({ params }) {
           crumb={doc.name}
           eyebrow={doc.speciality || 'Our Specialists'}
           titleHtml={esc(doc.name)}
-          intro={[doc.designation, doc.location ? `Kinder ${doc.location}` : ''].filter(Boolean).join(' · ')}
+          intro={[doc.designation, locationLabel(doc)].filter(Boolean).join(' · ')}
         />
 
         <section>
@@ -74,9 +74,9 @@ export default async function DoctorProfilePage({ params }) {
                       <span className="doc-tag">{doc.speciality}</span>
                     )
                   )}
-                  {loc && (
-                    <a className="doc-tag" href={`/hospitals/${locSlug}`}>Kinder {loc.name} →</a>
-                  )}
+                  {docLocs.map((l) => (
+                    <a className="doc-tag" key={l.id} href={`/hospitals/${l.slug || slugify(l.name)}`}>Kinder {l.name} →</a>
+                  ))}
                 </div>
                 {paragraphs.length > 0 ? (
                   paragraphs.map((p, i) => <p key={i} className="doc-profile-text">{p}</p>)
@@ -112,18 +112,7 @@ export default async function DoctorProfilePage({ params }) {
               </div>
               <div className="hosp-doctor-grid">
                 {colleagues.map((d) => (
-                  <article className="hosp-doctor-card" key={d.id}>
-                    <div
-                      className="hosp-doctor-img"
-                      style={{ backgroundImage: d.imageUrl ? `url('${d.imageUrl}')` : 'var(--mesh-card)' }}
-                    ></div>
-                    <div className="hosp-doctor-meta">
-                      <h4>{d.name}</h4>
-                      <span>{d.designation}</span>
-                      {d.location && <p className="svc-doc-loc">Kinder {d.location}</p>}
-                      <a className="svc-doc-book" href={`/doctors/${slugify(d.name)}`}>View Profile →</a>
-                    </div>
-                  </article>
+                  <DoctorCard doc={d} key={d.id} />
                 ))}
               </div>
             </div>

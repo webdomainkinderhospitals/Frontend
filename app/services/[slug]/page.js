@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
+import { locationsOf, locationLabel } from '@/lib/locations';
 import { findService, doctorsForService, slugify } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
+import DoctorCard from '@/components/DoctorCard';
 
 export const revalidate = 60;
 
@@ -32,7 +34,7 @@ export default async function ServicePage({ params }) {
 
   const team = doctorsForService(svc.name, content.doctors);
   const related = svc.group.items.filter((i) => i.name !== svc.name);
-  const centres = [...new Set(team.map((d) => d.location).filter(Boolean))];
+  const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
 
   return (
     <SiteChrome content={content}>
@@ -66,22 +68,7 @@ export default async function ServicePage({ params }) {
             {team.length > 0 ? (
               <div className="hosp-doctor-grid">
                 {team.map((doc) => (
-                  <article className="hosp-doctor-card" key={doc.id}>
-                    <div
-                      className="hosp-doctor-img"
-                      style={{ backgroundImage: doc.imageUrl ? `url('${doc.imageUrl}')` : 'var(--mesh-card)' }}
-                    ></div>
-                    <div className="hosp-doctor-meta">
-                      <h4>{doc.name}</h4>
-                      <span>{[doc.designation, doc.speciality].filter(Boolean).join(' · ')}</span>
-                      {doc.location && <p className="svc-doc-loc">Kinder {doc.location}</p>}
-                      {doc.bio && <p>{doc.bio}</p>}
-                      <div className="doc-card-links">
-                        <a className="svc-doc-book" href={`/doctors/${slugify(doc.name)}`}>View Profile →</a>
-                        <a className="svc-doc-book" href={enquire(svc.name)} target="_blank" rel="noopener">Book →</a>
-                      </div>
-                    </div>
-                  </article>
+                  <DoctorCard doc={doc} key={doc.id} />
                 ))}
               </div>
             ) : (

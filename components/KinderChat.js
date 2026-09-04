@@ -1,5 +1,6 @@
 'use client';
 
+import { atLocation, locationLabel, locationsOf } from '@/lib/locations';
 import { useEffect, useRef, useState } from 'react';
 import { allServices, doctorsForService } from '@/lib/services';
 
@@ -89,7 +90,7 @@ function buildReply(text, content) {
     return n && (q.includes(n) || n.split(' ').filter((w) => w.length > 3).some((w) => q.includes(w)));
   });
   if (namedDoc && /dr|doctor|who|meet|about/.test(q)) {
-    const where = namedDoc.location ? ` at Kinder ${namedDoc.location}` : '';
+    const where = locationLabel(namedDoc) ? ` at ${locationLabel(namedDoc)}` : '';
     return reply(
       `${namedDoc.name} — ${[namedDoc.designation, namedDoc.speciality].filter(Boolean).join(', ')}${where}. ${namedDoc.bio || ''}`,
       [
@@ -106,7 +107,7 @@ function buildReply(text, content) {
     return (name && q.includes(name)) || (city && q.includes(city)) || (name === 'bengaluru' && /bangalore/.test(q));
   });
   if (loc) {
-    const team = doctors.filter((d) => norm(d.location) === norm(loc.name));
+    const team = doctors.filter((d) => atLocation(d, loc.name));
     return reply(
       `Kinder ${loc.name} — ${loc.tagline || `${loc.city}, ${loc.country}`}. ${loc.address || ''}${loc.phone ? ` Phone: ${loc.phone}.` : ''}${team.length ? ` ${team.length} of our specialists practise here.` : ''}`,
       [
@@ -135,7 +136,7 @@ function buildReply(text, content) {
   }
   if (svc && svc.slug) {
     const team = doctorsForService(svc.name, doctors);
-    const centres = [...new Set(team.map((d) => d.location).filter(Boolean))];
+    const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
     return reply(
       `${svc.name} is part of our ${svc.group?.title || 'care'} services. ${svc.description || ''}${team.length ? ` We have ${team.length} specialist${team.length === 1 ? '' : 's'} for it${centres.length ? ` at Kinder ${centres.join(', Kinder ')}` : ''}.` : ''} Would you like to see the full page or book a consultation?`,
       [
