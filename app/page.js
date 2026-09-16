@@ -2,7 +2,8 @@ import { getContent } from '@/lib/api';
 
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
-import Hero from '@/components/Hero';
+import HomeHero from '@/components/HomeHero';
+import styles from './home.module.css';
 import QuickBar from '@/components/QuickBar';
 import Stats from '@/components/Stats';
 import CoeGrid from '@/components/CoeGrid';
@@ -29,7 +30,8 @@ export default async function HomePage() {
     <>
       <TopBar settings={settings} locations={locations} />
       <Header settings={settings} locations={locations} specialities={specialities} />
-      <Hero settings={settings} locations={locations} />
+      <main className={styles.home}>
+      <HomeHero settings={settings} locations={locations} />
       <QuickBar />
       <Stats settings={settings} />
       <CoeGrid />
@@ -41,6 +43,7 @@ export default async function HomePage() {
       <News news={news} />
       <Accreditations />
       <Locations locations={locations} />
+      </main>
       <Footer settings={settings} locations={locations} />
       <KinderChat content={content} />
       <WhatsAppFloat />
