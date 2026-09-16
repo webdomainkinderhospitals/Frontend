@@ -1,3 +1,4 @@
+import ContentPages from '@/components/ContentPages';
 import { getContent } from '@/lib/api';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -135,6 +136,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
+        <ContentPages title="More about Kinder Hospitals" pages={(content.pages || []).filter((p) => ['About Us', 'Leadership'].includes(p.category))} />
         <section className="hosp-cta-wrap">
           <div className="container">
             <div className="cta-strip">

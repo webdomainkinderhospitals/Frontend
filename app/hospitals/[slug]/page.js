@@ -1,3 +1,4 @@
+import ContentPages from '@/components/ContentPages';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { atLocation } from '@/lib/locations';
@@ -65,6 +66,7 @@ export default async function HospitalDetail({ params }) {
     <>
       <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
       <HospitalPage loc={loc} specialities={specialities} centreSpecific={ownSpecialities.length > 0} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
+      <ContentPages title="Information for your visit" pages={(content.pages || []).filter(at)} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <KinderChat content={content} />

@@ -1,3 +1,4 @@
+import ContentPages from '@/components/ContentPages';
 import { getContent } from '@/lib/api';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -6,38 +7,11 @@ export const revalidate = 60;
 
 export const metadata = {
   title: 'Health Packages · Kinder Hospitals',
-  description: 'Kinder Jananimitra maternity package, health check-ups and procedures — from ₹1,550 onwards.',
+  description: 'Explore Kinder hospital maternity and health check-up packages, inclusions and eligibility.',
 };
 
 const wa = (msg) =>
   'https://api.whatsapp.com/send?phone=919446654500&text=' + encodeURIComponent(msg);
-
-const PACKAGES = [
-  {
-    id: 'jananimitra',
-    name: 'Kinder Jananimitra Package',
-    tag: 'Maternity',
-    text: "Comprehensive pregnancy package — from your first scan to your baby's first vaccines, with fixed transparent pricing.",
-  },
-  {
-    id: 'comprehensive',
-    name: 'Comprehensive Health Check-Up',
-    tag: 'Full body',
-    text: 'Complete screening with consultations, lab work and imaging — your annual health picture in one visit.',
-  },
-  {
-    id: 'wellwomen',
-    name: 'Well Women Health Check-Up',
-    tag: "Women's health",
-    text: 'Tailored screening for women — gynaecology consult, breast screening, hormones and more.',
-  },
-  {
-    id: 'prepregnancy',
-    name: 'Pre-Pregnancy Health Check-Up',
-    tag: 'Planning',
-    text: 'Plan parenthood with confidence — fertility assessment and pre-conception screening for couples.',
-  },
-];
 
 export default async function PackagesPage() {
   const content = await getContent();
@@ -48,35 +22,12 @@ export default async function PackagesPage() {
         <PageHero
           crumb="Packages"
           eyebrow="Health Packages"
-          titleHtml="Transparent packages, <em>from ₹1,550 onwards</em>"
-          intro="Silver, Golden and Platinum tiers across our centres — fixed pricing, senior consultants, no surprises."
+          titleHtml="Care packages for <em>every stage of life</em>"
+          intro="Explore package details, included services and eligibility. Our team can help you choose the right care."
         />
 
-        <section id="checkup">
-          <div className="container">
-            <div className="pkg-grid">
-              {PACKAGES.map((p) => (
-                <article className="pkg-card" key={p.id} id={p.id}>
-                  <span className="pkg-tag">{p.tag}</span>
-                  <h3>{p.name}</h3>
-                  <p>{p.text}</p>
-                  <a
-                    className="btn btn-primary"
-                    href={wa(`Hello Kinder Hospitals, I would like to know more about the ${p.name}.`)}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Enquire on WhatsApp →
-                  </a>
-                </article>
-              ))}
-            </div>
-            <p className="pkg-tiers" id="tiers">
-              <strong>Silver · Golden · Platinum tiers</strong> — every package is available in
-              tiers starting from ₹1,550, so you choose the depth of screening that fits.
-            </p>
-          </div>
-        </section>
+        <ContentPages title="Our care packages" pages={(content.pages || []).filter((p) => p.category === 'Packages')} />
+        {!(content.pages || []).some((p) => p.category === 'Packages') && <section><div className="container"><p>Please contact our team for available packages, current prices and eligibility.</p></div></section>}
 
         {procedures.length > 0 && (
           <section style={{ background: 'var(--bg-soft)' }}>
