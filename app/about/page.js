@@ -1,7 +1,7 @@
 import ContentPages from '@/components/ContentPages';
 import { getContent } from '@/lib/api';
 import SiteChrome from '@/components/SiteChrome';
-import PageHero from '@/components/PageHero';
+import styles from './about.module.css';
 
 export const revalidate = 60;
 
@@ -24,15 +24,32 @@ export default async function AboutPage() {
   const content = await getContent();
   return (
     <SiteChrome content={content}>
-      <main>
-        <PageHero
-          crumb="About Us"
-          eyebrow="The Kinder Medical Group"
-          titleHtml="Kindness, from Singapore <em>to every tiny heartbeat</em>"
-          intro="A unit of Kindorama Healthcare Pvt Ltd — a women's and children's healthcare network built on one promise: world-class care, delivered with kindness, close to home."
-        />
+      <main className={styles.about}>
+        <section className={styles.hero}>
+          <div className="container">
+            <nav className={styles.breadcrumb} aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">About us</span></nav>
+            <div className={styles.heroGrid}>
+              <div>
+                <span className={styles.eyebrow}>THE KINDER MEDICAL GROUP</span>
+                <h1>Expert care.<br /><em>A kinder touch.</em></h1>
+                <p>A women&apos;s and children&apos;s healthcare network built on one promise: world-class care, delivered with kindness, close to home.</p>
+                <div className={styles.heroActions}><a href="#story" className="btn btn-primary">Discover our story <span aria-hidden="true">↗</span></a><a href="/#hospitals" className={styles.textLink}>Find a Kinder hospital <span aria-hidden="true">→</span></a></div>
+                <span className={styles.legal}>A unit of Kindorama Healthcare Pvt Ltd</span>
+              </div>
+              <aside className={styles.brandPanel} aria-label="The Kinder philosophy">
+                <span className={styles.panelLabel}>OUR PURPOSE, EVERY DAY</span>
+                <svg className={styles.heart} viewBox="0 0 120 110" fill="none" aria-hidden="true"><path d="M60 96 17 55C-12 25 30-9 60 23 90-9 132 25 103 55Z" stroke="currentColor" strokeWidth="2"/><path d="M30 55h15l8-17 14 35 9-18h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <h2>Kindness at the heart<br />of every tiny heartbeat.</h2>
+                <div className={styles.panelFooter}><span>Rooted in Singapore</span><span>Connected by care</span></div>
+              </aside>
+            </div>
+          </div>
+        </section>
+        <nav className={styles.sectionNav} aria-label="Explore About Us"><div className="container">
+          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ['leadership', 'Leadership']].map(([id, label], i) => <a key={id} href={`#${id}`}><span>0{i + 1}</span>{label}<span aria-hidden="true">↗</span></a>)}
+        </div></nav>
 
-        <section id="story">
+        <section id="story" className={styles.story}>
           <div className="container">
             <div className="hosp-about-grid">
               <div className="hosp-about-text">
@@ -50,7 +67,7 @@ export default async function AboutPage() {
                   neonatology and paediatric care at affordable cost, to all strata of society.
                 </p>
               </div>
-              <ul className="hosp-highlights">
+              <ul className={`hosp-highlights ${styles.highlights}`}>
                 {[
                   'NABH accredited · Nursing Excellence',
                   '5 centres across India & Singapore',
@@ -69,7 +86,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        <section id="vision" style={{ background: 'var(--bg-soft)' }}>
+        <section id="vision" className={styles.purpose}>
           <div className="container">
             <div className="section-head">
               <div>
@@ -79,15 +96,15 @@ export default async function AboutPage() {
             </div>
             <div className="value-grid">
               <div className="value-card">
-                <h4>Our Vision</h4>
+                <span className={styles.cardNumber}>01 / THE FUTURE WE SEE</span><h3>Our Vision</h3>
                 <p>To be the most trusted women's and children's healthcare network in the region — where every family receives international-standard care with genuine warmth.</p>
               </div>
               <div className="value-card">
-                <h4>Our Mission</h4>
+                <span className={styles.cardNumber}>02 / THE WORK WE DO</span><h3>Our Mission</h3>
                 <p>Comprehensive, personalised maternity, IVF, neonatology and paediatric care at affordable cost — upholding international protocols in every city we serve.</p>
               </div>
               <div className="value-card">
-                <h4>Our Values</h4>
+                <span className={styles.cardNumber}>03 / WHAT GUIDES US</span><h3>Our Values</h3>
                 <p>Kindness first. Clinical excellence. Honesty with every family. One standard of care across every Kinder centre.</p>
               </div>
             </div>
@@ -102,7 +119,7 @@ export default async function AboutPage() {
                 <h2 className="section-title">A growing family <em>since 2000</em></h2>
               </div>
             </div>
-            <ol className="timeline">
+            <ol className={styles.journey}>
               {MILESTONES.map(([year, text]) => (
                 <li key={year}>
                   <span className="timeline-year">{year}</span>
@@ -113,7 +130,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        <section id="leadership" style={{ background: 'var(--bg-soft)' }}>
+        <section id="leadership" className={styles.leadership}>
           <div className="container">
             <div className="section-head">
               <div>
