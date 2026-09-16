@@ -1,3 +1,4 @@
+import ContentBody from '@/components/ContentBody';
 import DoctorCard from '@/components/DoctorCard';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -137,6 +138,7 @@ export default function HospitalPage({ loc, specialities = [], centreSpecific = 
               {specialities.map((spec, i) => {
                 const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
                 const Tag = servicePages.includes(slug) ? 'a' : 'div';
+                if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary>{spec.name}</summary><ContentBody text={spec.fullDescription} /></details>;
                 return (
                   <Tag className="svc-card" key={spec.id ?? i} title={spec.description || undefined} {...(Tag === 'a' ? { href: `/services/${slug}` } : {})}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>

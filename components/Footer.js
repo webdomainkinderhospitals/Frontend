@@ -206,7 +206,7 @@ export default function Footer({ settings, locations = [] }) {
             <a href="/#home">Privacy Policy</a>
             <a href="/#home">Terms &amp; Conditions</a>
             <a href="/#home">Cookies</a>
-            <a href="/#home">Sitemap</a>
+            <a href="/information">Patient Information</a>
           </div>
         </div>
       </div>

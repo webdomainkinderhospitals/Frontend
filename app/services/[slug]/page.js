@@ -1,3 +1,4 @@
+import ContentBody from '@/components/ContentBody';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { locationsOf, locationLabel } from '@/lib/locations';
@@ -49,6 +50,7 @@ export default async function ServicePage({ params }) {
           }
         />
 
+        {svc.fullDescription && <section><div className="container"><ContentBody text={svc.fullDescription} /></div></section>}
         {/* Doctors for this service */}
         <section>
           <div className="container">
