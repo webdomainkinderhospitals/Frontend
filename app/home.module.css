@@ -24,7 +24,7 @@
 .imageCaption div > span { font-size: 13px; color: var(--muted); margin-top: 3px; }
 .heart { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 32px; flex-shrink: 0; }
 .sideNote { position: absolute; right: -14px; top: 42%; writing-mode: vertical-rl; letter-spacing: .2em; font-size: 10px; color: var(--muted); }
-.home :global(.quick-bar) { margin-top: 0; border-radius: 0 0 16px 16px; box-shadow: 0 8px 30px #44305f08; border: 1px solid #e9e1ee; background: white; }
+.home :global(.quick-bar) { margin-top: -24px; border-radius: 16px; box-shadow: 0 8px 30px #44305f08; border: 1px solid #e9e1ee; background: white; }
 .home :global(.quick-item) { padding: 25px 22px; }
 .home :global(.quick-icon) { background: var(--primary-light); color: var(--primary); border-radius: 12px; }
 .home :global(.quick-text strong) { color: var(--ink); font-size: 15px; }
