@@ -1,0 +1,66 @@
+.about { --about-teal: #196a66; }
+.about > section { padding: 88px 0; }
+.about .hero { padding: 28px 0 72px; background: radial-gradient(ellipse at 94% 0%, #f7e8ef, transparent 50%), linear-gradient(135deg, #faf8ff, #f2eef9); }
+.breadcrumb { display: flex; gap: 12px; color: #70627e; font-size: 13px; margin-bottom: 44px; }
+.breadcrumb a:hover { color: var(--primary-dark); text-decoration: underline; }
+.heroGrid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 72px; align-items: center; }
+.eyebrow, .panelLabel { font-size: 11px; font-weight: 700; letter-spacing: .17em; }
+.eyebrow { color: var(--primary-dark); }
+.hero h1 { font-size: clamp(44px, 5.2vw, 72px); font-weight: 600; line-height: 1.08; letter-spacing: -.045em; margin: 22px 0; }
+.hero h1 em { color: var(--primary); font-style: normal; }
+.hero p { max-width: 560px; font-size: 18px; line-height: 1.8; color: var(--ink-soft); }
+.heroActions { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 30px; }
+.textLink { font-size: 14px; font-weight: 600; color: var(--primary-dark); }
+.textLink:hover { text-decoration: underline; }
+.legal { display: block; margin-top: 26px; font-size: 12px; color: #70627e; }
+.brandPanel { padding: 36px; border-radius: 120px 24px 24px 24px; background: linear-gradient(145deg, #3b236b, #684aa3); color: #fff; box-shadow: 0 24px 60px #45257419; text-align: center; }
+.panelLabel { display: block; color: #e3d5f4; margin-top: 16px; }
+.heart { display: block; width: 120px; height: 110px; margin: 32px auto; color: #f5b3c7; }
+.brandPanel h2 { font-size: clamp(25px, 2.6vw, 35px); line-height: 1.35; letter-spacing: -.025em; }
+.panelFooter { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #ffffff30; padding-top: 24px; margin-top: 32px; font-size: 11px; color: #e3d5f4; }
+.sectionNav { border-bottom: 1px solid var(--line); background: white; }
+.sectionNav > div { display: grid; grid-template-columns: repeat(4, 1fr); }
+.sectionNav a { display: flex; gap: 14px; align-items: center; padding: 24px 18px; font-weight: 600; font-size: 14px; border-right: 1px solid var(--line); }
+.sectionNav a:first-child { border-left: 1px solid var(--line); }
+.sectionNav a span:first-child { font-size: 11px; color: var(--primary); }
+.sectionNav a span:last-child { margin-left: auto; }
+.sectionNav a:hover { background: #f8f5fc; color: var(--primary); }
+.about :global(.section-title) { font-size: clamp(30px, 3.4vw, 44px); font-weight: 600; line-height: 1.18; letter-spacing: -.035em; }
+.about :global(.section-title em) { font-style: normal; }
+.story :global(.hosp-about-grid) { gap: 72px; align-items: start; }
+.story :global(.hosp-about-text p) { font-size: 16px; line-height: 1.95; }
+.highlights { padding: 30px !important; background: #f1f7f5; border: 1px solid #d9e8e3; border-radius: 18px; }
+.highlights li { padding: 14px 0 !important; border: 0; border-bottom: 1px solid #d9e8e3; border-radius: 0; background: transparent !important; color: #234f48; }
+.highlights li:last-child { border-bottom: 0; }
+.highlights li svg { color: var(--about-teal); }
+.purpose { background: #faf8fd; border-block: 1px solid #eee7f6; }
+.purpose :global(.value-grid) { gap: 24px; }
+.purpose :global(.value-card) { padding: 32px; border: 1px solid var(--line); border-radius: 16px; box-shadow: none; background: white; }
+.cardNumber { display: block; font-size: 10px; color: var(--primary); font-weight: 700; letter-spacing: .12em; margin-bottom: 32px; }
+.purpose h3 { font-size: 26px; margin-bottom: 16px; color: var(--primary-dark); }
+.purpose p { line-height: 1.85; color: var(--ink-soft); }
+.journey { display: grid; grid-template-columns: repeat(3, 1fr); list-style: none; gap: 28px; margin-top: 36px; }
+.journey li { padding: 26px 26px 30px; border-top: 2px solid #b49bdb; background: #faf8fc; border-radius: 0 0 12px 12px; }
+.journey :global(.timeline-year) { font-size: 34px; font-weight: 600; letter-spacing: -.03em; color: var(--primary); background: none; padding: 0; display: block; margin-bottom: 16px; }
+.journey p { color: var(--ink-soft); font-size: 15px; line-height: 1.8; }
+.leadership { background: #f1f7f5; }
+.leadership :global(.chairman-quote) { max-width: 920px; padding: 0 0 0 32px; border: 0; border-left: 3px solid #78a59b; border-radius: 0; box-shadow: none; background: transparent; margin: 36px 0 0; text-align: left; }
+.leadership :global(.chairman-quote p) { font-size: clamp(21px, 2.4vw, 29px); line-height: 1.65; color: #294c45; }
+.leadership :global(.chairman-quote footer) { margin-top: 28px; }
+.about :global(.editorial-card) { border-radius: 16px; box-shadow: none; }
+.about :global(.cta-strip) { background: #3b2863; color: white; border: 0; border-radius: 20px; padding: 44px; }
+.about :global(.cta-strip h3), .about :global(.cta-strip p) { color: white; }
+.about a:focus-visible { outline: 3px solid #ad79cc; outline-offset: 5px; }
+@media (max-width: 900px) { .heroGrid { gap: 32px; } .brandPanel { padding: 28px 22px; } .story :global(.hosp-about-grid) { gap: 32px; } .journey { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+ .about > section { padding: 52px 0; } .about .hero { padding: 24px 0 40px; }
+ .breadcrumb { margin-bottom: 30px; } .heroGrid { grid-template-columns: 1fr; gap: 36px; }
+ .hero p { font-size: 16px; } .brandPanel { border-radius: 64px 20px 20px 20px; }
+ .heart { width: 90px; height: 83px; margin: 22px auto; }
+ .sectionNav > div { grid-template-columns: repeat(2, 1fr); padding: 0; }
+ .sectionNav a { padding: 18px; border-bottom: 1px solid var(--line); }
+ .purpose :global(.value-card) { padding: 26px; } .cardNumber { margin-bottom: 22px; }
+ .journey { grid-template-columns: 1fr; gap: 16px; } .journey li { padding: 22px; }
+ .leadership :global(.chairman-quote) { padding-left: 20px; }
+ .about :global(.cta-strip) { padding: 28px; }
+}
