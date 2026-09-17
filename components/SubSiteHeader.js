@@ -21,15 +21,16 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   }, []);
 
   const home = `/hospitals/${slug}`;
+  // The centre's own menu, in the order the group site tree lists it. The
+  // full list lives in the footer; the bar carries what a visitor needs most.
   const items = [
     { label: 'Home', href: home },
     { label: 'About', href: `${home}#about` },
     sections.care && { label: 'Our Care', href: `${home}#care` },
     sections.specialities && { label: 'Specialities', href: `${home}#specialities` },
     sections.doctors && { label: 'Doctors', href: `${home}#doctors` },
-    sections.procedures && { label: 'Treatments', href: `${home}#procedures` },
-    sections.testimonials && { label: 'Patient Stories', href: `${home}#testimonials` },
-    sections.news && { label: 'News & Events', href: `${home}#news` },
+    sections.facilities && { label: 'Facilities', href: `${home}#facilities` },
+    { label: 'Patient Services', href: `${home}#patient-services` },
     { label: 'Contact', href: `${home}#contact` },
   ].filter(Boolean);
 

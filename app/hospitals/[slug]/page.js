@@ -49,7 +49,7 @@ export default async function HospitalDetail({ params }) {
         settings={content.settings}
       />
       <ContentPages title="Information for your visit" pages={data.infoPages} />
-      <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
+      <SubSiteFooter loc={loc} settings={content.settings} slug={slug} sections={data.sections} />
       <WhatsAppFloat />
       <KinderChat content={content} />
       <ScrollEffects />

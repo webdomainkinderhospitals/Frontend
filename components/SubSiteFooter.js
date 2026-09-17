@@ -1,6 +1,8 @@
+import { locationSectionsFor } from '@/lib/site-tree';
+
 // Compact footer for a hospital sub-website: this centre's details only,
 // plus the corporate-site link. No other hospitals are listed here.
-export default function SubSiteFooter({ loc, settings, slug }) {
+export default function SubSiteFooter({ loc, settings, slug, sections = {} }) {
   const home = `/hospitals/${slug}`;
   return (
     <footer className="subsite-footer" id="contact">
@@ -26,10 +28,12 @@ export default function SubSiteFooter({ loc, settings, slug }) {
             )}
           </div>
           <div>
-            <h5>Quick links</h5>
+            <h5>On this centre</h5>
             <a href={home}>Home</a>
             <a href={`${home}#about`}>About this centre</a>
-            <a href={`${home}#contact`}>Contact</a>
+            {locationSectionsFor(sections).map((section) => (
+              <a key={section.label} href={`${home}${section.hash}`}>{section.label}</a>
+            ))}
             <a href="/" className="subsite-footer-corp">Kinder Medical Group — Corporate Website →</a>
           </div>
         </div>

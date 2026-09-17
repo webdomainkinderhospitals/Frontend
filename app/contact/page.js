@@ -1,6 +1,7 @@
 import { getContent } from '@/lib/api';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
+import EnquiryForm from '@/components/EnquiryForm';
 
 export const revalidate = 60;
 
@@ -56,7 +57,20 @@ export default async function ContactPage() {
           </div>
         </section>
 
-        <section style={{ background: 'var(--bg-soft)' }}>
+        <section id="enquiry">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">General enquiry</span>
+                <h2 className="section-title">Send us <em>your question</em></h2>
+                <p className="hosp-section-intro">Tell us what you need and where you are — a care coordinator will come back to you. For appointments, WhatsApp is usually fastest.</p>
+              </div>
+            </div>
+            <EnquiryForm mode="enquiry" email={settings.email} locations={locations} />
+          </div>
+        </section>
+
+        <section id="locations" style={{ background: 'var(--bg-soft)' }}>
           <div className="container">
             <div className="section-head">
               <div>
@@ -78,6 +92,19 @@ export default async function ContactPage() {
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="feedback">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Feedback &amp; grievance redressal</span>
+                <h2 className="section-title">Tell us when we <em>get it wrong</em></h2>
+                <p className="hosp-section-intro">Compliments, suggestions and complaints all reach the centre&apos;s management. A grievance is acknowledged and taken up with the department concerned; if you are not satisfied with the response, ask for it to be escalated to the centre head.</p>
+              </div>
+            </div>
+            <EnquiryForm mode="feedback" email={settings.email} locations={locations} />
           </div>
         </section>
 

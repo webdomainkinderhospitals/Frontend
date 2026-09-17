@@ -45,7 +45,7 @@ export default async function HospitalCareDetail({ params }) {
     <>
       <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
       <KochiCarePage page={page} content={content} loc={loc} hospitalSlug={slug} />
-      <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
+      <SubSiteFooter loc={loc} settings={content.settings} slug={slug} sections={sections} />
       <WhatsAppFloat />
       <KinderChat content={content} />
       <ScrollEffects />

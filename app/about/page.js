@@ -1,4 +1,6 @@
 import ContentPages from '@/components/ContentPages';
+import Accreditations from '@/components/Accreditations';
+import { HubProse } from '@/components/Hub';
 import { getContent } from '@/lib/api';
 import SiteChrome from '@/components/SiteChrome';
 import styles from './about.module.css';
@@ -46,7 +48,7 @@ export default async function AboutPage() {
           </div>
         </section>
         <nav className={styles.sectionNav} aria-label="Explore About Us"><div className="container">
-          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ['leadership', 'Leadership']].map(([id, label], i) => <a key={id} href={`#${id}`}><span>0{i + 1}</span>{label}<span aria-hidden="true">↗</span></a>)}
+          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ['leadership', 'Leadership'], ['accreditations', 'Accreditations'], ['quality', 'Quality & safety'], ['csr', 'CSR'], ['academics', 'Academics']].map(([id, label], i) => <a key={id} href={`#${id}`}><span>0{i + 1}</span>{label}<span aria-hidden="true">↗</span></a>)}
         </div></nav>
 
         <section id="story" className={styles.story}>
@@ -152,6 +154,44 @@ export default async function AboutPage() {
             </blockquote>
           </div>
         </section>
+
+        <section id="accreditations" style={{ background: 'var(--bg-soft)' }}>
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Accreditations &amp; certifications</span>
+                <h2 className="section-title">Standards we are <em>held to</em></h2>
+                <p className="hosp-section-intro">Accreditation is an outside audit of how we actually work — protocols, infection control, records, consent and outcomes. Certificates for each centre are displayed at its reception and available on request.</p>
+              </div>
+            </div>
+            <Accreditations />
+          </div>
+        </section>
+
+        <HubProse id="quality" eyebrow="Quality &amp; patient safety" title={<>One standard of care, <em>every centre</em></>}
+          intro="Our centres work to shared clinical protocols with audit and clinical governance across the group, so the care a family receives does not depend on which Kinder hospital they walk into."
+          points={[
+            'Shared clinical protocols across all centres',
+            'Clinical audit and governance review',
+            'Infection-control and hand-hygiene programmes',
+            'Informed consent before every procedure',
+            'Incident reporting, with learning shared across the group',
+            'Patient feedback reviewed by each centre\u2019s management',
+          ]}>
+          <p><a className="view-all" href="/patients/patient-rights">Patient rights &amp; responsibilities →</a></p>
+        </HubProse>
+
+        <HubProse id="csr" eyebrow="CSR" soft title={<>Care beyond <em>our walls</em></>}
+          intro="Kinder teams run health camps, screening drives and awareness programmes in the communities around our centres, often with schools, local bodies and partner organisations. Centres publish the camps they are running under news and events."
+          points={['Community health and screening camps', 'Awareness drives on maternal and child health', 'School and community education sessions', 'Support for families who need help accessing care']}>
+          <p><a className="view-all" href="/news">See camps &amp; events →</a></p>
+        </HubProse>
+
+        <HubProse id="academics" eyebrow="Academics" title={<>Teaching, <em>training, research</em></>}
+          intro="Structured teaching sessions, case discussions and skills training run alongside clinical work, and our consultants supervise trainees and visiting clinicians. For academic collaborations or observerships, write to our team."
+          points={['Structured teaching and case discussions', 'Skills and simulation training for clinical teams', 'Observerships and supervised training by arrangement', 'Academic collaboration enquiries welcome']}>
+          <p><a className="view-all" href="/contact">Enquire about academics →</a></p>
+        </HubProse>
 
         <ContentPages title="More about Kinder Hospitals" pages={(content.pages || []).filter((p) => ['About Us', 'Leadership'].includes(p.category))} />
         <section className="hosp-cta-wrap">
