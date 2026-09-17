@@ -1,3 +1,4 @@
+import KochiCarePage from '@/components/KochiCare';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { locationLabel } from '@/lib/locations';
@@ -13,6 +14,7 @@ export default async function InformationDetail({ params }) {
   const content = await getContent();
   const page = (content.pages || []).find((p) => p.slug === params.slug);
   if (!page) notFound();
+  if (page.category === 'Kochi Care') return <SiteChrome content={content}><KochiCarePage page={page} content={content} /></SiteChrome>;
   return <SiteChrome content={content}><main><article className="editorial-article container">
     <nav aria-label="Breadcrumb"><a href="/information">Hospital & patient information</a> / {page.category}</nav>
     <header><span className="section-eyebrow">{page.category}</span><h1>{page.title}</h1>

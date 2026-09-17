@@ -1,3 +1,4 @@
+import { KochiCareCards } from '@/components/KochiCare';
 import ContentBody from '@/components/ContentBody';
 import DoctorCard from '@/components/DoctorCard';
 const WHATSAPP_BOOK =
@@ -15,7 +16,7 @@ function slugOf(loc) {
   );
 }
 
-export default function HospitalPage({ loc, specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+export default function HospitalPage({ loc, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
   const highlights = String(loc.highlights || '')
     .split('\n')
     .map((h) => h.trim())
@@ -92,6 +93,8 @@ export default function HospitalPage({ loc, specialities = [], centreSpecific = 
       </div>
 
       {/* About + highlights */}
+      <KochiCareCards pages={carePages} />
+
       <section id="about">
         <div className="container">
           <div className="hosp-about-grid">

@@ -13,9 +13,6 @@ function Headline({ text }) {
 
 export default function HomeHero({ settings = {}, locations = [] }) {
   const [current, setCurrent] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(true);
   const names = locations.map((l) => l.name).filter(Boolean);
   const seeded = /spanning 5 hospitals across Cherthala/.test(settings.heroSubtitle || '');
@@ -48,16 +45,15 @@ export default function HomeHero({ settings = {}, locations = [] }) {
     update(); query.addEventListener('change', update);
     return () => query.removeEventListener('change', update);
   }, []);
-  const stopped = paused || hovered || focused || reducedMotion;
+  const stopped = reducedMotion;
   useEffect(() => {
     if (stopped) return;
     const timer = setInterval(() => setCurrent((n) => (n + 1) % 3), 6500);
     return () => clearInterval(timer);
   }, [stopped, current]);
-  function select(index) { setCurrent((index + slides.length) % slides.length); setPaused(true); }
+  function select(index) { setCurrent((index + slides.length) % slides.length); }
   return <section id="home" className={styles.hero} aria-label="Kinder Hospitals highlights" aria-roledescription="carousel"
-    onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-    onFocusCapture={() => setFocused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
+>
     {slides.map((slide, i) => <div key={slide.label} className={`${styles.slide} ${i === current ? styles.active : ''}`}
       aria-hidden={i !== current} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
       <img className={styles.image} src={slide.image} alt="" fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
@@ -80,7 +76,6 @@ export default function HomeHero({ settings = {}, locations = [] }) {
         {slides.map((slide, i) => <button type="button" key={slide.label} aria-label={`Show ${slide.label}`} aria-pressed={current === i} onClick={() => select(i)}><span /></button>)}
       </div>
       <button type="button" onClick={() => select(current + 1)} aria-label="Next highlight">→</button>
-      {!reducedMotion && <button type="button" className={styles.pause} onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play slideshow' : 'Pause slideshow'}>{paused ? 'Play' : 'Pause'}</button>}
     </div>
   </section>;
 }

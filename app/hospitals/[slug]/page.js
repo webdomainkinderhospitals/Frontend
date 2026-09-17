@@ -65,8 +65,8 @@ export default async function HospitalDetail({ params }) {
   return (
     <>
       <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
-      <HospitalPage loc={loc} specialities={specialities} centreSpecific={ownSpecialities.length > 0} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
-      <ContentPages title="Information for your visit" pages={(content.pages || []).filter(at)} />
+      <HospitalPage carePages={(content.pages || []).filter((p) => p.category === 'Kochi Care' && at(p))} loc={loc} specialities={specialities} centreSpecific={ownSpecialities.length > 0} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
+      <ContentPages title="Information for your visit" pages={(content.pages || []).filter((p) => p.category !== 'Kochi Care' && at(p))} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <KinderChat content={content} />
