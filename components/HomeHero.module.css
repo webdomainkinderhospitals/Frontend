@@ -19,7 +19,6 @@
 .dots button { background: transparent; border: 0; display: grid; place-items: center; }
 .dots span { width: 9px; height: 9px; border-radius: 20px; background: #ffffff80; transition: width .2s; }
 .dots button[aria-pressed='true'] span { width: 30px; background: var(--accent); }
-.controls .pause { font-size: 12px; border-radius: 24px; padding: 0 14px; }
 .hero a:focus-visible, .hero button:focus-visible { outline: 3px solid white; outline-offset: 4px; }
 @media (min-width: 1600px) { .inner { min-height: 640px; } }
 @media (max-width: 760px) {
