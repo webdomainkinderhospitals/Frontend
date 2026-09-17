@@ -1,0 +1,20 @@
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; pointer-events: none; background: transparent; }
+.progress span { display: block; height: 100%; transform-origin: left center; transform: scaleX(0); background: linear-gradient(90deg, var(--primary), var(--accent)); box-shadow: 0 0 12px rgba(242, 109, 139, .5); }
+
+.toTop {
+  position: fixed; left: 24px; bottom: 26px; z-index: 40;
+  width: 46px; height: 46px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: rgba(255, 255, 255, .92);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: var(--primary-dark); cursor: pointer;
+  box-shadow: 0 12px 30px rgba(63, 42, 134, .18);
+  opacity: 0; visibility: hidden; transform: translateY(14px);
+  transition: opacity .25s ease, transform .25s ease, visibility .25s, background .2s ease, color .2s ease;
+}
+.visible { opacity: 1; visibility: visible; transform: none; }
+.toTop:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.toTop svg { width: 19px; height: 19px; }
+.toTop:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+@media (max-width: 560px) { .toTop { left: 16px; bottom: 84px; width: 42px; height: 42px; } }
+@media (prefers-reduced-motion: reduce) { .toTop { transition: opacity .01s, visibility .01s; transform: none; } }
