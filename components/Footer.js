@@ -1,3 +1,5 @@
+import { siteTree, LEGAL_LINKS } from '@/lib/site-tree';
+
 const FOOTER_LOC_TAGS = {
   Cherthala: 'Cherthala · Flagship',
   Kochi: 'Kochi · Multispeciality',
@@ -15,6 +17,9 @@ const FOOTER_LOC_ADDR = {
 
 export default function Footer({ settings, locations = [] }) {
   const stats = settings.stats || [];
+  // The footer lists the site tree's top level, so every branch is reachable
+  // from the bottom of every page.
+  const sections = siteTree(locations).filter((node) => node.href !== '/');
   const footerLocations = locations.filter((l) => l.name !== 'Alappuzha').slice(0, 4);
   const year = new Date().getFullYear();
 
@@ -124,17 +129,14 @@ export default function Footer({ settings, locations = [] }) {
               </ul>
             </div>
 
-            {/* Quick Links */}
+            {/* Explore — the site tree's top level */}
             <div>
-              <h5>Quick Links</h5>
+              <h5>Explore</h5>
               <ul>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/about#leadership">Chairman&apos;s Message</a></li>
-                <li><a href="/doctors">Our Doctors</a></li>
-                <li><a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">ANC Class Booking</a></li>
-                <li><a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Online Consultation</a></li>
+                {sections.map((section) => (
+                  <li key={section.label}><a href={section.href}>{section.label}</a></li>
+                ))}
                 <li><a href="/stories">Patient Testimonials</a></li>
-                <li><a href={`mailto:${settings.email}?subject=Careers%20at%20Kinder`}>Careers at Kinder</a></li>
               </ul>
             </div>
 
@@ -203,9 +205,9 @@ export default function Footer({ settings, locations = [] }) {
             reserved.
           </span>
           <div className="footer-bottom-links">
-            <a href="/#home">Privacy Policy</a>
-            <a href="/#home">Terms &amp; Conditions</a>
-            <a href="/#home">Cookies</a>
+            {LEGAL_LINKS.map((link) => (
+              <a key={link.href} href={link.href}>{link.label}</a>
+            ))}
             <a href="/information">Patient Information</a>
           </div>
         </div>

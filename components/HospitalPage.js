@@ -121,16 +121,19 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
               <p>{loc.description || loc.address}</p>
             </div>
             {highlights.length > 0 && (
-              <ul className="hosp-highlights">
-                {highlights.map((h, i) => (
-                  <li key={i}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
-                    {h}
-                  </li>
-                ))}
-              </ul>
+              <div id="facilities" className="hosp-facilities">
+                <h3 className="hosp-facilities-title">Facilities at this centre</h3>
+                <ul className="hosp-highlights">
+                  {highlights.map((h, i) => (
+                    <li key={i}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         </div>
@@ -176,6 +179,35 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           </div>
         </section>
       )}
+
+      {/* Packages, insurance and consultation for this centre */}
+      <section id="patient-services">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <span className="section-eyebrow">Patient services · Kinder {loc.name}</span>
+              <h2 className="section-title">Packages, insurance <em>&amp; consultations</em></h2>
+              <p className="hosp-section-intro">Arrangements run across the group; our team at this centre confirms what applies to your visit.</p>
+            </div>
+          </div>
+          <div className="editorial-grid">
+            {[
+              { title: 'Packages & health checkups', text: 'Maternity, well-woman, pre-pregnancy and full-body packages with their inclusions and tiers.', href: '/packages', cta: 'See packages' },
+              { title: 'Insurance & TPA / cashless', text: 'Empanelment, pre-authorisation and what to bring for a cashless admission.', href: '/patients/insurance-and-tpa', cta: 'How it works' },
+              { title: 'Online consultation', text: 'Speak to a specialist from home — our coordinators will set up the consultation.', href: WHATSAPP_BOOK, cta: 'Book a consultation', external: true },
+              { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: WHATSAPP_BOOK, cta: 'Book on WhatsApp', external: true },
+              { title: 'Visitor guidelines', text: 'Visiting hours, attendant passes and the rules for NICU, ICU and maternity wards.', href: '/patients/visitor-guidelines', cta: 'Before you visit' },
+              { title: 'Patient rights', text: 'What you can expect from us, and what helps us care for you safely.', href: '/patients/patient-rights', cta: 'Read the charter' },
+            ].map((item) => (
+              <article className="editorial-card" key={item.title}>
+                <h3><a href={item.href} {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}>{item.title}</a></h3>
+                <p>{item.text}</p>
+                <a className="view-all" href={item.href} {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}>{item.cta} →</a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Doctors at this centre */}
       {doctors.length > 0 && (

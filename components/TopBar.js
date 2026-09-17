@@ -18,9 +18,9 @@ export default function TopBar({ settings, locations = [] }) {
           ) : (
             <span className="loc-pill">📍 {cities}</span>
           )}
-          <a href={`mailto:${settings.email}?subject=Careers%20at%20Kinder`}>Careers</a>
-          <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Patient Portal</a>
-          <a href="/services">🔍 Search</a>
+          <a href="/careers">Careers</a>
+          <a href="/patients">Patient Portal</a>
+          <a href="/find-care">🔍 Find Care</a>
         </div>
       </div>
     </div>

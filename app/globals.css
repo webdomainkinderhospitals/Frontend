@@ -164,7 +164,7 @@
   .nav > .container { position: relative; }
   .nav-list {
     display: flex; list-style: none; align-items: center;
-    gap: 4px; padding: 0;
+    gap: 2px; padding: 0; flex-wrap: wrap;
   }
   .nav-list > li {
     position: relative;
@@ -174,8 +174,8 @@
   }
   .nav-list li > a {
     display: flex; align-items: center; gap: 4px;
-    padding: 18px 14px;
-    font-size: 14px; font-weight: 500; color: var(--ink-soft);
+    padding: 18px 10px;
+    font-size: 13.5px; font-weight: 500; color: var(--ink-soft);
     position: relative; transition: color .2s;
     white-space: nowrap;
   }
@@ -2384,6 +2384,47 @@ a.quick-item:hover .quick-text strong { color: var(--primary, inherit); }
   .hosp-hero { min-height: 340px; padding: 70px 0 60px; }
   .hosp-contact-bar { margin-top: -30px; }
 }
+
+/* Shortcuts into a centre's sections, on the locations index */
+.loc-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.loc-links a {
+  font-size: 12px; font-weight: 600; color: var(--primary);
+  background: var(--primary-light); border-radius: 999px; padding: 6px 12px;
+  transition: background .2s ease, color .2s ease;
+}
+.loc-links a:hover { background: var(--primary); color: #fff; }
+
+/* Facilities block on a hospital page */
+.hosp-facilities-title {
+  font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+}
+
+/* Media & press gallery */
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.gallery-item { margin: 0; border-radius: 14px; overflow: hidden; background: var(--bg-soft); border: 1px solid var(--line); }
+.gallery-item img { width: 100%; height: 190px; object-fit: cover; display: block; transition: transform .35s ease; }
+.gallery-item:hover img { transform: scale(1.04); }
+.gallery-item figcaption { padding: 12px 14px; font-size: 13px; color: var(--ink-soft); }
+
+/* Sitemap */
+.sitemap-grid { column-width: 270px; column-gap: 40px; }
+.sitemap-branch { display: contents; }
+.sitemap-col { break-inside: avoid; margin-bottom: 34px; display: inline-block; width: 100%; }
+.sitemap-col h3 { font-size: 14px; margin-bottom: 10px; color: var(--primary-dark); }
+.sitemap-col h3 a { font-size: 14px; color: var(--primary-dark); font-weight: 700; }
+.sitemap-col h2 { font-size: 17px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.sitemap-col h2 a { color: var(--primary-dark); }
+.sitemap-col ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+.sitemap-col ul ul { margin: 8px 0 12px 14px; padding-left: 12px; border-left: 1px solid var(--line); }
+.sitemap-col a { font-size: 14px; color: var(--ink-soft); }
+.sitemap-col a:hover { color: var(--primary); text-decoration: underline; }
+
+/* Find Care shortcut bar sits inside the page, not under a hero */
+.find-care-bar { margin-top: 0; }
+
+.muted { color: var(--ink-soft); line-height: 1.8; }
+.muted a { color: var(--primary-dark); font-weight: 600; }
 
 /* Departments grouped by care journey on a hospital sub-site */
 .hosp-section-intro { color: var(--ink-soft); font-size: 15px; line-height: 1.75; max-width: 620px; margin-top: 14px; }

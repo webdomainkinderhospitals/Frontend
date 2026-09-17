@@ -30,7 +30,7 @@ export default async function DoctorsPage() {
           intro="Senior consultants practising under shared protocols, audit and clinical governance across every Kinder centre. Filter by hospital or speciality to find yours."
         />
 
-        <section className="dd-section">
+        <section className="dd-section" id="directory">
           <div className="container">
             <DoctorDirectory doctors={doctors} locations={locations} servicePages={servicePages} />
           </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
+import { siteTree } from '@/lib/site-tree';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -12,21 +13,34 @@ const HOSPITAL_TAGS = {
   Singapore: 'International · HQ',
 };
 
+const BOOK =
+  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+
 export default function Header({ settings, locations = [], specialities = [] }) {
   const serviceGroups = groupServices(specialities);
+  // Menus are built from the agreed site tree, so the navigation cannot drift
+  // away from the architecture.
+  const tree = siteTree(locations);
+  const node = (label) => tree.find((n) => n.label === label);
+  const about = node('About Us');
+  const patients = node('Patients Portal');
+  const library = node('Health Library');
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname() || '/';
 
   // Which top-level menu item owns the current page.
   const sectionOf = (p) => {
-    if (p.startsWith('/about')) return 'about';
+    if (p.startsWith('/about') || p.startsWith('/careers') || p.startsWith('/media') || p.startsWith('/international-patients')) return 'about';
+    if (p.startsWith('/celebrate-pregnancy')) return 'pregnancy';
+    if (p.startsWith('/hospitals')) return 'locations';
     if (p.startsWith('/services')) return 'services';
     if (p.startsWith('/doctors')) return 'doctors';
-    if (p.startsWith('/packages')) return 'packages';
-    if (p.startsWith('/news') || p.startsWith('/stories')) return 'resources';
+    if (p.startsWith('/patients') || p.startsWith('/packages')) return 'patients';
+    if (p.startsWith('/health-library') || p.startsWith('/news') || p.startsWith('/stories')) return 'library';
+    if (p.startsWith('/find-care')) return 'find-care';
     if (p.startsWith('/contact')) return 'contact';
-    if (p.startsWith('/hospitals')) return 'hospitals';
     return 'home';
   };
   const active = sectionOf(pathname);
@@ -120,24 +134,24 @@ export default function Header({ settings, locations = [], specialities = [] }) 
         <nav className="nav" id="mainNav">
           <div className="container">
             <ul className="nav-list">
-              <li className={act('home')}><a href="/#home" onClick={onLeafClick}>Home</a></li>
+              <li className={act('home')}><a href="/" onClick={onLeafClick}>Home</a></li>
 
               <li className={dd('about') + act('about')}>
-                <a href="/about" onClick={(e) => toggleDropdown(e, 'about')}>
-                  About Us <span className="caret">▾</span>
+                <a href={about.href} onClick={(e) => toggleDropdown(e, 'about')}>
+                  {about.label} <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
-                  <a href="/about#story" onClick={onLeafClick}><strong>The Kinder Group</strong><small>Our story since 2011</small></a>
-                  <a href="/about#leadership" onClick={onLeafClick}><strong>Chairman&apos;s Message</strong><small>From Dr. Pradeep Kumar V.K</small></a>
-                  <a href="/about#leadership" onClick={onLeafClick}><strong>Leadership &amp; Team</strong><small>Across all our centres</small></a>
-                  <a href="/about#vision" onClick={onLeafClick}><strong>Vision &amp; Mission</strong><small>Kindness at the heart</small></a>
-                  <a href="/about#milestones" onClick={onLeafClick}><strong>Milestones</strong><small>5 hospitals · 13,000+ births</small></a>
+                  {about.children.map((child) => (
+                    <a key={child.label} href={child.href} onClick={onLeafClick}><strong>{child.label}</strong></a>
+                  ))}
                 </div>
               </li>
 
-              <li className={`${dd('hospitals')} has-mega` + act('hospitals')}>
-                <a href="/#hospitals" onClick={(e) => toggleDropdown(e, 'hospitals')}>
-                  Our Hospitals <span className="caret">▾</span>
+              <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
+
+              <li className={`${dd('locations')} has-mega` + act('locations')}>
+                <a href="/hospitals" onClick={(e) => toggleDropdown(e, 'locations')}>
+                  Our Locations <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega mega-hospitals">
                   {locations.map((loc) => (
@@ -172,7 +186,7 @@ export default function Header({ settings, locations = [], specialities = [] }) 
 
               <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
-                  Services <span className="caret">▾</span>
+                  Specialities <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega">
                   {serviceGroups.slice(0, 3).map((group) => (
@@ -191,7 +205,7 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
                       <p>Our care coordinators will guide you to the right Kinder doctor.</p>
-                      <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener" className="mega-btn" onClick={onLeafClick}>Book Appointment →</a>
+                      <a href={BOOK} target="_blank" rel="noopener" className="mega-btn" onClick={onLeafClick}>Book Appointment →</a>
                     </div>
                   </div>
                 </div>
@@ -199,37 +213,34 @@ export default function Header({ settings, locations = [], specialities = [] }) 
 
               <li className={act('doctors')}><a href="/doctors" onClick={onLeafClick}>Doctors</a></li>
 
-              <li className={dd('packages') + act('packages')}>
-                <a href="/packages" onClick={(e) => toggleDropdown(e, 'packages')}>
-                  Packages <span className="caret">▾</span>
+              <li className={dd('patients') + act('patients')}>
+                <a href={patients.href} onClick={(e) => toggleDropdown(e, 'patients')}>
+                  Patients <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
-                  <a href="/packages#jananimitra" onClick={onLeafClick}><strong>Kinder Jananimitra Package</strong><small>Comprehensive pregnancy package</small></a>
-                  <a href="/packages#comprehensive" onClick={onLeafClick}><strong>Comprehensive Health Check-Up</strong><small>Full body screening</small></a>
-                  <a href="/packages#wellwomen" onClick={onLeafClick}><strong>Well Women Health Check-Up</strong><small>Tailored for women</small></a>
-                  <a href="/packages#prepregnancy" onClick={onLeafClick}><strong>Pre-Pregnancy Health Check-Up</strong><small>Plan parenthood with confidence</small></a>
-                  <a href="/packages#tiers" onClick={onLeafClick}><strong>Silver / Golden / Platinum Tiers</strong><small>From ₹1,550 onwards</small></a>
+                  {patients.children.map((child) => (
+                    <a key={child.label} href={child.href} onClick={onLeafClick}><strong>{child.label}</strong></a>
+                  ))}
                 </div>
               </li>
 
-              <li className={dd('resources') + act('resources')}>
-                <a href="/news" onClick={(e) => toggleDropdown(e, 'resources')}>
-                  Resources <span className="caret">▾</span>
+              <li className={dd('library') + act('library')}>
+                <a href={library.href} onClick={(e) => toggleDropdown(e, 'library')}>
+                  Health Library <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
-                  <a href="/news" onClick={onLeafClick}><strong>Gallery</strong><small>Inside our hospitals</small></a>
-                  <a href="/news" onClick={onLeafClick}><strong>News &amp; Press</strong><small>Latest from the Kinder Group</small></a>
-                  <a href="/news" onClick={onLeafClick}><strong>Health Blogs</strong><small>Insights from our doctors</small></a>
-                  <a href="/news" onClick={onLeafClick}><strong>Media &amp; Events</strong><small>Awareness drives &amp; camps</small></a>
-                  <a href="/stories" onClick={onLeafClick}><strong>Patient Testimonials</strong><small>Real stories of joy</small></a>
-                  <a href={`mailto:${settings.email}?subject=Careers%20at%20Kinder`} onClick={onLeafClick}><strong>Careers at Kinder</strong><small>Join our growing team</small></a>
+                  {library.children.map((child) => (
+                    <a key={child.label} href={child.href} onClick={onLeafClick}><strong>{child.label}</strong></a>
+                  ))}
                 </div>
               </li>
+
+              <li className={act('find-care')}><a href="/find-care" onClick={onLeafClick}>Find Care</a></li>
 
               <li className={act('contact')}><a href="/contact" onClick={onLeafClick}>Contact</a></li>
 
               <li className="nav-cta-wrap">
-                <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener" className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
+                <a href={BOOK} target="_blank" rel="noopener" className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
               </li>
             </ul>
           </div>
