@@ -1,8 +1,8 @@
 import ContentPages from '@/components/ContentPages';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
-import { atLocation } from '@/lib/locations';
-import { allServices } from '@/lib/services';
+import { findLocationBySlug } from '@/lib/locations';
+import { hospitalData } from '@/lib/hospital';
 
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
@@ -13,21 +13,10 @@ import KinderChat from '@/components/KinderChat';
 
 export const revalidate = 60;
 
-export function slugOf(loc) {
-  return (
-    loc.slug ||
-    String(loc.name || '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-  );
-}
-
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const content = await getContent();
-  const loc = content.locations.find((l) => slugOf(l) === slug);
+  const loc = findLocationBySlug(content.locations, slug);
   if (!loc) return { title: 'Kinder Hospitals' };
   return {
     title: `Kinder ${loc.name} — ${loc.city}, ${loc.country} · Kinder Hospitals`,
@@ -38,35 +27,28 @@ export async function generateMetadata({ params }) {
 export default async function HospitalDetail({ params }) {
   const { slug } = await params;
   const content = await getContent();
-  const loc = content.locations.find((l) => slugOf(l) === slug);
+  const loc = findLocationBySlug(content.locations, slug);
   if (!loc) notFound();
 
-  // Doctors (and anything else) may be tagged with several hospitals.
-  const at = (item) => atLocation(item, loc.name);
-  // Every sub-site shows a Specialities menu: centres without their own
-  // location-tagged list fall back to the group-wide catalogue.
-  const ownSpecialities = content.specialities.filter(at);
-  const specialities = ownSpecialities.length
-    ? ownSpecialities
-    : allServices(content.specialities).map((s) => ({ name: s.name, description: s.description }));
-  const doctors = content.doctors.filter(at);
-  const procedures = content.procedures.filter(at);
-  const testimonials = content.testimonials.filter(at);
-  const news = content.news.filter(at);
-
-  const sections = {
-    specialities: specialities.length > 0,
-    doctors: doctors.length > 0,
-    procedures: procedures.length > 0,
-    testimonials: testimonials.length > 0,
-    news: news.length > 0,
-  };
+  const data = hospitalData(content, loc);
 
   return (
     <>
-      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
-      <HospitalPage carePages={(content.pages || []).filter((p) => p.category === 'Kochi Care' && at(p))} loc={loc} specialities={specialities} centreSpecific={ownSpecialities.length > 0} servicePages={allServices(content.specialities).map((s) => s.slug)} doctors={doctors} procedures={procedures} testimonials={testimonials} news={news} settings={content.settings} />
-      <ContentPages title="Information for your visit" pages={(content.pages || []).filter((p) => p.category !== 'Kochi Care' && at(p))} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={data.sections} />
+      <HospitalPage
+        loc={loc}
+        hospitalSlug={slug}
+        carePages={data.carePages}
+        specialities={data.specialities}
+        centreSpecific={data.centreSpecific}
+        servicePages={data.servicePages}
+        doctors={data.doctors}
+        procedures={data.procedures}
+        testimonials={data.testimonials}
+        news={data.news}
+        settings={content.settings}
+      />
+      <ContentPages title="Information for your visit" pages={data.infoPages} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} />
       <WhatsAppFloat />
       <KinderChat content={content} />

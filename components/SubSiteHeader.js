@@ -24,6 +24,7 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   const items = [
     { label: 'Home', href: home },
     { label: 'About', href: `${home}#about` },
+    sections.care && { label: 'Our Care', href: `${home}#care` },
     sections.specialities && { label: 'Specialities', href: `${home}#specialities` },
     sections.doctors && { label: 'Doctors', href: `${home}#doctors` },
     sections.procedures && { label: 'Treatments', href: `${home}#procedures` },
