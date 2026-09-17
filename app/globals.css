@@ -2385,6 +2385,14 @@ a.quick-item:hover .quick-text strong { color: var(--primary, inherit); }
   .hosp-contact-bar { margin-top: -30px; }
 }
 
+/* Departments grouped by care journey on a hospital sub-site */
+.hosp-section-intro { color: var(--ink-soft); font-size: 15px; line-height: 1.75; max-width: 620px; margin-top: 14px; }
+.hosp-spec-groups { display: grid; gap: 34px; }
+.hosp-spec-group h3 {
+  font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
+}
+
 /* Per-centre content on hospital pages */
 .hosp-proc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .hosp-proc-card {
@@ -2489,7 +2497,7 @@ html { scroll-behavior: smooth; }
   }
   .subsite-nav.open { display: flex; }
   .subsite-header-in { position: relative; }
-  .subsite-cta { display: none; }
+  .subsite-cta { display: none !important; }
 }
 
 .subsite-footer { background: var(--primary-deep, #2c1d5e); background: #2c1d5e; color: #cfc3ec; padding: 50px 0 24px; margin-top: 60px; }

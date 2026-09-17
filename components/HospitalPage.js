@@ -5,23 +5,40 @@ const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
 
-function slugOf(loc) {
-  return (
-    loc.slug ||
-    String(loc.name || '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-  );
+// Specialities read better grouped by the care journey they belong to than as
+// one long alphabet of department names.
+function groupSpecialities(specialities) {
+  const groups = [];
+  for (const spec of specialities) {
+    const title = spec.group || spec.category || '';
+    let group = groups.find((g) => g.title === title);
+    if (!group) groups.push((group = { title, items: [] }));
+    group.items.push(spec);
+  }
+  return groups.length > 1 || groups[0]?.title ? groups : [];
 }
 
-export default function HospitalPage({ loc, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+  // Highlights arrive newline-separated; some records carry the escape
+  // sequence literally rather than a real line break.
   const highlights = String(loc.highlights || '')
-    .split('\n')
+    .split(/\\n|\n/)
     .map((h) => h.trim())
     .filter(Boolean);
   const hero = loc.heroImageUrl || loc.imageUrl;
+  const specialityGroups = groupSpecialities(specialities);
+
+  const renderSpeciality = (spec, i) => {
+    const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const Tag = servicePages.includes(slug) ? 'a' : 'div';
+    if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary>{spec.name}</summary><ContentBody text={spec.fullDescription} /></details>;
+    return (
+      <Tag className="svc-card" key={spec.id ?? i} title={spec.description || undefined} {...(Tag === 'a' ? { href: `/services/${slug}` } : {})}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+        <span>{spec.name}</span>
+      </Tag>
+    );
+  };
 
   return (
     <main>
@@ -93,8 +110,6 @@ export default function HospitalPage({ loc, carePages = [], specialities = [], c
       </div>
 
       {/* About + highlights */}
-      <KochiCareCards pages={carePages} />
-
       <section id="about">
         <div className="container">
           <div className="hosp-about-grid">
@@ -121,6 +136,9 @@ export default function HospitalPage({ loc, carePages = [], specialities = [], c
         </div>
       </section>
 
+      {/* Care pages for this centre — each opens as its own page */}
+      <KochiCareCards pages={carePages} hospitalSlug={hospitalSlug} hospitalName={loc.name} />
+
       {/* Specialities at this centre */}
       {specialities.length > 0 && (
         <section id="specialities">
@@ -135,21 +153,26 @@ export default function HospitalPage({ loc, carePages = [], specialities = [], c
                     <>Specialities <em>across our group</em></>
                   )}
                 </h2>
+                <p className="hosp-section-intro">
+                  Grouped by the kind of care you are looking for — {specialities.length} departments in all.
+                </p>
               </div>
+              {carePages.length > 0 && (
+                <a className="view-all" href="#care">Read our care pages →</a>
+              )}
             </div>
-            <div className="svc-grid">
-              {specialities.map((spec, i) => {
-                const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                const Tag = servicePages.includes(slug) ? 'a' : 'div';
-                if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary>{spec.name}</summary><ContentBody text={spec.fullDescription} /></details>;
-                return (
-                  <Tag className="svc-card" key={spec.id ?? i} title={spec.description || undefined} {...(Tag === 'a' ? { href: `/services/${slug}` } : {})}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                    <span>{spec.name}</span>
-                  </Tag>
-                );
-              })}
-            </div>
+            {specialityGroups.length > 0 ? (
+              <div className="hosp-spec-groups">
+                {specialityGroups.map((group, gi) => (
+                  <div className="hosp-spec-group" key={group.title || gi}>
+                    {group.title && <h3>{group.title}</h3>}
+                    <div className="svc-grid">{group.items.map(renderSpeciality)}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="svc-grid">{specialities.map(renderSpeciality)}</div>
+            )}
           </div>
         </section>
       )}

@@ -1,7 +1,8 @@
 import KochiCarePage from '@/components/KochiCare';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getContent } from '@/lib/api';
-import { locationLabel } from '@/lib/locations';
+import { locationLabel, hospitalSlugForPage } from '@/lib/locations';
+import { carePageHref, isCarePage } from '@/lib/care-content.mjs';
 import SiteChrome from '@/components/SiteChrome';
 import ContentBody from '@/components/ContentBody';
 export const revalidate = 60;
@@ -14,7 +15,11 @@ export default async function InformationDetail({ params }) {
   const content = await getContent();
   const page = (content.pages || []).find((p) => p.slug === params.slug);
   if (!page) notFound();
-  if (page.category === 'Kochi Care') return <SiteChrome content={content}><KochiCarePage page={page} content={content} /></SiteChrome>;
+  // A care page belongs to its hospital's sub-site: older links land there
+  // rather than opening the page inside the corporate site.
+  const hospitalSlug = isCarePage(page) ? hospitalSlugForPage(page, content.locations) : '';
+  if (hospitalSlug) redirect(carePageHref(page, hospitalSlug));
+  if (isCarePage(page)) return <SiteChrome content={content}><KochiCarePage page={page} content={content} /></SiteChrome>;
   return <SiteChrome content={content}><main><article className="editorial-article container">
     <nav aria-label="Breadcrumb"><a href="/information">Hospital & patient information</a> / {page.category}</nav>
     <header><span className="section-eyebrow">{page.category}</span><h1>{page.title}</h1>
