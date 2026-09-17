@@ -19,6 +19,7 @@ import Footer from '@/components/Footer';
 import KinderChat from '@/components/KinderChat';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
+import HomeInteractions from '@/components/HomeInteractions';
 
 export const revalidate = 60;
 
@@ -47,6 +48,7 @@ export default async function HomePage() {
       <Footer settings={settings} locations={locations} />
       <KinderChat content={content} />
       <WhatsAppFloat />
+      <HomeInteractions />
       <ScrollEffects />
     </>
   );

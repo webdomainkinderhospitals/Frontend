@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './HomeHero.module.css';
 
 const appointment = 'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+
+// How long each slide holds before the next one takes over.
+const SLIDE_MS = 6000;
 
 function Headline({ text }) {
   return String(text).split(/(<em>.*?<\/em>)/gis).map((part, i) =>
@@ -13,7 +16,11 @@ function Headline({ text }) {
 
 export default function HomeHero({ settings = {}, locations = [] }) {
   const [current, setCurrent] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(true);
+  const [motionOk, setMotionOk] = useState(false);
+  const [paused, setPaused] = useState(false); // the visitor pressed pause
+  const [hold, setHold] = useState(false);     // pointer or keyboard focus is on the hero
+  const [hidden, setHidden] = useState(false); // the tab is in the background
+  const touchStart = useRef(null);
   const names = locations.map((l) => l.name).filter(Boolean);
   const seeded = /spanning 5 hospitals across Cherthala/.test(settings.heroSubtitle || '');
   const slides = [
@@ -39,21 +46,50 @@ export default function HomeHero({ settings = {}, locations = [] }) {
       cta: 'Explore our packages', href: '/packages',
     },
   ];
+  const count = slides.length;
+
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReducedMotion(query.matches);
+    const update = () => setMotionOk(!query.matches);
     update(); query.addEventListener('change', update);
     return () => query.removeEventListener('change', update);
   }, []);
-  const stopped = reducedMotion;
+
+  // A slideshow nobody can see is a slideshow nobody should pay for.
   useEffect(() => {
-    if (stopped) return;
-    const timer = setInterval(() => setCurrent((n) => (n + 1) % 3), 6500);
-    return () => clearInterval(timer);
-  }, [stopped, current]);
-  function select(index) { setCurrent((index + slides.length) % slides.length); }
+    const onVisibility = () => setHidden(document.hidden);
+    onVisibility();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  const running = motionOk && !paused && !hold && !hidden;
+  useEffect(() => {
+    if (!running) return;
+    const timer = setTimeout(() => setCurrent((n) => (n + 1) % count), SLIDE_MS);
+    return () => clearTimeout(timer);
+  }, [running, current, count]);
+
+  const select = useCallback((index) => setCurrent((index + count) % count), [count]);
+
+  function onKeyDown(event) {
+    if (event.key === 'ArrowRight') { select(current + 1); event.preventDefault(); }
+    if (event.key === 'ArrowLeft') { select(current - 1); event.preventDefault(); }
+  }
+  function onTouchStart(event) { touchStart.current = event.changedTouches[0].clientX; }
+  function onTouchEnd(event) {
+    if (touchStart.current === null) return;
+    const dx = event.changedTouches[0].clientX - touchStart.current;
+    touchStart.current = null;
+    if (Math.abs(dx) > 50) select(current + (dx < 0 ? 1 : -1));
+  }
+
   return <section id="home" className={styles.hero} aria-label="Kinder Hospitals highlights" aria-roledescription="carousel"
->
+    onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}
+    onFocusCapture={() => setHold(true)} onBlurCapture={() => setHold(false)}
+    onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+    onKeyDown={onKeyDown} tabIndex={-1}
+  >
     {slides.map((slide, i) => <div key={slide.label} className={`${styles.slide} ${i === current ? styles.active : ''}`}
       aria-hidden={i !== current} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
       <img className={styles.image} src={slide.image} alt="" fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
@@ -76,6 +112,18 @@ export default function HomeHero({ settings = {}, locations = [] }) {
         {slides.map((slide, i) => <button type="button" key={slide.label} aria-label={`Show ${slide.label}`} aria-pressed={current === i} onClick={() => select(i)}><span /></button>)}
       </div>
       <button type="button" onClick={() => select(current + 1)} aria-label="Next highlight">→</button>
+      {motionOk && <button type="button" className={styles.playPause} onClick={() => setPaused((p) => !p)}
+        aria-label={paused ? 'Play the highlights' : 'Pause the highlights'}>
+        {paused
+          ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
+          : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zm5 0h3v14h-3z" /></svg>}
+      </button>}
+      <span className={styles.counter} aria-hidden="true">
+        <strong>{String(current + 1).padStart(2, '0')}</strong> / {String(count).padStart(2, '0')}
+      </span>
     </div>
+    {motionOk && <div className={styles.progress} aria-hidden="true">
+      <span key={current} style={{ animationDuration: `${SLIDE_MS}ms`, animationPlayState: running ? 'running' : 'paused' }} />
+    </div>}
   </section>;
 }

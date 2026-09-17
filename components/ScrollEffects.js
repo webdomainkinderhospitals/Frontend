@@ -16,6 +16,7 @@ export default function ScrollEffects() {
     const sel = [
       '.section-head', '.overview-img', '.overview-text',
       '.coe-card', '.procedure-card', '.care-card', '.support-card',
+      '.quick-item', '.stat',
       '.spec-card', '.testi-card', '.blog-card', '.loc-card',
       '.hospital-card', '.stats-row', '.accred-strip', '.cta-strip',
     ].join(',');
@@ -27,7 +28,7 @@ export default function ScrollEffects() {
 
     // stagger siblings within the same grid for a graceful cascade
     document
-      .querySelectorAll('.coe-grid, .procedure-grid, .care-grid, .support-grid, .spec-grid, .loc-grid, .blog-grid, .hospital-grid')
+      .querySelectorAll('.coe-grid, .procedure-grid, .care-grid, .support-grid, .spec-grid, .loc-grid, .blog-grid, .hospital-grid, .quick-bar, .stats-row')
       .forEach((grid) => {
         Array.prototype.slice.call(grid.children).forEach((child, i) => {
           if (child.hasAttribute('data-reveal')) {
