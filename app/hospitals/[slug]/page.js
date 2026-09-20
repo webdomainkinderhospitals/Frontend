@@ -48,7 +48,7 @@ export default async function HospitalDetail({ params }) {
         news={data.news}
         settings={content.settings}
       />
-      <ContentPages title="Information for your visit" pages={data.infoPages} />
+      <ContentPages title="Information for your visit" pages={data.infoPages} base={`/hospitals/${slug}`} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} sections={data.sections} privacyHref={data.privacyHref} />
       <WhatsAppFloat />
       <KinderChat content={content} />

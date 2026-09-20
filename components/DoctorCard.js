@@ -2,7 +2,9 @@ import { slugify } from '@/lib/services';
 import { locationsOf } from '@/lib/locations';
 
 // The one doctor card used across the corporate site and every hospital
-// sub-site. Server-safe (no hooks) so it can render anywhere.
+// sub-site. Server-safe (no hooks) so it can render anywhere. `base` is '' on
+// the corporate site and '/hospitals/<slug>' inside a centre, so a card never
+// links a visitor out of the site they are browsing.
 
 const book = (name) =>
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -21,11 +23,13 @@ export function initials(name) {
     .toUpperCase();
 }
 
-export default function DoctorCard({ doc, compact = false, hideHospitals = false, servicePages = [] }) {
+export default function DoctorCard({ doc, compact = false, hideHospitals = false, servicePages = [], base = '' }) {
   const locs = locationsOf(doc);
-  const profile = `/doctors/${slugify(doc.name)}`;
+  const profile = `${base}/doctors/${slugify(doc.name)}`;
   const specSlug = doc.speciality ? slugify(doc.speciality) : '';
-  const specHref = specSlug && servicePages.includes(specSlug) ? `/services/${specSlug}` : null;
+  // Inside a sub-site every speciality has its own page there, so the card
+  // links to it whether or not the corporate catalogue lists one.
+  const specHref = specSlug && (base || servicePages.includes(specSlug)) ? `${base}/services/${specSlug}` : null;
 
   return (
     <article className={`dcard${compact ? ' dcard-compact' : ''}`}>
