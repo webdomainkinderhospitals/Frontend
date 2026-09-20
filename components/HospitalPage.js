@@ -5,6 +5,23 @@ const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
 
+// Newline-separated admin fields: some records carry the escape sequence
+// literally rather than a real line break.
+export function lines(text) {
+  return String(text || '')
+    .split(/\\n|\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+// A facility may be written as "Level 3 NICU — five beds, round-the-clock
+// care": the name is printed in bold with its description beneath. Plain
+// highlights (no dash) stay a one-line tick, exactly as before.
+export function splitHighlight(line) {
+  const match = String(line).match(/^(.{2,60}?)\s+[—–]\s+(.+)$/s);
+  return match ? { title: match[1], text: match[2] } : { title: '', text: line };
+}
+
 // Specialities read better grouped by the care journey they belong to than as
 // one long alphabet of department names.
 function groupSpecialities(specialities) {
@@ -19,13 +36,12 @@ function groupSpecialities(specialities) {
 }
 
 export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
-  // Highlights arrive newline-separated; some records carry the escape
-  // sequence literally rather than a real line break.
-  const highlights = String(loc.highlights || '')
-    .split(/\\n|\n/)
-    .map((h) => h.trim())
-    .filter(Boolean);
+  const highlights = lines(loc.highlights).map(splitHighlight);
+  const about = lines(loc.description);
   const hero = loc.heroImageUrl || loc.imageUrl;
+  // A centre with its own booking link (its hospital app, say) uses it for
+  // every Book Appointment button here; the rest keep the group WhatsApp.
+  const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
   const specialityGroups = groupSpecialities(specialities);
 
   const renderSpeciality = (spec, i) => {
@@ -59,7 +75,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
             </h1>
             {loc.tagline && <p className="hero-text">{loc.tagline}</p>}
             <div className="hosp-hero-ctas">
-              <a href={WHATSAPP_BOOK} target="_blank" rel="noopener" className="btn btn-primary">
+              <a href={book} target="_blank" rel="noopener" className="btn btn-primary">
                 Book an Appointment →
               </a>
               {loc.phone && (
@@ -118,7 +134,9 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
               <h2 className="section-title">
                 Care with <em>kindness</em>, close to home
               </h2>
-              <p>{loc.description || loc.address}</p>
+              {(about.length ? about : [loc.address]).map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             {highlights.length > 0 && (
               <div id="facilities" className="hosp-facilities">
@@ -129,7 +147,14 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M20 6 9 17l-5-5" />
                       </svg>
-                      {h}
+                      {h.title ? (
+                        <span className="hosp-highlight-body">
+                          <strong>{h.title}</strong>
+                          <span>{h.text}</span>
+                        </span>
+                      ) : (
+                        h.text
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -195,7 +220,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
               { title: 'Packages & health checkups', text: 'Maternity, well-woman, pre-pregnancy and full-body packages with their inclusions and tiers.', href: '/packages', cta: 'See packages' },
               { title: 'Insurance & TPA / cashless', text: 'Empanelment, pre-authorisation and what to bring for a cashless admission.', href: '/patients/insurance-and-tpa', cta: 'How it works' },
               { title: 'Online consultation', text: 'Speak to a specialist from home — our coordinators will set up the consultation.', href: WHATSAPP_BOOK, cta: 'Book a consultation', external: true },
-              { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: WHATSAPP_BOOK, cta: 'Book on WhatsApp', external: true },
+              { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: book, cta: loc.bookingUrl ? 'Book online' : 'Book on WhatsApp', external: true },
               { title: 'Visitor guidelines', text: 'Visiting hours, attendant passes and the rules for NICU, ICU and maternity wards.', href: '/patients/visitor-guidelines', cta: 'Before you visit' },
               { title: 'Patient rights', text: 'What you can expect from us, and what helps us care for you safely.', href: '/patients/patient-rights', cta: 'Read the charter' },
             ].map((item) => (
@@ -324,7 +349,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                   : 'Book on WhatsApp — our care coordinators will guide you.'}
               </p>
             </div>
-            <a href={WHATSAPP_BOOK} target="_blank" rel="noopener" className="btn btn-primary">
+            <a href={book} target="_blank" rel="noopener" className="btn btn-primary">
               Book an Appointment →
             </a>
           </div>
