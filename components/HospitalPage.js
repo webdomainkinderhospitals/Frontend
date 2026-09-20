@@ -42,17 +42,18 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   // A centre with its own booking link (its hospital app, say) uses it for
   // every Book Appointment button here; the rest keep the group WhatsApp.
   const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
+  // Every inner link from this page opens inside this centre's own site.
+  const base = `/hospitals/${hospitalSlug}`;
   const specialityGroups = groupSpecialities(specialities);
 
   const renderSpeciality = (spec, i) => {
     const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    const Tag = servicePages.includes(slug) ? 'a' : 'div';
     if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary>{spec.name}</summary><ContentBody text={spec.fullDescription} /></details>;
     return (
-      <Tag className="svc-card" key={spec.id ?? i} title={spec.description || undefined} {...(Tag === 'a' ? { href: `/services/${slug}` } : {})}>
+      <a className="svc-card" key={spec.id ?? i} title={spec.description || undefined} href={`${base}/services/${slug}`}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
         <span>{spec.name}</span>
-      </Tag>
+      </a>
     );
   };
 
@@ -217,12 +218,12 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           </div>
           <div className="editorial-grid">
             {[
-              { title: 'Packages & health checkups', text: 'Maternity, well-woman, pre-pregnancy and full-body packages with their inclusions and tiers.', href: '/packages', cta: 'See packages' },
-              { title: 'Insurance & TPA / cashless', text: 'Empanelment, pre-authorisation and what to bring for a cashless admission.', href: '/patients/insurance-and-tpa', cta: 'How it works' },
+              { title: 'Packages & health checkups', text: 'Maternity, well-woman, pre-pregnancy and full-body packages with their inclusions and tiers.', href: `${base}/packages`, cta: 'See packages' },
+              { title: 'Insurance & TPA / cashless', text: 'Empanelment, pre-authorisation and what to bring for a cashless admission.', href: `${base}/patients/insurance-and-tpa`, cta: 'How it works' },
               { title: 'Online consultation', text: 'Speak to a specialist from home — our coordinators will set up the consultation.', href: WHATSAPP_BOOK, cta: 'Book a consultation', external: true },
               { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: book, cta: loc.bookingUrl ? 'Book online' : 'Book on WhatsApp', external: true },
-              { title: 'Visitor guidelines', text: 'Visiting hours, attendant passes and the rules for NICU, ICU and maternity wards.', href: '/patients/visitor-guidelines', cta: 'Before you visit' },
-              { title: 'Patient rights', text: 'What you can expect from us, and what helps us care for you safely.', href: '/patients/patient-rights', cta: 'Read the charter' },
+              { title: 'Visitor guidelines', text: 'Visiting hours, attendant passes and the rules for NICU, ICU and maternity wards.', href: `${base}/patients/visitor-guidelines`, cta: 'Before you visit' },
+              { title: 'Patient rights', text: 'What you can expect from us, and what helps us care for you safely.', href: `${base}/patients/patient-rights`, cta: 'Read the charter' },
             ].map((item) => (
               <article className="editorial-card" key={item.title}>
                 <h3><a href={item.href} {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}>{item.title}</a></h3>
@@ -248,7 +249,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
             </div>
             <div className="hosp-doctor-grid">
               {doctors.map((doc, i) => (
-                <DoctorCard doc={doc} key={doc.id} hideHospitals servicePages={servicePages} />
+                <DoctorCard doc={doc} key={doc.id} hideHospitals servicePages={servicePages} base={base} />
               ))}
             </div>
           </div>
