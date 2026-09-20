@@ -1,6 +1,7 @@
 import { KochiCareCards } from '@/components/KochiCare';
 import ContentBody from '@/components/ContentBody';
 import DoctorCard from '@/components/DoctorCard';
+import { isOwnImageOf } from '@/lib/hospital';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
@@ -164,6 +165,32 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           </div>
         </div>
       </section>
+
+      {/* The building itself. These are watercolour elevations on paper, so
+          they are shown whole on a paper ground rather than cropped into a
+          band or scrimmed behind text — a drawing of the place a family is
+          about to visit is worth seeing at size. */}
+      {isOwnImageOf(loc.imageUrl) && (
+        <section className="hosp-plate">
+          <div className="container">
+            <figure className="hosp-plate-fig">
+              <img
+                src={loc.imageUrl}
+                alt={`Illustration of the Kinder ${loc.name} building`}
+                width={1400}
+                height={875}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>
+                <span className="section-eyebrow">The centre</span>
+                <strong>Kinder {loc.name}</strong>
+                {loc.address && <span>{loc.address}</span>}
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+      )}
 
       {/* Care pages for this centre — each opens as its own page */}
       <KochiCareCards pages={carePages} hospitalSlug={hospitalSlug} hospitalName={loc.name} />
