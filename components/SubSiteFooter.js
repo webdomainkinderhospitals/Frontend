@@ -1,9 +1,14 @@
 import { locationSectionsFor } from '@/lib/site-tree';
 
+const WHATSAPP_BOOK =
+  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+
 // Compact footer for a hospital sub-website: this centre's details only,
 // plus the corporate-site link. No other hospitals are listed here.
-export default function SubSiteFooter({ loc, settings, slug, sections = {} }) {
+export default function SubSiteFooter({ loc, settings, slug, sections = {}, privacyHref = '/policies/privacy-policy' }) {
   const home = `/hospitals/${slug}`;
+  const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
   return (
     <footer className="subsite-footer" id="contact">
       <div className="container">
@@ -34,6 +39,8 @@ export default function SubSiteFooter({ loc, settings, slug, sections = {} }) {
             {locationSectionsFor(sections).map((section) => (
               <a key={section.label} href={`${home}${section.hash}`}>{section.label}</a>
             ))}
+            <a href={book} target="_blank" rel="noopener">Book an appointment →</a>
+            <a href={privacyHref}>Privacy Policy</a>
             <a href="/" className="subsite-footer-corp">Kinder Medical Group — Corporate Website →</a>
           </div>
         </div>

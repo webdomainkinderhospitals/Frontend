@@ -7,10 +7,19 @@ import { HubCta, whatsapp } from '@/components/Hub';
 
 export const revalidate = 60;
 
-export const metadata = {
-  title: 'Our Locations · Kinder Hospitals',
-  description: 'Every Kinder centre — Cherthala, Kochi, Bengaluru, Alappuzha and Singapore — with its own departments, doctors, facilities and contact details.',
-};
+// The centres are named from the CMS, so a new hospital never leaves this
+// description listing yesterday's network.
+export async function generateMetadata() {
+  const content = await getContent();
+  const names = (content.locations || []).map((loc) => loc.name);
+  const listed = names.length
+    ? `${names.slice(0, -1).join(', ')}${names.length > 1 ? ' and ' : ''}${names[names.length - 1]}`
+    : 'every city we serve';
+  return {
+    title: 'Our Locations · Kinder Hospitals',
+    description: `Every Kinder centre — ${listed} — with its own departments, doctors, facilities and contact details.`,
+  };
+}
 
 export default async function LocationsPage() {
   const content = await getContent();

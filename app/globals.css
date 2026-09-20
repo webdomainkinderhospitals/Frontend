@@ -2334,6 +2334,11 @@ a.quick-item:hover .quick-text strong { color: var(--primary, inherit); }
   font-size: 14.5px;
 }
 .hosp-highlights svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--primary); margin-top: 2px; }
+/* A facility written as "Name — description": its name reads as a heading,
+   its description as the normal-weight text beneath. */
+.hosp-highlight-body { display: flex; flex-direction: column; gap: 4px; }
+.hosp-highlight-body strong { color: var(--primary-dark); font-size: 15px; }
+.hosp-highlight-body > span { font-weight: 400; font-size: 14px; color: var(--muted); line-height: 1.6; }
 
 .hosp-doctor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
 .hosp-doctor-card {

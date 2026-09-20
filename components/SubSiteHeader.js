@@ -11,6 +11,8 @@ const WHATSAPP_BOOK =
 // corporate-site link. Other hospitals are never shown here.
 export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   const [open, setOpen] = useState(false);
+  // This centre's own booking link when it has one, the group WhatsApp otherwise.
+  const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
 
   useEffect(() => {
     const header = document.querySelector('.subsite-header');
@@ -40,7 +42,9 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
         <div className="container">
           <div className="subsite-topbar-in">
             <div className="subsite-topbar-contact">
-              {loc.phone && <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>☎ {loc.phone}</a>}
+              {loc.phone && (
+                <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>☎ 24/7 Emergency · {loc.phone}</a>
+              )}
               {loc.email && <a href={`mailto:${loc.email}`}>✉ {loc.email}</a>}
             </div>
             <a className="corporate-link" href="/">
@@ -70,7 +74,7 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
             </nav>
 
             <div className="subsite-actions">
-              <a href={WHATSAPP_BOOK} target="_blank" rel="noopener" className="nav-cta subsite-cta">
+              <a href={book} target="_blank" rel="noopener" className="nav-cta subsite-cta">
                 Book Appointment →
               </a>
               <button
