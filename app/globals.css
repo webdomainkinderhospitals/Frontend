@@ -3312,3 +3312,57 @@ button, [role="button"], .quick-item, summary{ cursor: pointer; }
    scroll container, so the sticky header keeps working. */
 html{ overflow-x: clip; }
 body{ overflow-x: clip; }
+
+/* ---------- The centre's own elevation ----------
+   Watercolour on paper, so it gets a paper ground and is never cropped:
+   the asset is already 16:10, the ratio of the frame. A caption sets it as a
+   plate rather than a stock banner. */
+.hosp-plate{ padding-top: 0; }
+.hosp-plate-fig{
+  margin: 0;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--e-2);
+  overflow: hidden;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+.hosp-plate-fig img{
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 10;      /* reserves the box, so nothing shifts on load */
+  object-fit: cover;
+}
+.hosp-plate-fig figcaption{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 18px 26px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+.hosp-plate-fig figcaption strong{
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: var(--display-weight);
+  color: var(--ink);
+}
+.hosp-plate-fig figcaption > span:last-child{
+  font-size: var(--t-small);
+  color: var(--muted);
+}
+@media (max-width: 640px){
+  .hosp-plate-fig figcaption{ padding: 16px 18px 18px; }
+}
+
+/* A hospital card's image is now a drawing on white paper. The dark gradient
+   that used to sit over its lower third was there to keep photo cards from
+   washing out; over a watercolour it reads as a smudge. A hairline separates
+   the image from the card body more cleanly, for photos and drawings alike. */
+.loc-img::after{ display: none; }
+.loc-img{
+  border-bottom: 1px solid var(--line);
+  background-color: var(--white);
+}
