@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import UiIcon from '@/components/UiIcon';
 
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -43,9 +44,15 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
           <div className="subsite-topbar-in">
             <div className="subsite-topbar-contact">
               {loc.phone && (
-                <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>☎ 24/7 Emergency · {loc.phone}</a>
+                <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>
+                  <UiIcon name="phone" /> 24/7 Emergency · {loc.phone}
+                </a>
               )}
-              {loc.email && <a href={`mailto:${loc.email}`}>✉ {loc.email}</a>}
+              {loc.email && (
+                <a href={`mailto:${loc.email}`}>
+                  <UiIcon name="mail" /> {loc.email}
+                </a>
+              )}
             </div>
             <a className="corporate-link" href="/">
               Part of Kinder Medical Group · Corporate Website →
