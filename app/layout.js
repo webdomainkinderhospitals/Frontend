@@ -1,4 +1,23 @@
+import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
+
+// Display serif for headlines, neutral sans for everything read at length.
+// Self-hosted by next/font: no render-blocking request to Google, no flash of
+// invisible text, and no layout shift as the face swaps in.
+const display = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-display',
+});
+
+const body = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-body',
+});
 
 export const metadata = {
   title: 'Kinder Hospitals — Medical Group · India · Singapore',
@@ -9,18 +28,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: 'document.documentElement.className+=" js";',
           }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&display=swap"
-          rel="stylesheet"
         />
       </head>
       <body>{children}</body>

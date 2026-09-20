@@ -1,3 +1,5 @@
+import UiIcon from '@/components/UiIcon';
+
 export default function Locations({ locations = [] }) {
   return (
     <section className="locations" id="hospitals">
@@ -37,10 +39,10 @@ export default function Locations({ locations = [] }) {
                 <p>{loc.address}</p>
                 {loc.phone ? (
                   <a href={`tel:${loc.phone.replace(/\s/g, '')}`} className="loc-phone">
-                    📞 {loc.phone}
+                    <UiIcon name="phone" /> {loc.phone}
                   </a>
                 ) : (
-                  <a href={loc.website || '#'} className="loc-phone">🌐 Visit website</a>
+                  <a href={loc.website || '#'} className="loc-phone"><UiIcon name="globe" /> Visit website</a>
                 )}
                 <a
                   href={`/hospitals/${loc.slug || String(loc.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
