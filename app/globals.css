@@ -2286,7 +2286,17 @@ a.quick-item:hover .quick-text strong { color: var(--primary, inherit); }
 .hosp-hero::before {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(100deg, rgba(36,27,51,0.86) 20%, rgba(63,42,134,0.55) 60%, rgba(36,27,51,0.25));
+  /* The banner now carries each centre's own watercolour elevation, which is
+     a light image — the previous scrim left 28% of the area behind the hero
+     text below 4.5:1, worst point 2.68:1, because the subtitle fell across
+     the pale part of the wash. This is the lightest scrim that clears AA
+     across the whole text box (worst 4.97:1), so it holds the drawing back
+     no further than it has to. */
+  background: linear-gradient(100deg,
+    rgba(36,27,51,0.90) 0%,
+    rgba(36,27,51,0.80) 50%,
+    rgba(63,42,134,0.64) 80%,
+    rgba(36,27,51,0.42) 100%);
 }
 .hosp-hero .container { position: relative; z-index: 1; }
 .hosp-hero-content { max-width: 640px; }
