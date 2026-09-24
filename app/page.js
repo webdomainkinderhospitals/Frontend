@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { centreName, isOwnImageOf, slugOfLocation } from '@/lib/locations';
 
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
@@ -34,7 +35,12 @@ export default async function HomePage() {
       <main className={styles.home}>
       <HomeHero settings={settings} locations={locations} />
       <QuickBar />
-      <Stats settings={settings} />
+      <Stats
+        settings={settings}
+        centres={(locations || [])
+          .filter((loc) => isOwnImageOf(loc.imageUrl))
+          .map((loc) => ({ slug: slugOfLocation(loc), title: centreName(loc), since: loc.since, imageUrl: loc.imageUrl }))}
+      />
       <CoeGrid />
       <Doctors doctors={doctors} locations={locations} />
       <Procedures procedures={procedures} />

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
+import { centreName } from '@/lib/locations';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -173,10 +174,10 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                         <span className={`hospital-since${loc.international ? ' hospital-since-intl' : ''}`}>
                           {loc.since || HOSPITAL_TAGS[loc.name] || `${loc.city} · ${loc.country}`}
                         </span>
-                        <h6>Kinder {loc.name}</h6>
+                        <h6>{centreName(loc)}</h6>
                         <p>{loc.address}</p>
                         <span className="hospital-link">
-                          {`Explore Kinder ${loc.name} →`}
+                          {`Explore ${centreName(loc)} →`}
                         </span>
                       </div>
                     </a>

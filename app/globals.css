@@ -3431,3 +3431,60 @@ body{ overflow-x: clip; }
   .editorial-body .cb-gallery, .editorial-body .cb-gallery-3{ grid-template-columns: 1fr; }
   .editorial-body .cb-logos img{ height: 64px; }
 }
+
+/* Menu hospital cards carry each centre's watercolour elevation. The dark
+   gradient over their lower half was there for photographs; over a drawing
+   on white paper it reads as a grey smudge. A hairline separates instead. */
+.hospital-card .hospital-img::after{ display: none; }
+.hospital-card .hospital-img{
+  background-color: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- Homepage: the network, as the network ----------
+   The four buildings replace a stock photograph. Tiles are 16:10, the ratio
+   the elevations are drawn to, so nothing is cropped. The accent offset
+   block the old photograph sat on is kept, so the section's rhythm holds. */
+.overview-mosaic{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-3);
+  padding: var(--s-3);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: 24px 24px 0 0 var(--accent-light), var(--e-2);
+}
+.overview-mosaic[data-count="3"] .overview-tile:first-child{ grid-column: 1 / -1; }
+.overview-mosaic[data-count="2"]{ grid-template-columns: 1fr; }
+.overview-tile{
+  display: flex; flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--white);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.overview-tile img{ width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+.overview-tile-cap{
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+.overview-tile-cap strong{ font-family: var(--display); font-weight: var(--display-weight); font-size: 1rem; color: var(--ink); line-height: 1.3; }
+.overview-tile-cap small{ font-size: var(--t-micro); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.overview-tile:hover{ transform: translateY(-2px); box-shadow: var(--e-3); border-color: color-mix(in srgb, var(--primary) 28%, var(--line)); }
+@media (max-width: 640px){
+  .overview-mosaic{ box-shadow: 12px 12px 0 0 var(--accent-light), var(--e-2); gap: var(--s-2); padding: var(--s-2); }
+  .overview-tile-cap{ padding: 8px 10px 10px; }
+  .overview-tile-cap strong{ font-size: .875rem; }
+}
+@media (prefers-reduced-motion: reduce){ .overview-tile:hover{ transform: none; } }
+
+/* "Kinder Hospital Cherthala" is longer than the old "Kinder Cherthala" and
+   wraps in a menu card; hold the two lines together as one name. */
+.hospital-meta h6{ line-height: 1.25 !important; text-wrap: balance; }
+.hospital-link{ line-height: 1.45; }
+/* Each homepage tile's caption band fills its tile, so tiles in a row end level. */
+.overview-tile-cap{ flex: 1; }

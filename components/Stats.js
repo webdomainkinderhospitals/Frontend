@@ -55,21 +55,45 @@ function StatValue({ value }) {
   return <strong ref={ref}>{text}</strong>;
 }
 
-export default function Stats({ settings }) {
+// The network, shown as the network: each centre's own watercolour elevation,
+// captioned with its name. Built from the live hospital list, so a centre the
+// admin hides drops out and a new one with its own drawing appears.
+function NetworkMosaic({ centres }) {
+  const shown = centres.slice(0, 4);
+  return (
+    <div className="overview-mosaic" data-count={shown.length}>
+      {shown.map((c) => (
+        <a key={c.slug} href={`/hospitals/${c.slug}`} className="overview-tile">
+          <img src={c.imageUrl} alt={`Illustration of ${c.title}`} width={1400} height={875} loading="lazy" decoding="async" />
+          <span className="overview-tile-cap">
+            <strong>{c.title}</strong>
+            {c.since && <small>{c.since}</small>}
+          </span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
+export default function Stats({ settings, centres = [] }) {
   const stats = settings.stats || [];
 
   return (
     <section className="overview" id="about">
       <div className="container">
         <div className="overview-grid">
-          <div className="overview-img">
-            <img
-              src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?auto=format&fit=crop&w=1000&q=80"
-              alt="Mother and baby at Kinder Hospital"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
+          {centres.length >= 2 ? (
+            <NetworkMosaic centres={centres} />
+          ) : (
+            <div className="overview-img">
+              <img
+                src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?auto=format&fit=crop&w=1000&q=80"
+                alt="Mother and baby at Kinder Hospital"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
           <div className="overview-text">
             <span className="section-eyebrow">Welcome to Kinder Medical Group</span>
             <h2 className="section-title">
