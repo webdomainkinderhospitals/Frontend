@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import UiIcon from '@/components/UiIcon';
+import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -10,7 +11,7 @@ const WHATSAPP_BOOK =
 // Header for a hospital's own sub-website: its Home is its own page, its menu
 // scrolls within its page, and the only way "out" is the clearly-labelled
 // corporate-site link. Other hospitals are never shown here.
-export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
+export default function SubSiteHeader({ loc, settings, slug, sections = {}, pages = [] }) {
   const [open, setOpen] = useState(false);
   // This centre's own booking link when it has one, the group WhatsApp otherwise.
   const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
@@ -24,6 +25,9 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   }, []);
 
   const home = `/hospitals/${slug}`;
+  const features = kochiFeaturePages(pages, loc.name);
+  const celebration = features.filter((link) => link.group === 'Celebrate Pregnancy');
+  const premium = features.find((link) => link.group === 'Premium Birthing Centre');
   // The centre's own menu, in the order the group site tree lists it. The
   // full list lives in the footer; the bar carries what a visitor needs most.
   const items = [
@@ -96,6 +100,13 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
           </div>
         </div>
       </header>
+      {features.length > 0 && <nav className="kochi-feature-menu" aria-label="Kochi pregnancy and birthing menu">
+        <div className="container kochi-feature-menu-inner">
+          {celebration.length > 0 && <a className="kochi-feature-lead" href={`${home}/celebrate-pregnancy`} onClick={() => setOpen(false)}>Celebrate Pregnancy <span aria-hidden="true">→</span></a>}
+          {celebration.map((link) => <a key={link.slug} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
+          {premium && <a className="kochi-feature-premium" href={premium.href} onClick={() => setOpen(false)}>✦ Premium Birthing Centre <span aria-hidden="true">→</span></a>}
+        </div>
+      </nav>}
     </>
   );
 }
