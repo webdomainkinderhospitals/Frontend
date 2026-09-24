@@ -26,7 +26,7 @@ export default async function CelebratePregnancyPage() {
 
   // Birthing and maternity content published for any centre.
   const birthing = pages
-    .filter((p) => isCarePage(p) && /birth|labour|labor|maternity|obstetric/i.test(`${p.title} ${p.excerpt}`))
+    .filter((p) => isCarePage(p) && /birth|labour|labor|maternity|obstetric|pregnan/i.test(`${p.title} ${p.excerpt}`))
     .map((p) => ({
       title: p.title,
       text: p.excerpt,

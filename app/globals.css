@@ -3384,3 +3384,50 @@ body{ overflow-x: clip; }
   border-bottom: 1px solid var(--line);
   background-color: var(--white);
 }
+
+/* ---------- Media inside editorial content (see ContentBody) ----------
+   Photographs keep their own proportions: an editor's portrait is not cut
+   into a landscape band. Logos sit whole on white, in a row, never cropped. */
+.editorial-body .cb-figure{ margin: var(--s-6) 0; }
+.editorial-body .cb-figure img{
+  width: 100%; height: auto; display: block;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  box-shadow: var(--e-1);
+  background: var(--bg-soft);
+}
+.editorial-body .cb-figure figcaption{
+  margin-top: var(--s-2);
+  font-size: var(--t-small);
+  color: var(--muted);
+}
+.editorial-body .cb-gallery{
+  display: grid; gap: var(--s-4); margin: var(--s-6) 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+.editorial-body .cb-gallery-3{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.editorial-body .cb-gallery .cb-figure{ margin: 0; }
+.editorial-body .cb-logos{
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4);
+  margin: var(--s-5) 0;
+}
+.editorial-body .cb-logos img{
+  height: 88px; width: auto; max-width: 240px;
+  object-fit: contain;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+}
+.editorial-body .cb-video{
+  position: relative; aspect-ratio: 16 / 9; margin: var(--s-6) 0;
+  border-radius: var(--r-md); overflow: hidden;
+  border: 1px solid var(--line); box-shadow: var(--e-2);
+  background: var(--ink);
+}
+.editorial-body .cb-video iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 640px){
+  .editorial-body .cb-gallery, .editorial-body .cb-gallery-3{ grid-template-columns: 1fr; }
+  .editorial-body .cb-logos img{ height: 64px; }
+}
