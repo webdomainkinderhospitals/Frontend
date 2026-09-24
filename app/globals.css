@@ -2533,6 +2533,14 @@ html { scroll-behavior: smooth; }
   white-space: nowrap;
 }
 .subsite-nav a:hover { color: var(--primary); background: rgba(236, 230, 250, 0.7); }
+.kochi-feature-menu { background: #f9f1f8; border-bottom: 1px solid #ebddec; }
+.kochi-feature-menu-inner { display: flex; align-items: center; justify-content: center; gap: clamp(8px, 1.5vw, 24px); flex-wrap: wrap; padding-top: 9px; padding-bottom: 9px; }
+.kochi-feature-menu a { color: #513368; text-decoration: none; font-size: 13px; font-weight: 700; padding: 9px 12px; border-radius: 999px; transition: background .2s, transform .2s; }
+.kochi-feature-menu a:hover { background: #f0dcea; transform: translateY(-1px); }
+.kochi-feature-menu .kochi-feature-lead { background: white; color: #7c395f; box-shadow: 0 4px 14px #733d6f18; }
+.kochi-feature-menu .kochi-feature-premium { background: #39204f; color: #fff; padding: 10px 17px; box-shadow: 0 7px 20px #39204f2c; }
+.kochi-feature-menu .kochi-feature-premium:hover { background: #5a3175; }
+@media (max-width: 700px) { .kochi-feature-menu-inner { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; } .kochi-feature-menu a { flex: 0 0 auto; } }
 .subsite-actions { display: flex; align-items: center; gap: 10px; }
 .subsite-cta { text-decoration: none; }
 .subsite-toggle { display: none; background: none; border: none; padding: 8px; cursor: pointer; }
