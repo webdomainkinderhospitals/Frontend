@@ -1,4 +1,4 @@
-import { specIcon } from './icons';
+import SpecialityIcon from '@/components/SpecialityIcon';
 
 export default function Specialities({ specialities = [] }) {
   return (
@@ -20,7 +20,7 @@ export default function Specialities({ specialities = [] }) {
         <div className="spec-grid">
           {specialities.map((spec, i) => (
             <div className="spec-card" key={spec.id ?? i} title={spec.description || undefined}>
-              <div className="spec-icon">{specIcon(spec.icon, i)}</div>
+              <SpecialityIcon name={spec.name} className="spec-icon" />
               <h4>{spec.name}</h4>
               <span className="spec-arrow">→</span>
             </div>

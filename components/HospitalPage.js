@@ -4,6 +4,7 @@ import DoctorCard from '@/components/DoctorCard';
 import PromoBanner from '@/components/PromoBanner';
 import { promoSlides } from '@/lib/promo';
 import { isOwnImageOf } from '@/lib/hospital';
+import SpecialityIcon from '@/components/SpecialityIcon';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
@@ -51,10 +52,10 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
 
   const renderSpeciality = (spec, i) => {
     const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary>{spec.name}</summary><ContentBody text={spec.fullDescription} /></details>;
+    if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary><SpecialityIcon name={spec.name} /><span>{spec.name}</span></summary><ContentBody text={spec.fullDescription} /></details>;
     return (
       <a className="svc-card" key={spec.id ?? i} title={spec.description || undefined} href={`${base}/services/${slug}`}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+        <SpecialityIcon name={spec.name} />
         <span>{spec.name}</span>
       </a>
     );

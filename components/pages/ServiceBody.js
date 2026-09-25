@@ -3,6 +3,7 @@ import PageHero from '@/components/PageHero';
 import DoctorCard from '@/components/DoctorCard';
 import { doctorsForService, slugify } from '@/lib/services';
 import { atLocation, locationsOf } from '@/lib/locations';
+import SpecialityIcon from '@/components/SpecialityIcon';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -106,7 +107,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
                   href={`${base}/services/${slugify(item.name)}`}
                   title={item.description || undefined}
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                  <SpecialityIcon name={item.name} />
                   <span>{item.name}</span>
                 </a>
               ))}
