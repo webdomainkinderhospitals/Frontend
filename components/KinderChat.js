@@ -4,7 +4,7 @@ import { atLocation, locationLabel, locationsOf } from '@/lib/locations';
 import { useEffect, useRef, useState } from 'react';
 import { allServices, doctorsForService } from '@/lib/services';
 
-// Kinder Assistant — a professional, on-brand hospital chatbot.
+// Dr. Kinder Maa (Kinder Assistant) — a professional, on-brand hospital chatbot.
 // It answers ONLY from the content this website already shows (services,
 // doctors, hospitals, packages, contact details from the admin), and every
 // answer carries buttons that take the visitor to the right page.
@@ -209,49 +209,12 @@ function buildReply(text, content) {
   );
 }
 
-// Dr. Kinder — a robot in a doctor's white coat: glowing face-screen,
-// antenna, stethoscope around the neck and a medical badge on the pocket.
-// Brand tokens via CSS variables (with fallbacks) so it stays on-palette.
-function DoctorBot(props) {
+// Dr. Kinder Maa — the assistant's portrait, a friendly doctor in a white
+// coat with a stethoscope, used on the launcher and in the chat header.
+function DoctorAvatar({ className }) {
   return (
-    <svg viewBox="0 0 72 88" fill="none" aria-hidden="true" {...props}>
-      {/* antenna */}
-      <rect x="34.6" y="8" width="2.8" height="7" rx="1.4" fill="#fff" opacity=".9" />
-      <circle cx="36" cy="6" r="4" fill="var(--accent, #F26D8B)" />
-      <circle cx="36" cy="6" r="6.5" stroke="var(--accent, #F26D8B)" strokeWidth="1.2" opacity=".35" />
-      {/* head */}
-      <rect x="16" y="14" width="40" height="31" rx="13" fill="#fff" />
-      <rect x="16.9" y="14.9" width="38.2" height="29.2" rx="12.2" stroke="var(--primary, #6D49C9)" strokeOpacity=".22" strokeWidth="1.8" />
-      {/* ear caps */}
-      <rect x="11" y="24" width="5" height="11" rx="2.5" fill="var(--accent, #F26D8B)" />
-      <rect x="56" y="24" width="5" height="11" rx="2.5" fill="var(--accent, #F26D8B)" />
-      {/* glowing face screen */}
-      <rect x="21.5" y="19.5" width="29" height="20" rx="9" fill="var(--primary-dark, #3F2A86)" />
-      <circle cx="30" cy="28.5" r="3" fill="#A5F3FF" />
-      <circle cx="42" cy="28.5" r="3" fill="#A5F3FF" />
-      <circle cx="31" cy="27.5" r="1" fill="#fff" />
-      <circle cx="43" cy="27.5" r="1" fill="#fff" />
-      <path d="M31 34c1.7 1.9 8.3 1.9 10 0" stroke="#A5F3FF" strokeWidth="2.2" strokeLinecap="round" />
-      {/* neck */}
-      <rect x="30" y="45" width="12" height="5" rx="2.5" fill="#E4DCF5" />
-      {/* white doctor's coat */}
-      <path d="M14 88V64c0-9.5 9-15 22-15s22 5.5 22 15v24H14Z" fill="#fff" />
-      <path d="M14.9 88V64c0-9 8.6-14.1 21.1-14.1S57.1 55 57.1 64v24" stroke="var(--primary, #6D49C9)" strokeOpacity=".18" strokeWidth="1.8" />
-      {/* shirt opening + lapels */}
-      <path d="M36 49.5 32 57l4 31 4-31-4-7.5Z" fill="var(--primary-light, #ECE6FA)" />
-      <path d="m36 49.5-7.5 2.5 5 8.5 2.5-11Z" fill="#E4DCF5" />
-      <path d="m36 49.5 7.5 2.5-5 8.5-2.5-11Z" fill="#E4DCF5" />
-      {/* stethoscope */}
-      <path d="M28.5 52.5c-1 8 1.5 13.5 7.5 13.5 5.5 0 8-5 7.5-12" stroke="var(--primary, #6D49C9)" strokeWidth="2.7" strokeLinecap="round" />
-      <circle cx="36" cy="71" r="4.4" stroke="var(--primary, #6D49C9)" strokeWidth="2.7" />
-      <path d="M36 66v.6" stroke="var(--primary, #6D49C9)" strokeWidth="2.7" strokeLinecap="round" />
-      {/* pocket with medical cross */}
-      <rect x="18.5" y="66" width="10.5" height="9.5" rx="2.5" fill="var(--primary-light, #ECE6FA)" />
-      <path d="M23.75 68.2v5.1M21.2 70.75h5.1" stroke="var(--accent, #F26D8B)" strokeWidth="2.1" strokeLinecap="round" />
-      {/* coat buttons */}
-      <circle cx="47.5" cy="67" r="1.7" fill="#CBBFE9" />
-      <circle cx="47.5" cy="74" r="1.7" fill="#CBBFE9" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img className={className} src="/dr-kinder-maa.png" alt="" width={100} height={100} aria-hidden="true" />
   );
 }
 
@@ -267,7 +230,7 @@ export default function KinderChat({ content }) {
     if (open && msgs.length === 0) {
       setMsgs([{
         from: 'bot',
-        text: `Hello! I'm Dr. Kinder, your robot guide. Ask me about our doctors, services, hospitals or packages — or use a shortcut below.`,
+        text: `Hello! I'm Dr. Kinder Maa, your guide at Kinder Hospitals. Ask me about our doctors, services, hospitals or packages — or use a shortcut below.`,
         actions: [],
       }]);
     }
@@ -300,21 +263,21 @@ export default function KinderChat({ content }) {
     <>
       <button
         className={`kc-launcher${open ? ' kc-hidden' : ''}`}
-        aria-label="Chat with Kinder Assistant"
+        aria-label="Chat with Dr. Kinder Maa"
         onClick={() => setOpen(true)}
       >
-        <span className="kc-bot-wrap"><DoctorBot className="kc-bot-icon" /></span>
-        <span className="kc-launcher-label">Chat with Dr.&nbsp;Kinder</span>
+        <span className="kc-bot-wrap"><DoctorAvatar className="kc-bot-icon" /></span>
+        <span className="kc-launcher-label">Chat with Dr.&nbsp;Kinder&nbsp;Maa</span>
       </button>
 
       {open && (
-        <section className="kc-panel" role="dialog" aria-label="Kinder Assistant chat">
+        <section className="kc-panel" role="dialog" aria-label="Chat with Dr. Kinder Maa">
           <header className="kc-head">
             <span className="kc-avatar" aria-hidden="true">
-              <DoctorBot />
+              <DoctorAvatar />
             </span>
             <div className="kc-head-text">
-              <strong>Dr. Kinder · Assistant</strong>
+              <strong>Dr. Kinder Maa · Assistant</strong>
               <span><i className="kc-dot" aria-hidden="true"></i> Online · replies instantly</span>
             </div>
             <button className="kc-close" aria-label="Close chat" onClick={() => setOpen(false)}>
@@ -338,7 +301,7 @@ export default function KinderChat({ content }) {
               </div>
             ))}
             {typing && (
-              <div className="kc-msg kc-bot kc-typing" aria-label="Kinder Assistant is typing">
+              <div className="kc-msg kc-bot kc-typing" aria-label="Dr. Kinder Maa is typing">
                 <span></span><span></span><span></span>
               </div>
             )}
@@ -359,14 +322,14 @@ export default function KinderChat({ content }) {
               type="text"
               value={input}
               placeholder="Type your question…"
-              aria-label="Type your question for Kinder Assistant"
+              aria-label="Type your question for Dr. Kinder Maa"
               onChange={(e) => setInput(e.target.value)}
             />
             <button type="submit" aria-label="Send message" disabled={!input.trim()}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
             </button>
           </form>
-          <p className="kc-foot">Kinder Assistant guides you around this website · for medical advice please consult our doctors</p>
+          <p className="kc-foot">Dr. Kinder Maa guides you around this website · for medical advice please consult our doctors</p>
         </section>
       )}
     </>
