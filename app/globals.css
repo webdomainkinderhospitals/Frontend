@@ -4023,3 +4023,26 @@ a:hover .spec-3d, summary:hover .spec-3d {
   .subsite-nav a { display: flex !important; width: 100%; padding: 12px 10px !important; border-radius: 12px; }
   .subsite-nav .nav-ico { margin-right: 12px; }
 }
+
+/* ============ Clinics menu ============ */
+.dropdown-clinics { min-width: 340px; padding: 14px !important; }
+.dropdown-clinics-head { display: block; padding: 2px 8px 10px; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #0e8c7b; }
+.dropdown-clinics a.clinic-card { display: flex !important; align-items: flex-start; gap: 14px; padding: 14px !important; border-radius: 14px; }
+.clinic-card-ico {
+  display: grid; place-items: center; flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px;
+  background: linear-gradient(150deg, #5fe0c8, #0e8c7b); color: #fff;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.45), inset 0 -4px 6px rgba(0,0,0,.18), 0 8px 14px -6px rgba(14,140,123,.6);
+}
+.clinic-card-ico .nav-ico { display: block !important; width: 22px; height: 22px; margin: 0; padding: 0; background: none; color: #fff !important; }
+.clinic-card-body { display: grid; gap: 3px; min-width: 0; }
+.clinic-card-body strong { font-size: 15px; color: var(--ink); }
+.clinic-card-tag { font-size: 11.5px !important; font-weight: 700 !important; letter-spacing: .06em; text-transform: uppercase; color: #0e8c7b !important; }
+.clinic-card-addr { font-size: 12.5px !important; line-height: 1.5; color: var(--muted) !important; white-space: normal; }
+.clinic-card-go { margin-top: 4px; font-size: 12.5px; font-weight: 700; color: var(--primary); }
+.dropdown-clinics a.clinic-card:hover .clinic-card-go { color: var(--lux-rose, #d24f7e); }
+@media (max-width: 1024px) {
+  .dropdown-clinics { min-width: 0; padding: 6px !important; }
+  .dropdown-clinics-head { display: none; }
+}
+/* Find Care is in the top bar on desktop; the menu keeps it for phones */
+@media (min-width: 1025px) { .nav-list > li.nav-findcare { display: none; } }
