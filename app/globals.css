@@ -3545,3 +3545,15 @@ body{ overflow-x: clip; }
   .pregnancy-strip::after, .pregnancy-strip-pulse { animation: none; }
   .pregnancy-strip { transition: none; }
 }
+
+/* Quick bar: five tiles — Surgical Care gets its own teal accent, and an odd
+   tile out on two-column layouts spans the full row instead of hanging alone. */
+.quick-bar { grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 1240px; }
+.quick-item { padding: 22px 20px; gap: 14px; min-width: 0; }
+.quick-text { min-width: 0; }
+.quick-item:nth-child(2) .quick-icon { background: #E3F6F2 !important; color: #0E8C7B !important; }
+.quick-item:nth-child(3) .quick-icon { background: var(--accent-light) !important; color: var(--accent) !important; }
+@media (max-width: 1024px) {
+  .quick-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quick-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}

@@ -10,6 +10,18 @@ const ITEMS = [
     icon: <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />,
   },
   {
+    href: '/services#allied',
+    title: 'Surgical Care',
+    sub: 'Laparoscopic & general',
+    icon: (
+      <>
+        <path d="M20.5 3.5c-3.2.2-7 2.6-10.4 6.1l3.8 3.8c3.5-3.4 5.9-7.2 6.6-9.9z" />
+        <path d="m10.1 9.6-6.4 6.4a1.8 1.8 0 0 0 0 2.5l1.8 1.8a1.8 1.8 0 0 0 2.5 0l6-6" />
+        <path d="M7.2 15.2l1.6 1.6" />
+      </>
+    ),
+  },
+  {
     href: '/services',
     title: 'Kinder IVF',
     sub: '1,500+ successful IVFs',
