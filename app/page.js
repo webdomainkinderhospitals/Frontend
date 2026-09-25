@@ -1,5 +1,5 @@
 import { getContent } from '@/lib/api';
-import { centreName, isOwnImageOf, slugOfLocation } from '@/lib/locations';
+import { slugOfLocation } from '@/lib/locations';
 
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
@@ -40,9 +40,7 @@ export default async function HomePage() {
       <PromoBanner slides={promoSlides(settings, 'homePromo')} label="Kinder Hospitals announcements" />
       <Stats
         settings={settings}
-        centres={(locations || [])
-          .filter((loc) => isOwnImageOf(loc.imageUrl))
-          .map((loc) => ({ slug: slugOfLocation(loc), title: centreName(loc), since: loc.since, imageUrl: loc.imageUrl }))}
+        hospitals={(locations || []).map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
       />
       <CoeGrid />
       <Doctors doctors={doctors} locations={locations} />
