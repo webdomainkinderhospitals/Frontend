@@ -9,6 +9,7 @@ import QuickBar from '@/components/QuickBar';
 import PromoBanner from '@/components/PromoBanner';
 import { promoSlides } from '@/lib/promo';
 import Stats from '@/components/Stats';
+import CelebratePregnancy from '@/components/CelebratePregnancy';
 import CoeGrid from '@/components/CoeGrid';
 import Doctors from '@/components/Doctors';
 import Procedures from '@/components/Procedures';
@@ -42,6 +43,7 @@ export default async function HomePage() {
         settings={settings}
         hospitals={(locations || []).map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
       />
+      <CelebratePregnancy pages={content.pages} />
       <CoeGrid />
       <Doctors doctors={doctors} locations={locations} />
       <Procedures procedures={procedures} />
