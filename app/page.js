@@ -1,3 +1,4 @@
+import { featureMenuPages } from '@/lib/kochi-features.mjs';
 import { getContent } from '@/lib/api';
 import { slugOfLocation } from '@/lib/locations';
 
@@ -34,7 +35,7 @@ export default async function HomePage() {
   return (
     <>
       <TopBar settings={settings} locations={locations} />
-      <Header settings={settings} locations={locations} specialities={specialities} />
+      <Header settings={settings} locations={locations} specialities={specialities} pages={featureMenuPages(content.pages)} />
       <main className={styles.home}>
       <HomeHero settings={settings} locations={locations} />
       <QuickBar />
