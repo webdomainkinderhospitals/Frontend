@@ -3982,3 +3982,44 @@ a:hover .spec-3d, summary:hover .spec-3d {
   .nav-cta::before, .subsite-cta::before { animation: none; display: none; }
   .pregnancy-strip-links a::after, .kochi-feature-menu a::after { transition: none; }
 }
+
+/* Menu icons — premium line glyphs beside each menu label */
+.nav-ico { width: 15px; height: 15px; flex-shrink: 0; margin-right: 6px; color: #8b77b8; transition: color .25s ease, transform .25s ease; }
+.nav-list li > a, .subsite-nav a { display: inline-flex; align-items: center; }
+.nav-list > li:hover > a .nav-ico, .nav-list > li.is-open > a .nav-ico, .subsite-nav a:hover .nav-ico { color: var(--lux-rose, #d24f7e); transform: translateY(-1px); }
+.nav-list > li.is-active > a .nav-ico { color: var(--lux-rose, #d24f7e); }
+.nav-list > li.nav-pregnancy > a .nav-ico { color: #c7417c; }
+/* In the phone drawer the icons sit in soft tiles */
+@media (max-width: 1024px) {
+  .nav-ico { width: 18px; height: 18px; margin-right: 12px; padding: 7px; box-sizing: content-box; border-radius: 10px; background: linear-gradient(145deg, #f3eefc, #fbf8ff); color: var(--primary); }
+}
+/* Icons need room: widen the header on large screens, hide them elsewhere */
+@media (min-width: 1025px) and (max-width: 1439px) { .nav-ico { display: none; } }
+@media (min-width: 1440px) {
+  .top-bar .container, .header .container, .pregnancy-strip .container,
+  .subsite-topbar .container, .subsite-header .container, .kochi-feature-menu .container { max-width: 1440px; }
+  .nav-list > li:not(.nav-cta-wrap) > a { padding: 8px 7px !important; }
+  .nav-list .nav-ico { margin-right: 5px; }
+  .nav-list { gap: 1px; }
+  .subsite-nav a { padding: 10px 10px; }
+}
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .subsite-nav a { padding: 8px 7px !important; font-size: 13px !important; }
+  .subsite-cta { padding: 10px 14px !important; font-size: 13px !important; }
+  .subsite-header-in { gap: 10px; }
+  .subsite-brand-text small { display: none; }
+}
+@media (max-width: 1024px) {
+  .nav-list li > a { display: flex !important; justify-content: flex-start !important; }
+  .nav-list li > a .caret { margin-left: auto; }
+  .nav-list li.nav-cta-wrap > a { justify-content: center !important; }
+}
+@media (min-width: 1025px) and (max-width: 1120px) {
+  .subsite-nav a { padding: 7px 5px !important; font-size: 12.5px !important; }
+  .subsite-brand-text strong { font-size: 15px; }
+}
+@media (max-width: 1024px) {
+  .subsite-nav { background: #fff !important; border-radius: 0 0 18px 18px; }
+  .subsite-nav a { display: flex !important; width: 100%; padding: 12px 10px !important; border-radius: 12px; }
+  .subsite-nav .nav-ico { margin-right: 12px; }
+}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import UiIcon from '@/components/UiIcon';
+import NavIcon from '@/components/NavIcon';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 
 const WHATSAPP_BOOK =
@@ -31,14 +32,14 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, page
   // The centre's own menu, in the order the group site tree lists it. The
   // full list lives in the footer; the bar carries what a visitor needs most.
   const items = [
-    { label: 'Home', href: home },
-    { label: 'About', href: `${home}#about` },
-    sections.care && { label: 'Our Care', href: `${home}#care` },
-    sections.specialities && { label: 'Specialities', href: `${home}#specialities` },
-    sections.doctors && { label: 'Doctors', href: `${home}#doctors` },
-    sections.facilities && { label: 'Facilities', href: `${home}#facilities` },
-    { label: 'Patient Services', href: `${home}#patient-services` },
-    { label: 'Contact', href: `${home}#contact` },
+    { label: 'Home', href: home, icon: 'home' },
+    { label: 'About', href: `${home}#about`, icon: 'about' },
+    sections.care && { label: 'Our Care', href: `${home}#care`, icon: 'care' },
+    sections.specialities && { label: 'Specialities', href: `${home}#specialities`, icon: 'stethoscope' },
+    sections.doctors && { label: 'Doctors', href: `${home}#doctors`, icon: 'doctor' },
+    sections.facilities && { label: 'Facilities', href: `${home}#facilities`, icon: 'building' },
+    { label: 'Patient Services', href: `${home}#patient-services`, icon: 'people' },
+    { label: 'Contact', href: `${home}#contact`, icon: 'phone' },
   ].filter(Boolean);
 
   return (
@@ -79,7 +80,7 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, page
             <nav className={`subsite-nav${open ? ' open' : ''}`} aria-label={`Kinder ${loc.name} menu`}>
               {items.map((item) => (
                 <a key={item.label} href={item.href} onClick={() => setOpen(false)}>
-                  {item.label}
+                  <NavIcon name={item.icon} />{item.label}
                 </a>
               ))}
             </nav>
