@@ -3598,3 +3598,69 @@ body{ overflow-x: clip; }
 .spec-card .spec-icon svg { width: 26px; height: 26px; }
 
 @media (prefers-reduced-motion: reduce) { .spec-glyph { transition: none; } .svc-card:hover .spec-glyph { transform: none; } }
+
+/* ============ 3D "clay" speciality icons ============
+   A raised, glossy tile: tone gradient, a soft top highlight, an inner
+   shade at the base and a coloured drop shadow; the glyph is white with its
+   own depth. Tones come from SpecialityIcon (data-tone). */
+.spec-3d {
+  --t1: #8f6cf0; --t2: #5b36c4; --glow: 91, 54, 196;
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  background: linear-gradient(150deg, var(--t1) 0%, var(--t2) 100%) !important;
+  color: #fff !important;
+  box-shadow:
+    inset 0 2px 1px rgba(255, 255, 255, .45),
+    inset 0 -4px 6px rgba(0, 0, 0, .18),
+    0 6px 12px -4px rgba(var(--glow), .55),
+    0 2px 3px rgba(var(--glow), .25) !important;
+  transform: translateZ(0);
+  transition: transform .3s cubic-bezier(.2,.8,.3,1.4), box-shadow .3s ease !important;
+}
+.spec-3d::before {
+  content: ""; position: absolute; z-index: -1; left: 8%; right: 8%; top: 5%; height: 46%;
+  border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0));
+}
+.spec-3d::after {
+  content: ""; position: absolute; z-index: -1; right: -20%; bottom: -30%; width: 70%; height: 70%;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, .22), transparent 70%);
+}
+.spec-3d svg { color: #fff; filter: drop-shadow(0 1.5px 1px rgba(0, 0, 0, .28)); }
+
+.spec-3d[data-tone="rose"]   { --t1: #ff9bb8; --t2: #e0457a; --glow: 224, 69, 122; }
+.spec-3d[data-tone="berry"]  { --t1: #f08bd6; --t2: #a43596; --glow: 164, 53, 150; }
+.spec-3d[data-tone="teal"]   { --t1: #5fe0c8; --t2: #0e8c7b; --glow: 14, 140, 123; }
+.spec-3d[data-tone="blue"]   { --t1: #7cc4ff; --t2: #2f6fd6; --glow: 47, 111, 214; }
+.spec-3d[data-tone="coral"]  { --t1: #ffae8f; --t2: #e8574a; --glow: 232, 87, 74; }
+.spec-3d[data-tone="violet"] { --t1: #a88bff; --t2: #5b36c4; --glow: 91, 54, 196; }
+.spec-3d[data-tone="amber"]  { --t1: #ffd27a; --t2: #e08a1e; --glow: 224, 138, 30; }
+.spec-3d[data-tone="green"]  { --t1: #9be37e; --t2: #3a9a3f; --glow: 58, 154, 63; }
+.spec-3d[data-tone="gold"]   { --t1: #ffe08a; --t2: #c98a1c; --glow: 201, 138, 28; }
+
+/* Lift on hover wherever the tile sits inside a link */
+a:hover .spec-3d, summary:hover .spec-3d {
+  transform: translateY(-2px) rotate(-4deg) scale(1.06);
+  box-shadow:
+    inset 0 2px 1px rgba(255, 255, 255, .5),
+    inset 0 -4px 6px rgba(0, 0, 0, .18),
+    0 10px 18px -6px rgba(var(--glow), .6),
+    0 3px 5px rgba(var(--glow), .25) !important;
+}
+/* Sizes: roomier tiles on cards, compact in the menu */
+.svc-card .spec-3d { width: 40px; height: 40px; border-radius: 12px; }
+.svc-card .spec-3d svg { width: 21px; height: 21px; }
+.mega-col a.mega-spec .spec-3d { width: 30px; height: 30px; border-radius: 9px; }
+.mega-col a.mega-spec .spec-3d svg { width: 16px; height: 16px; }
+.editorial-speciality summary .spec-3d { width: 40px; height: 40px; border-radius: 12px; }
+.editorial-speciality summary .spec-3d svg { width: 21px; height: 21px; }
+.spec-card .spec-3d { width: 56px !important; height: 56px !important; border-radius: 16px !important; }
+.spec-card .spec-3d svg { width: 28px; height: 28px; }
+/* The earlier flat hover fills no longer apply */
+.svc-card:hover .spec-glyph, .mega-col a.mega-spec:hover .spec-glyph,
+.mega-col:nth-child(2) a.mega-spec:hover .spec-glyph, .mega-col:nth-child(3) a.mega-spec:hover .spec-glyph { background: linear-gradient(150deg, var(--t1), var(--t2)) !important; color: #fff !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spec-3d { transition: none !important; }
+  a:hover .spec-3d, summary:hover .spec-3d { transform: none; }
+}
