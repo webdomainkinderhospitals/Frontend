@@ -75,11 +75,23 @@ export function specialityIconKey(name) {
   return (RULES.find(([re]) => re.test(n)) || [null, 'cross'])[1];
 }
 
+// Colour family per icon, so the 3D tiles read as groups of care at a glance.
+const TONE = {
+  pregnant: 'rose', motherChild: 'rose', womb: 'rose', bottle: 'rose', book: 'rose',
+  egg: 'berry', female: 'berry', ribbon: 'berry',
+  baby: 'teal', child: 'teal', monitor: 'teal', kidney: 'teal',
+  scalpel: 'blue', syringe: 'blue', pill: 'blue', scan: 'blue', ambulance: 'blue',
+  heart: 'coral', lungs: 'coral', drop: 'coral',
+  brain: 'violet', chat: 'violet', ear: 'violet', stethoscope: 'violet', cross: 'violet',
+  bone: 'amber', runner: 'amber', apple: 'green', stomach: 'green', sparkle: 'gold',
+};
+
 export default function SpecialityIcon({ name, className = 'spec-glyph' }) {
+  const key = specialityIconKey(name);
   return (
-    <span className={className} aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        {P[specialityIconKey(name)]}
+    <span className={`${className} spec-3d`} data-tone={TONE[key] || 'violet'} aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {P[key]}
       </svg>
     </span>
   );
