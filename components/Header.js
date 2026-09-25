@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
-import { centreName } from '@/lib/locations';
+import { centreName, isClinic, slugOfLocation } from '@/lib/locations';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import NavIcon from '@/components/NavIcon';
@@ -33,6 +33,10 @@ export default function Header({ settings, locations = [], specialities = [], pa
   // Kinder Kochi's pregnancy experiences, from the same published pages as the
   // Kochi menu bar: a highlighted strip under the menu and a dropdown on
   // Celebrate Pregnancy. Both disappear if the pages are unpublished.
+  // Hospitals and clinics get a menu each; a centre is a clinic when the
+  // admin marks it so.
+  const clinics = locations.filter(isClinic);
+  const hospitals = clinics.length ? locations.filter((l) => !isClinic(l)) : locations;
   const features = kochiFeaturePages(pages, 'Kochi');
   const celebration = features.filter((f) => f.group === 'Celebrate Pregnancy');
   const premium = features.find((f) => f.group === 'Premium Birthing Centre');
@@ -187,10 +191,10 @@ export default function Header({ settings, locations = [], specialities = [], pa
 
               <li className={`${dd('locations')} has-mega` + act('locations')}>
                 <a href="/hospitals" onClick={(e) => toggleDropdown(e, 'locations')}>
-                  <NavIcon name="pin" />Our Locations <span className="caret">▾</span>
+                  <NavIcon name="pin" />{clinics.length ? 'Hospitals' : 'Our Locations'} <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega mega-hospitals">
-                  {locations.map((loc) => (
+                  {hospitals.map((loc) => (
                     <a
                       key={loc.id}
                       href={`/hospitals/${loc.slug || String(loc.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
@@ -219,6 +223,28 @@ export default function Header({ settings, locations = [], specialities = [], pa
                   ))}
                 </div>
               </li>
+
+              {clinics.length > 0 && (
+                <li className={dd('clinics') + ' nav-clinics'}>
+                  <a href={`/hospitals/${slugOfLocation(clinics[0])}`} onClick={(e) => toggleDropdown(e, 'clinics')}>
+                    <NavIcon name="clinic" />Clinics <span className="caret">▾</span>
+                  </a>
+                  <div className="dropdown dropdown-clinics">
+                    <span className="dropdown-clinics-head">Kinder clinics · care close to home</span>
+                    {clinics.map((loc) => (
+                      <a key={loc.id ?? loc.name} className="clinic-card" href={`/hospitals/${slugOfLocation(loc)}`} onClick={onLeafClick}>
+                        <span className="clinic-card-ico" aria-hidden="true"><NavIcon name="clinic" /></span>
+                        <span className="clinic-card-body">
+                          <strong>{centreName(loc)}</strong>
+                          <small className="clinic-card-tag">{['Clinic', loc.since || loc.city].filter(Boolean).join(' · ')}</small>
+                          {loc.address && <small className="clinic-card-addr">{loc.address}</small>}
+                          <span className="clinic-card-go">Visit clinic →</span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              )}
 
               <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
@@ -271,7 +297,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
                 </div>
               </li>
 
-              <li className={act('find-care')}><a href="/find-care" onClick={onLeafClick}><NavIcon name="search" />Find Care</a></li>
+              <li className={'nav-findcare' + act('find-care')}><a href="/find-care" onClick={onLeafClick}><NavIcon name="search" />Find Care</a></li>
 
               <li className={act('contact')}><a href="/contact" onClick={onLeafClick}><NavIcon name="phone" />Contact</a></li>
 
