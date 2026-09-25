@@ -4046,3 +4046,15 @@ a:hover .spec-3d, summary:hover .spec-3d {
 }
 /* Find Care is in the top bar on desktop; the menu keeps it for phones */
 @media (min-width: 1025px) { .nav-list > li.nav-findcare { display: none; } }
+
+/* Homepage pregnancy strip — same arrangement as the Kochi menu: one centred
+   group, even gaps, same button sizes. */
+.pregnancy-strip-in { justify-content: center !important; gap: clamp(8px, 1.5vw, 24px) !important; padding-top: 9px; padding-bottom: 9px; }
+.pregnancy-strip-links { display: contents; }
+.pregnancy-strip-lead, .pregnancy-strip-links a { font-size: 13px !important; font-weight: 700 !important; padding: 9px 12px !important; }
+.pregnancy-strip-lead { gap: 6px !important; padding: 9px 14px !important; }
+.pregnancy-strip-pulse, .pregnancy-strip-where { display: none !important; }
+.pregnancy-strip-links .pregnancy-strip-premium { margin-left: 0 !important; padding: 10px 17px !important; }
+@media (max-width: 900px) {
+  .pregnancy-strip-in { justify-content: flex-start !important; }
+}
