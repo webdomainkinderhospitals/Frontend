@@ -2805,12 +2805,12 @@ html { scroll-behavior: smooth; }
 }
 .kc-bot-wrap {
   width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(160deg, var(--primary), var(--primary-dark));
+  background: #cfe6f5;
+  box-shadow: 0 0 0 2px #fff, 0 4px 12px rgba(63,42,134,0.18);
   display: grid; place-items: center; overflow: hidden;
 }
 .kc-launcher .kc-bot-icon {
-  width: 32px; height: 39px; margin-top: 8px;
-  animation: kcBob 3s ease-in-out infinite;
+  width: 100%; height: 100%; object-fit: cover; display: block;
 }
 @keyframes kcBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
 .kc-launcher:hover { transform: translateY(-2px) scale(1.03); }
@@ -2826,6 +2826,7 @@ html { scroll-behavior: smooth; }
   border: 1px solid var(--line);
   box-shadow: 0 30px 80px -20px rgba(24, 16, 50, 0.45);
   animation: kcIn .3s var(--ease-out, ease) both;
+  padding: 0; /* the panel is a <section>; keep the site-wide section padding off it */
 }
 @keyframes kcIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
 
@@ -2841,7 +2842,7 @@ html { scroll-behavior: smooth; }
   border: 2px solid rgba(255,255,255,0.35);
   display: grid; place-items: center; overflow: hidden;
 }
-.kc-avatar svg { width: 30px; height: 37px; margin-top: 9px; }
+.kc-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .kc-head-text { flex: 1; min-width: 0; }
 .kc-head-text strong { display: block; font-size: 15.5px; }
 .kc-head-text span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; opacity: .9; }
@@ -2909,7 +2910,7 @@ html { scroll-behavior: smooth; }
   .kc-launcher-label { display: none; }
   .kc-launcher { width: 60px; height: 60px; padding: 0; justify-content: center; border-radius: 50%; }
   .kc-bot-wrap { width: 52px; height: 52px; }
-  .kc-launcher .kc-bot-icon { width: 36px; height: 44px; margin-top: 9px; }
+  .kc-launcher .kc-bot-icon { width: 100%; height: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .kc-panel, .kc-msg, .kc-typing span, .kc-launcher .kc-bot-icon, .kc-launcher { animation: none; }
