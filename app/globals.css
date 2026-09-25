@@ -3489,3 +3489,59 @@ body{ overflow-x: clip; }
 .hospital-link{ line-height: 1.45; }
 /* Each homepage tile's caption band fills its tile, so tiles in a row end level. */
 .overview-tile-cap{ flex: 1; }
+
+/* ============ Celebrate Pregnancy — highlighted strip & menu (corporate header) ============ */
+.pregnancy-strip {
+  position: relative; overflow: hidden;
+  background: linear-gradient(90deg, #fde7ee 0%, #f7e6f6 45%, #ece4fb 100%);
+  border-top: 1px solid #f3d9e6; border-bottom: 1px solid #ead9ef;
+  max-height: 70px; transition: max-height .35s ease, border-color .35s ease;
+}
+.pregnancy-strip::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.65) 50%, transparent 70%);
+  transform: translateX(-100%); animation: stripShine 6s ease-in-out 1.2s infinite;
+}
+@keyframes stripShine { 0%, 60% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.pregnancy-strip-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 9px; padding-bottom: 9px; }
+.pregnancy-strip-lead {
+  display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
+  padding: 8px 16px 8px 12px; border-radius: 999px; background: #fff; color: #9b2f5f;
+  font-size: 13.5px; font-weight: 800; text-decoration: none;
+  box-shadow: 0 6px 18px -8px rgba(155, 47, 95, .45); transition: transform .2s ease, box-shadow .2s ease;
+}
+.pregnancy-strip-lead:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -8px rgba(155, 47, 95, .55); }
+.pregnancy-strip-where { color: #6b4a7a; font-weight: 600; }
+.pregnancy-strip-pulse { width: 9px; height: 9px; border-radius: 50%; background: #e2447a; box-shadow: 0 0 0 0 rgba(226, 68, 122, .6); animation: stripPulse 1.8s ease-out infinite; }
+@keyframes stripPulse { to { box-shadow: 0 0 0 9px rgba(226, 68, 122, 0); } }
+.pregnancy-strip-links { display: flex; align-items: center; gap: 6px; }
+.pregnancy-strip-links a { padding: 8px 14px; border-radius: 999px; color: #4f2d66; font-size: 13.5px; font-weight: 700; text-decoration: none; white-space: nowrap; transition: background .2s ease, color .2s ease; }
+.pregnancy-strip-links a:hover { background: rgba(255,255,255,.8); color: #9b2f5f; }
+.pregnancy-strip-links .pregnancy-strip-premium {
+  margin-left: 6px; padding: 9px 18px; color: #fff;
+  background: linear-gradient(135deg, #3b1f5e, #6a2c63); box-shadow: 0 8px 20px -8px rgba(59, 31, 94, .7);
+}
+.pregnancy-strip-links .pregnancy-strip-premium:hover { background: linear-gradient(135deg, #52297a, #8a3a7f); color: #fff; }
+/* Once the page scrolls, the sticky header folds the strip away; the
+   Celebrate Pregnancy dropdown keeps every link one tap away. */
+.header.is-stuck .pregnancy-strip { max-height: 0; border-color: transparent; }
+
+/* The menu item itself stands out */
+.nav-pregnancy > a { color: #b0336b !important; font-weight: 700 !important; }
+.nav-spark { color: #d8a24a; margin-right: 2px; }
+.dropdown-pregnancy { min-width: 300px; }
+.dropdown-pregnancy a small { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+.dropdown-pregnancy a.is-premium { background: linear-gradient(135deg, #3b1f5e, #6a2c63); border-radius: 10px; }
+.dropdown-pregnancy a.is-premium strong { color: #fff; }
+.dropdown-pregnancy a.is-premium small { color: rgba(255,255,255,.8); }
+
+@media (max-width: 900px) {
+  .pregnancy-strip-in { justify-content: flex-start; overflow-x: auto; scrollbar-width: none; gap: 8px; }
+  .pregnancy-strip-in::-webkit-scrollbar { display: none; }
+  .pregnancy-strip-where { display: none; }
+  .pregnancy-strip-lead, .pregnancy-strip-links a { font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pregnancy-strip::after, .pregnancy-strip-pulse { animation: none; }
+  .pregnancy-strip { transition: none; }
+}

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
 import { centreName } from '@/lib/locations';
+import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -18,7 +19,21 @@ const BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
 
-export default function Header({ settings, locations = [], specialities = [] }) {
+// One line under each pregnancy experience in the Celebrate Pregnancy menu.
+const FEATURE_NOTES = {
+  'kochi-tharattazhaku': 'Our pregnancy fashion show',
+  'kochi-wow-mom': 'Pregnancy club for mothers-to-be',
+  'kochi-water-birthing-suite': 'Kerala’s first water birthing suite',
+  'kochi-premium-birthing-centre': 'LDRP suites & painless labour',
+};
+
+export default function Header({ settings, locations = [], specialities = [], pages = [] }) {
+  // Kinder Kochi's pregnancy experiences, from the same published pages as the
+  // Kochi menu bar: a highlighted strip under the menu and a dropdown on
+  // Celebrate Pregnancy. Both disappear if the pages are unpublished.
+  const features = kochiFeaturePages(pages, 'Kochi');
+  const celebration = features.filter((f) => f.group === 'Celebrate Pregnancy');
+  const premium = features.find((f) => f.group === 'Premium Birthing Centre');
   const serviceGroups = groupServices(specialities);
   // Menus are built from the agreed site tree, so the navigation cannot drift
   // away from the architecture.
@@ -148,7 +163,25 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                 </div>
               </li>
 
-              <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
+              {features.length ? (
+                <li className={dd('pregnancy') + ' nav-pregnancy' + act('pregnancy')}>
+                  <a href="/celebrate-pregnancy" onClick={(e) => toggleDropdown(e, 'pregnancy')}>
+                    <span className="nav-spark" aria-hidden="true">✦</span> Celebrate Pregnancy <span className="caret">▾</span>
+                  </a>
+                  <div className="dropdown dropdown-pregnancy">
+                    <a href="/celebrate-pregnancy" onClick={onLeafClick}><strong>Your pregnancy journey</strong><small>Antenatal care to going home</small></a>
+                    <a href="/hospitals/kochi/celebrate-pregnancy" onClick={onLeafClick}><strong>Celebrate Pregnancy at Kinder Kochi</strong><small>All experiences in one place</small></a>
+                    {features.map((f) => (
+                      <a key={f.slug} href={f.href} onClick={onLeafClick} className={f === premium ? 'is-premium' : undefined}>
+                        <strong>{f === premium ? '✦ ' : ''}{f.label}</strong>
+                        <small>{FEATURE_NOTES[f.slug] || f.group}</small>
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              ) : (
+                <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
+              )}
 
               <li className={`${dd('locations')} has-mega` + act('locations')}>
                 <a href="/hospitals" onClick={(e) => toggleDropdown(e, 'locations')}>
@@ -246,6 +279,20 @@ export default function Header({ settings, locations = [], specialities = [] }) 
             </ul>
           </div>
         </nav>
+        {features.length > 0 && (
+          <nav className="pregnancy-strip" aria-label="Celebrate Pregnancy at Kinder Kochi">
+            <div className="container pregnancy-strip-in">
+              <a className="pregnancy-strip-lead" href="/hospitals/kochi/celebrate-pregnancy">
+                <span className="pregnancy-strip-pulse" aria-hidden="true" />
+                Celebrate Pregnancy <span className="pregnancy-strip-where">at Kinder Kochi</span> <span aria-hidden="true">→</span>
+              </a>
+              <span className="pregnancy-strip-links">
+                {celebration.map((f) => <a key={f.slug} href={f.href}>{f.label}</a>)}
+                {premium && <a className="pregnancy-strip-premium" href={premium.href}>✦ Premium Birthing Centre <span aria-hidden="true">→</span></a>}
+              </span>
+            </div>
+          </nav>
+        )}
       </header>
 
       <div className="nav-backdrop" onClick={closeMenu}></div>

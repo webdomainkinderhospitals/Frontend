@@ -1,3 +1,4 @@
+import { featureMenuPages } from '@/lib/kochi-features.mjs';
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -10,7 +11,7 @@ export default function SiteChrome({ content, children }) {
   return (
     <>
       <TopBar settings={content.settings} locations={content.locations} />
-      <Header settings={content.settings} locations={content.locations} specialities={content.specialities} />
+      <Header settings={content.settings} locations={content.locations} specialities={content.specialities} pages={featureMenuPages(content.pages)} />
       {children}
       <Footer settings={content.settings} locations={content.locations} />
       <WhatsAppFloat />
