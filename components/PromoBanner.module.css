@@ -1,6 +1,5 @@
 .promo { padding: 48px 0 32px; }
 .frame {
-  display: block;
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -9,15 +8,96 @@
   box-shadow: 0 18px 48px rgba(63, 42, 134, 0.12);
   isolation: isolate;
 }
+.slide {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.015);
+  transition: opacity .8s ease, transform 1.2s ease, visibility 0s linear .8s;
+}
+.active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  z-index: 1;
+  transition: opacity .8s ease, transform 1.2s ease, visibility 0s;
+}
 .image { display: block; width: 100%; height: 100%; object-fit: cover; }
-a.frame { transition: transform .35s ease, box-shadow .35s ease; }
-a.frame:hover { transform: translateY(-3px); box-shadow: 0 26px 60px rgba(63, 42, 134, 0.18); }
-a.frame:focus-visible { outline: 3px solid var(--primary, #6b3fa0); outline-offset: 4px; }
+a.slide:focus-visible { outline: 3px solid #fff; outline-offset: -6px; border-radius: 20px; }
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--primary-dark, #3f2a86);
+  box-shadow: 0 6px 18px rgba(20, 12, 40, 0.18);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .25s ease, transform .25s ease, background .2s ease;
+}
+.arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.arrow:hover { background: #fff; transform: scale(1.06); }
+.prev { left: 16px; }
+.next { right: 16px; }
+.frame:hover .arrow, .arrow:focus-visible { opacity: 1; }
+.arrow:focus-visible, .dot:focus-visible { outline: 3px solid var(--primary, #6b3fa0); outline-offset: 2px; }
+
+.dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(20, 12, 40, 0.28);
+  backdrop-filter: blur(6px);
+  transform: translateX(-50%);
+}
+.dot {
+  position: relative;
+  overflow: hidden;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: width .35s ease, background .2s ease;
+}
+.dot:hover { background: rgba(255, 255, 255, 0.85); }
+.dotActive { width: 28px; background: rgba(255, 255, 255, 0.5); }
+.progress {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  transform-origin: left center;
+  animation: fill linear forwards;
+}
+.dotActive:not(:has(.progress)) { background: #fff; }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (max-width: 768px) {
   .promo { padding: 28px 0 16px; }
-  .frame { border-radius: 12px; }
+  .frame, a.slide:focus-visible { border-radius: 12px; }
+  .arrow { display: none; }
+  .dots { bottom: 6px; padding: 4px 7px; gap: 6px; }
+  .dot { width: 6px; height: 6px; }
+  .dotActive { width: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  a.frame, a.frame:hover { transition: none; transform: none; }
+  .slide, .active, .dot, .arrow { transition: none; transform: none; }
 }
