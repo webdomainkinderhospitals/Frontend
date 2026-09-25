@@ -7,6 +7,7 @@ import { siteTree } from '@/lib/site-tree';
 import { centreName } from '@/lib/locations';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
+import NavIcon from '@/components/NavIcon';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -151,11 +152,11 @@ export default function Header({ settings, locations = [], specialities = [], pa
         <nav className="nav" id="mainNav">
           <div className="container">
             <ul className="nav-list">
-              <li className={act('home')}><a href="/" onClick={onLeafClick}>Home</a></li>
+              <li className={act('home')}><a href="/" onClick={onLeafClick}><NavIcon name="home" />Home</a></li>
 
               <li className={dd('about') + act('about')}>
                 <a href={about.href} onClick={(e) => toggleDropdown(e, 'about')}>
-                  {about.label} <span className="caret">▾</span>
+                  <NavIcon name="about" />{about.label} <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
                   {about.children.map((child) => (
@@ -186,7 +187,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
 
               <li className={`${dd('locations')} has-mega` + act('locations')}>
                 <a href="/hospitals" onClick={(e) => toggleDropdown(e, 'locations')}>
-                  Our Locations <span className="caret">▾</span>
+                  <NavIcon name="pin" />Our Locations <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega mega-hospitals">
                   {locations.map((loc) => (
@@ -221,7 +222,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
 
               <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
-                  Specialities <span className="caret">▾</span>
+                  <NavIcon name="stethoscope" />Specialities <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega">
                   {serviceGroups.slice(0, 3).map((group) => (
@@ -246,11 +247,11 @@ export default function Header({ settings, locations = [], specialities = [], pa
                 </div>
               </li>
 
-              <li className={act('doctors')}><a href="/doctors" onClick={onLeafClick}>Doctors</a></li>
+              <li className={act('doctors')}><a href="/doctors" onClick={onLeafClick}><NavIcon name="doctor" />Doctors</a></li>
 
               <li className={dd('patients') + act('patients')}>
                 <a href={patients.href} onClick={(e) => toggleDropdown(e, 'patients')}>
-                  Patients <span className="caret">▾</span>
+                  <NavIcon name="patients" />Patients <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
                   {patients.children.map((child) => (
@@ -261,7 +262,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
 
               <li className={dd('library') + act('library')}>
                 <a href={library.href} onClick={(e) => toggleDropdown(e, 'library')}>
-                  Health Library <span className="caret">▾</span>
+                  <NavIcon name="book" />Health Library <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
                   {library.children.map((child) => (
@@ -270,9 +271,9 @@ export default function Header({ settings, locations = [], specialities = [], pa
                 </div>
               </li>
 
-              <li className={act('find-care')}><a href="/find-care" onClick={onLeafClick}>Find Care</a></li>
+              <li className={act('find-care')}><a href="/find-care" onClick={onLeafClick}><NavIcon name="search" />Find Care</a></li>
 
-              <li className={act('contact')}><a href="/contact" onClick={onLeafClick}>Contact</a></li>
+              <li className={act('contact')}><a href="/contact" onClick={onLeafClick}><NavIcon name="phone" />Contact</a></li>
 
               <li className="nav-cta-wrap">
                 <a href={BOOK} target="_blank" rel="noopener" className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
