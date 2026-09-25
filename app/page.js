@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import HomeHero from '@/components/HomeHero';
 import styles from './home.module.css';
 import QuickBar from '@/components/QuickBar';
+import PromoBanner from '@/components/PromoBanner';
 import Stats from '@/components/Stats';
 import CoeGrid from '@/components/CoeGrid';
 import Doctors from '@/components/Doctors';
@@ -35,6 +36,7 @@ export default async function HomePage() {
       <main className={styles.home}>
       <HomeHero settings={settings} locations={locations} />
       <QuickBar />
+      <PromoBanner image={settings?.homePromoImageUrl} link={settings?.homePromoLink} alt={settings?.homePromoAlt} />
       <Stats
         settings={settings}
         centres={(locations || [])

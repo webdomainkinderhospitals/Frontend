@@ -1,6 +1,7 @@
 import { KochiCareCards } from '@/components/KochiCare';
 import ContentBody from '@/components/ContentBody';
 import DoctorCard from '@/components/DoctorCard';
+import PromoBanner from '@/components/PromoBanner';
 import { isOwnImageOf } from '@/lib/hospital';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -126,6 +127,9 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           )}
         </div>
       </div>
+
+      {/* Campaign banner, set per centre in the admin portal */}
+      <PromoBanner image={loc.promoImageUrl} link={loc.promoLink} alt={loc.promoAlt} label={`Kinder ${loc.name} announcement`} />
 
       {/* About + highlights */}
       <section id="about">
