@@ -6,6 +6,7 @@ import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
 import { centreName } from '@/lib/locations';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
+import SpecialityIcon from '@/components/SpecialityIcon';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -227,14 +228,14 @@ export default function Header({ settings, locations = [], specialities = [], pa
                     <div className="mega-col" key={group.id}>
                       <h6>{group.title}</h6>
                       {group.items.slice(0, 8).map((item) => (
-                        <a key={item.name} href={`/services/${slugify(item.name)}`} onClick={onLeafClick}>{item.name}</a>
+                        <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} /><span>{item.name}</span></a>
                       ))}
                     </div>
                   ))}
                   <div className="mega-col mega-feature">
                     <h6>{serviceGroups[3].title}</h6>
                     {serviceGroups[3].items.slice(0, 9).map((item) => (
-                      <a key={item.name} href={`/services/${slugify(item.name)}`} onClick={onLeafClick}>{item.name}</a>
+                      <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} /><span>{item.name}</span></a>
                     ))}
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
