@@ -3824,3 +3824,161 @@ a:hover .spec-3d, summary:hover .spec-3d {
   .nav-spark { display: none; }
   .nav-cta { padding: 9px 13px !important; font-size: 12.5px !important; }
 }
+
+/* =====================================================================
+   Premium menus — corporate header and hospital sub-sites
+   Frosted menu row with a rose-to-gold hairline; items are quiet text that
+   lift into a white card; the current page is a white card with a gradient
+   bar; the pregnancy strip is a deep plum band with champagne-gold accents.
+   ===================================================================== */
+:root {
+  --lux-plum-1: #2a1540; --lux-plum-2: #4a1f55; --lux-plum-3: #6a2c63;
+  --lux-gold-1: #f9e7bd; --lux-gold-2: #e3b86a; --lux-gold-3: #b9832f;
+  --lux-rose: #d24f7e;
+  --lux-card: inset 0 1px 0 #fff, 0 1px 2px rgba(42,21,64,.06), 0 10px 24px -14px rgba(42,21,64,.45);
+}
+
+@media (min-width: 1025px) {
+  /* Menu row: frosted glass with a hairline of rose → gold */
+  .nav {
+    background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(250,247,253,.96)) !important;
+    border-top: 1px solid rgba(109,73,201,.08) !important;
+  }
+  .nav::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(210,79,126,.35) 25%, rgba(227,184,106,.55) 50%, rgba(109,73,201,.35) 75%, transparent);
+  }
+
+  /* Items: quiet text that lifts into a white card */
+  .nav-list > li:not(.nav-cta-wrap) > a {
+    color: #3b3050 !important; font-weight: 500 !important; letter-spacing: .01em;
+    background: transparent !important; border: 1px solid transparent !important; box-shadow: none !important;
+  }
+  .nav-list > li:not(.nav-cta-wrap):hover > a,
+  .nav-list > li.is-open:not(.nav-cta-wrap) > a {
+    color: var(--primary-dark) !important;
+    background: #fff !important;
+    border-color: rgba(42,21,64,.07) !important;
+    box-shadow: var(--lux-card) !important;
+    transform: translateY(-1px);
+  }
+  /* Current page: white card with a gradient bar beneath the label */
+  .nav-list > li.is-active:not(.nav-cta-wrap) > a {
+    color: var(--primary-dark) !important; font-weight: 600 !important;
+    background: #fff !important;
+    border-color: rgba(42,21,64,.08) !important;
+    box-shadow: var(--lux-card) !important;
+  }
+  .nav-list > li.is-active:not(.nav-cta-wrap) > a::after {
+    display: block !important; content: "" !important;
+    position: absolute; left: 30%; right: 30%; bottom: 4px; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--lux-rose), var(--lux-gold-2)) !important;
+    transform: none !important;
+  }
+  .nav-list .caret { opacity: .45; }
+
+  /* Celebrate Pregnancy: rose → plum lettering with a gold sparkle */
+  .nav-list > li.nav-pregnancy > a {
+    background: linear-gradient(180deg, #fffafc, #fdf0f5) !important;
+    border-color: rgba(210,79,126,.18) !important;
+    box-shadow: inset 0 1px 0 #fff, 0 6px 16px -12px rgba(210,79,126,.7) !important;
+  }
+  .nav-list > li.nav-pregnancy > a, .nav-list > li.nav-pregnancy > a .caret { color: #a3346a !important; }
+  .nav-list > li.nav-pregnancy > a {
+    background-clip: padding-box;
+  }
+  .nav-spark {
+    background: linear-gradient(135deg, var(--lux-gold-1), var(--lux-gold-2) 50%, var(--lux-gold-3));
+    -webkit-background-clip: text; background-clip: text; color: transparent !important;
+    filter: drop-shadow(0 0 4px rgba(227,184,106,.55));
+  }
+}
+
+/* Book Appointment: rose satin with a slow light sweep */
+.nav-cta, .subsite-cta {
+  --face1: #f1809f; --face2: #cf3f69; --edge: #a52f55; --glow: 207, 63, 105;
+  overflow: hidden; letter-spacing: .01em;
+}
+.nav-cta::before, .subsite-cta::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent);
+  transform: skewX(-18deg); animation: luxSweep 5s ease-in-out 2s infinite; pointer-events: none;
+}
+@keyframes luxSweep { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+
+/* ---- Pregnancy strip (corporate) & Kochi feature menu: plum band, gold accents ---- */
+.pregnancy-strip, .kochi-feature-menu {
+  background:
+    radial-gradient(60% 140% at 0% 50%, rgba(210,79,126,.35), transparent 60%),
+    radial-gradient(50% 140% at 100% 50%, rgba(227,184,106,.18), transparent 60%),
+    linear-gradient(90deg, var(--lux-plum-1), var(--lux-plum-2) 55%, var(--lux-plum-3)) !important;
+  border-top: 1px solid rgba(227,184,106,.35) !important;
+  border-bottom: 1px solid rgba(0,0,0,.25) !important;
+}
+.pregnancy-strip::after { background: linear-gradient(100deg, transparent 30%, rgba(249,231,189,.18) 50%, transparent 70%) !important; }
+
+/* Lead chip: glass on plum, gold pulse */
+.pregnancy-strip-lead, .kochi-feature-menu .kochi-feature-lead {
+  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)) !important;
+  border: 1px solid rgba(249,231,189,.35) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 16px -10px rgba(0,0,0,.6) !important;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.pregnancy-strip-lead:hover, .kochi-feature-menu .kochi-feature-lead:hover { background: linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.1)) !important; }
+.pregnancy-strip-where { color: rgba(249,231,189,.9) !important; }
+.pregnancy-strip-pulse { background: var(--lux-gold-2) !important; animation-name: luxPulse !important; }
+@keyframes luxPulse { from { box-shadow: 0 0 0 0 rgba(227,184,106,.7); } to { box-shadow: 0 0 0 9px rgba(227,184,106,0); } }
+
+/* Links: soft white with a gold underline that draws in */
+.pregnancy-strip-links a:not(.pregnancy-strip-premium),
+.kochi-feature-menu a:not(.kochi-feature-lead):not(.kochi-feature-premium) {
+  position: relative; color: rgba(255,255,255,.88) !important; font-weight: 600 !important;
+  background: transparent !important; border-color: transparent !important; box-shadow: none !important;
+}
+.pregnancy-strip-links a:not(.pregnancy-strip-premium)::after,
+.kochi-feature-menu a:not(.kochi-feature-lead):not(.kochi-feature-premium)::after {
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 1.5px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--lux-gold-1), var(--lux-gold-2));
+  transform: scaleX(0); transform-origin: center; transition: transform .3s ease;
+}
+.pregnancy-strip-links a:not(.pregnancy-strip-premium):hover,
+.kochi-feature-menu a:not(.kochi-feature-lead):not(.kochi-feature-premium):hover {
+  color: var(--lux-gold-1) !important; background: rgba(255,255,255,.06) !important; transform: none !important;
+}
+.pregnancy-strip-links a:not(.pregnancy-strip-premium):hover::after,
+.kochi-feature-menu a:not(.kochi-feature-lead):not(.kochi-feature-premium):hover::after { transform: scaleX(1); }
+
+/* Premium Birthing Centre: champagne gold */
+.pregnancy-strip-links .pregnancy-strip-premium, .kochi-feature-menu .kochi-feature-premium {
+  --face1: #fbeccb; --face2: #e0b060; --edge: #a8772a; --glow: 224, 176, 96;
+  color: #3a2208 !important; text-shadow: 0 1px 0 rgba(255,255,255,.45) !important;
+}
+.pregnancy-strip-links .pregnancy-strip-premium:hover, .kochi-feature-menu .kochi-feature-premium:hover { color: #2a1604 !important; }
+
+/* ---- Hospital sub-site menu: same quiet-to-card treatment ---- */
+.subsite-header {
+  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(250,247,253,.9)) !important;
+  border-bottom: 1px solid transparent !important;
+}
+.subsite-header::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(210,79,126,.35) 25%, rgba(227,184,106,.55) 50%, rgba(109,73,201,.35) 75%, transparent);
+}
+@media (min-width: 1025px) {
+  .subsite-nav a {
+    color: #3b3050 !important; font-weight: 500 !important; letter-spacing: .01em;
+    background: transparent !important; border: 1px solid transparent !important; box-shadow: none !important;
+  }
+  .subsite-nav a:hover {
+    color: var(--primary-dark) !important; background: #fff !important;
+    border-color: rgba(42,21,64,.07) !important; box-shadow: var(--lux-card) !important; transform: translateY(-1px);
+  }
+}
+.subsite-brand-text strong { letter-spacing: -.01em; }
+.subsite-brand-text small { background: linear-gradient(90deg, var(--lux-rose), var(--lux-gold-3)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-cta::before, .subsite-cta::before { animation: none; display: none; }
+  .pregnancy-strip-links a::after, .kochi-feature-menu a::after { transition: none; }
+}
