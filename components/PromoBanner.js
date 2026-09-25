@@ -8,30 +8,23 @@ const INTERVAL = 6000;
 // Ready-made campaign artwork (text and branding baked into the image),
 // managed from the admin portal. Every slide is shown at its natural
 // 1920 × 720 proportion so nothing in the design is ever cropped. Two or more
-// slides cross-fade on their own; the rotation pauses while a visitor hovers,
-// focuses or has asked for reduced motion, and dots/arrows let them choose.
+// slides change on their own every few seconds, always — visitors who have
+// asked for reduced motion get an instant switch instead of the fade. Hovering
+// holds the current poster only while the pointer rests on it, and a click on
+// a dot or arrow simply restarts the timer.
 export default function PromoBanner({ slides = [], label = 'Announcements' }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [still, setStill] = useState(false);
   const count = slides.length;
   const touch = useRef(null);
 
   const go = useCallback((i) => setIndex(((i % count) + count) % count), [count]);
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setStill(media.matches);
-    update();
-    media.addEventListener?.('change', update);
-    return () => media.removeEventListener?.('change', update);
-  }, []);
-
-  useEffect(() => {
-    if (count < 2 || paused || still) return undefined;
+    if (count < 2 || paused) return undefined;
     const timer = setTimeout(() => go(index + 1), INTERVAL);
     return () => clearTimeout(timer);
-  }, [count, index, paused, still, go]);
+  }, [count, index, paused, go]);
 
   if (!count) return null;
   const multi = count > 1;
@@ -41,10 +34,8 @@ export default function PromoBanner({ slides = [], label = 'Announcements' }) {
       className={styles.promo}
       aria-label={label}
       aria-roledescription={multi ? 'carousel' : undefined}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false); }}
+      onPointerEnter={(e) => { if (e.pointerType === 'mouse') setPaused(true); }}
+      onPointerLeave={() => setPaused(false)}
       onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
       onTouchEnd={(e) => {
         if (touch.current === null || !multi) return;
@@ -102,7 +93,7 @@ export default function PromoBanner({ slides = [], label = 'Announcements' }) {
                     aria-label={`Show banner ${i + 1} of ${count}`}
                     aria-current={i === index ? 'true' : undefined}
                   >
-                    {i === index && !paused && !still && <span key={index} className={styles.progress} style={{ animationDuration: `${INTERVAL}ms` }} />}
+                    {i === index && !paused && <span key={index} className={styles.progress} style={{ animationDuration: `${INTERVAL}ms` }} />}
                   </button>
                 ))}
               </div>
