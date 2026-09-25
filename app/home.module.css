@@ -25,7 +25,7 @@
 .heart { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 32px; flex-shrink: 0; }
 .sideNote { position: absolute; right: -14px; top: 42%; writing-mode: vertical-rl; letter-spacing: .2em; font-size: 10px; color: var(--muted); }
 .home :global(.quick-bar) { margin-top: -24px; border-radius: 16px; box-shadow: 0 8px 30px #44305f08; border: 1px solid #e9e1ee; background: white; }
-.home :global(.quick-item) { padding: 25px 22px; }
+.home :global(.quick-item) { padding: 22px 18px; }
 .home :global(.quick-icon) { background: var(--primary-light); color: var(--primary); border-radius: 12px; }
 .home :global(.quick-text strong) { color: var(--ink); font-size: 15px; }
 .home :global(.quick-text span) { color: var(--muted); }
@@ -80,4 +80,5 @@
 }
 @media (prefers-reduced-motion: reduce) { .home *, .home *::before, .home *::after { animation: none !important; transition: none !important; } }
 
-.home :global(.quick-item:nth-child(2) .quick-icon) { background: var(--accent-light); color: var(--accent); }
+.home :global(.quick-item:nth-child(2) .quick-icon) { background: #E3F6F2; color: #0E8C7B; }
+.home :global(.quick-item:nth-child(3) .quick-icon) { background: var(--accent-light); color: var(--accent); }
