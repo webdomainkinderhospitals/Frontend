@@ -100,4 +100,5 @@ a.slide:focus-visible { outline: 3px solid #fff; outline-offset: -6px; border-ra
 }
 @media (prefers-reduced-motion: reduce) {
   .slide, .active, .dot, .arrow { transition: none; transform: none; }
+  .progress { animation: none; transform: none; }
 }
