@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import UiIcon from '@/components/UiIcon';
+import NavIcon from '@/components/NavIcon';
+import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 
 // Header for a hospital's own sub-website: its Home is its own page, its menu
 // scrolls within its page, and the only way "out" is the clearly-labelled
 // corporate-site link. Other hospitals are never shown here.
-export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
+export default function SubSiteHeader({ loc, settings, slug, sections = {}, pages = [] }) {
   const [open, setOpen] = useState(false);
   // This centre's own booking link when it has one, the group WhatsApp otherwise.
   // Its own booking page: only this centre's doctors, inside this site.
@@ -21,17 +23,20 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   }, []);
 
   const home = `/hospitals/${slug}`;
+  const features = kochiFeaturePages(pages, loc.name);
+  const celebration = features.filter((link) => link.group === 'Celebrate Pregnancy');
+  const premium = features.find((link) => link.group === 'Premium Birthing Centre');
   // The centre's own menu, in the order the group site tree lists it. The
   // full list lives in the footer; the bar carries what a visitor needs most.
   const items = [
-    { label: 'Home', href: home },
-    { label: 'About', href: `${home}#about` },
-    sections.care && { label: 'Our Care', href: `${home}#care` },
-    sections.specialities && { label: 'Specialities', href: `${home}#specialities` },
-    sections.doctors && { label: 'Doctors', href: `${home}#doctors` },
-    sections.facilities && { label: 'Facilities', href: `${home}#facilities` },
-    { label: 'Patient Services', href: `${home}#patient-services` },
-    { label: 'Contact', href: `${home}#contact` },
+    { label: 'Home', href: home, icon: 'home' },
+    { label: 'About', href: `${home}#about`, icon: 'about' },
+    sections.care && { label: 'Our Care', href: `${home}#care`, icon: 'care' },
+    sections.specialities && { label: 'Specialities', href: `${home}#specialities`, icon: 'stethoscope' },
+    sections.doctors && { label: 'Doctors', href: `${home}#doctors`, icon: 'doctor' },
+    sections.facilities && { label: 'Facilities', href: `${home}#facilities`, icon: 'building' },
+    { label: 'Patient Services', href: `${home}#patient-services`, icon: 'people' },
+    { label: 'Contact', href: `${home}#contact`, icon: 'phone' },
   ].filter(Boolean);
 
   return (
@@ -72,7 +77,7 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
             <nav className={`subsite-nav${open ? ' open' : ''}`} aria-label={`Kinder ${loc.name} menu`}>
               {items.map((item) => (
                 <a key={item.label} href={item.href} onClick={() => setOpen(false)}>
-                  {item.label}
+                  <NavIcon name={item.icon} />{item.label}
                 </a>
               ))}
             </nav>
@@ -93,6 +98,13 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
           </div>
         </div>
       </header>
+      {features.length > 0 && <nav className="kochi-feature-menu" aria-label="Kochi pregnancy and birthing menu">
+        <div className="container kochi-feature-menu-inner">
+          {celebration.length > 0 && <a className="kochi-feature-lead" href={`${home}/celebrate-pregnancy`} onClick={() => setOpen(false)}>Celebrate Pregnancy <span aria-hidden="true">→</span></a>}
+          {celebration.map((link) => <a key={link.slug} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
+          {premium && <a className="kochi-feature-premium" href={premium.href} onClick={() => setOpen(false)}>✦ Premium Birthing Centre <span aria-hidden="true">→</span></a>}
+        </div>
+      </nav>}
     </>
   );
 }

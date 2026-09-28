@@ -10,7 +10,7 @@ import KinderChat from '@/components/KinderChat';
 export default function SubSiteChrome({ content, loc, slug, sections = {}, privacyHref, children }) {
   return (
     <>
-      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} pages={content.pages} />
       {children}
       <SubSiteFooter
         loc={loc}

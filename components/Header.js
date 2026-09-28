@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
-import { centreName } from '@/lib/locations';
+import { centreName, isClinic, slugOfLocation } from '@/lib/locations';
+import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
+import SpecialityIcon from '@/components/SpecialityIcon';
+import NavIcon from '@/components/NavIcon';
 
 const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
@@ -18,7 +21,25 @@ const HOSPITAL_TAGS = {
 // preferred day and a request sent on WhatsApp.
 const BOOK = '/book';
 
-export default function Header({ settings, locations = [], specialities = [] }) {
+// One line under each pregnancy experience in the Celebrate Pregnancy menu.
+const FEATURE_NOTES = {
+  'kochi-tharattazhaku': 'Our pregnancy fashion show',
+  'kochi-wow-mom': 'Pregnancy club for mothers-to-be',
+  'kochi-water-birthing-suite': 'Kerala’s first water birthing suite',
+  'kochi-premium-birthing-centre': 'LDRP suites & painless labour',
+};
+
+export default function Header({ settings, locations = [], specialities = [], pages = [] }) {
+  // Kinder Kochi's pregnancy experiences, from the same published pages as the
+  // Kochi menu bar: a highlighted strip under the menu and a dropdown on
+  // Celebrate Pregnancy. Both disappear if the pages are unpublished.
+  // Hospitals and clinics get a menu each; a centre is a clinic when the
+  // admin marks it so.
+  const clinics = locations.filter(isClinic);
+  const hospitals = clinics.length ? locations.filter((l) => !isClinic(l)) : locations;
+  const features = kochiFeaturePages(pages, 'Kochi');
+  const celebration = features.filter((f) => f.group === 'Celebrate Pregnancy');
+  const premium = features.find((f) => f.group === 'Premium Birthing Centre');
   const serviceGroups = groupServices(specialities);
   // Menus are built from the agreed site tree, so the navigation cannot drift
   // away from the architecture.
@@ -135,11 +156,11 @@ export default function Header({ settings, locations = [], specialities = [] }) 
         <nav className="nav" id="mainNav">
           <div className="container">
             <ul className="nav-list">
-              <li className={act('home')}><a href="/" onClick={onLeafClick}>Home</a></li>
+              <li className={act('home')}><a href="/" onClick={onLeafClick}><NavIcon name="home" />Home</a></li>
 
               <li className={dd('about') + act('about')}>
                 <a href={about.href} onClick={(e) => toggleDropdown(e, 'about')}>
-                  {about.label} <span className="caret">▾</span>
+                  <NavIcon name="about" />{about.label} <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
                   {about.children.map((child) => (
@@ -148,14 +169,32 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                 </div>
               </li>
 
-              <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
+              {features.length ? (
+                <li className={dd('pregnancy') + ' nav-pregnancy' + act('pregnancy')}>
+                  <a href="/celebrate-pregnancy" onClick={(e) => toggleDropdown(e, 'pregnancy')}>
+                    <span className="nav-spark" aria-hidden="true">✦</span> Celebrate Pregnancy <span className="caret">▾</span>
+                  </a>
+                  <div className="dropdown dropdown-pregnancy">
+                    <a href="/celebrate-pregnancy" onClick={onLeafClick}><strong>Your pregnancy journey</strong><small>Antenatal care to going home</small></a>
+                    <a href="/hospitals/kochi/celebrate-pregnancy" onClick={onLeafClick}><strong>Celebrate Pregnancy at Kinder Kochi</strong><small>All experiences in one place</small></a>
+                    {features.map((f) => (
+                      <a key={f.slug} href={f.href} onClick={onLeafClick} className={f === premium ? 'is-premium' : undefined}>
+                        <strong>{f === premium ? '✦ ' : ''}{f.label}</strong>
+                        <small>{FEATURE_NOTES[f.slug] || f.group}</small>
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              ) : (
+                <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
+              )}
 
               <li className={`${dd('locations')} has-mega` + act('locations')}>
                 <a href="/hospitals" onClick={(e) => toggleDropdown(e, 'locations')}>
-                  Our Locations <span className="caret">▾</span>
+                  <NavIcon name="pin" />{clinics.length ? 'Hospitals' : 'Our Locations'} <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega mega-hospitals">
-                  {locations.map((loc) => (
+                  {hospitals.map((loc) => (
                     <a
                       key={loc.id}
                       href={`/hospitals/${loc.slug || String(loc.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
@@ -185,23 +224,45 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                 </div>
               </li>
 
+              {clinics.length > 0 && (
+                <li className={dd('clinics') + ' nav-clinics'}>
+                  <a href={`/hospitals/${slugOfLocation(clinics[0])}`} onClick={(e) => toggleDropdown(e, 'clinics')}>
+                    <NavIcon name="clinic" />Clinics <span className="caret">▾</span>
+                  </a>
+                  <div className="dropdown dropdown-clinics">
+                    <span className="dropdown-clinics-head">Kinder clinics · care close to home</span>
+                    {clinics.map((loc) => (
+                      <a key={loc.id ?? loc.name} className="clinic-card" href={`/hospitals/${slugOfLocation(loc)}`} onClick={onLeafClick}>
+                        <span className="clinic-card-ico" aria-hidden="true"><NavIcon name="clinic" /></span>
+                        <span className="clinic-card-body">
+                          <strong>{centreName(loc)}</strong>
+                          <small className="clinic-card-tag">{['Clinic', loc.since || loc.city].filter(Boolean).join(' · ')}</small>
+                          {loc.address && <small className="clinic-card-addr">{loc.address}</small>}
+                          <span className="clinic-card-go">Visit clinic →</span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              )}
+
               <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
-                  Specialities <span className="caret">▾</span>
+                  <NavIcon name="stethoscope" />Specialities <span className="caret">▾</span>
                 </a>
                 <div className="dropdown mega">
                   {serviceGroups.slice(0, 3).map((group) => (
                     <div className="mega-col" key={group.id}>
                       <h6>{group.title}</h6>
                       {group.items.slice(0, 8).map((item) => (
-                        <a key={item.name} href={`/services/${slugify(item.name)}`} onClick={onLeafClick}>{item.name}</a>
+                        <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} /><span>{item.name}</span></a>
                       ))}
                     </div>
                   ))}
                   <div className="mega-col mega-feature">
                     <h6>{serviceGroups[3].title}</h6>
                     {serviceGroups[3].items.slice(0, 9).map((item) => (
-                      <a key={item.name} href={`/services/${slugify(item.name)}`} onClick={onLeafClick}>{item.name}</a>
+                      <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} /><span>{item.name}</span></a>
                     ))}
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
@@ -212,11 +273,11 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                 </div>
               </li>
 
-              <li className={act('doctors')}><a href="/doctors" onClick={onLeafClick}>Doctors</a></li>
+              <li className={act('doctors')}><a href="/doctors" onClick={onLeafClick}><NavIcon name="doctor" />Doctors</a></li>
 
               <li className={dd('patients') + act('patients')}>
                 <a href={patients.href} onClick={(e) => toggleDropdown(e, 'patients')}>
-                  Patients <span className="caret">▾</span>
+                  <NavIcon name="patients" />Patients <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
                   {patients.children.map((child) => (
@@ -227,7 +288,7 @@ export default function Header({ settings, locations = [], specialities = [] }) 
 
               <li className={dd('library') + act('library')}>
                 <a href={library.href} onClick={(e) => toggleDropdown(e, 'library')}>
-                  Health Library <span className="caret">▾</span>
+                  <NavIcon name="book" />Health Library <span className="caret">▾</span>
                 </a>
                 <div className="dropdown">
                   {library.children.map((child) => (
@@ -236,9 +297,9 @@ export default function Header({ settings, locations = [], specialities = [] }) 
                 </div>
               </li>
 
-              <li className={act('find-care')}><a href="/find-care" onClick={onLeafClick}>Find Care</a></li>
+              <li className={'nav-findcare' + act('find-care')}><a href="/find-care" onClick={onLeafClick}><NavIcon name="search" />Find Care</a></li>
 
-              <li className={act('contact')}><a href="/contact" onClick={onLeafClick}>Contact</a></li>
+              <li className={act('contact')}><a href="/contact" onClick={onLeafClick}><NavIcon name="phone" />Contact</a></li>
 
               <li className="nav-cta-wrap">
                 <a href={BOOK} className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
@@ -246,6 +307,20 @@ export default function Header({ settings, locations = [], specialities = [] }) 
             </ul>
           </div>
         </nav>
+        {features.length > 0 && (
+          <nav className="pregnancy-strip" aria-label="Celebrate Pregnancy at Kinder Kochi">
+            <div className="container pregnancy-strip-in">
+              <a className="pregnancy-strip-lead" href="/hospitals/kochi/celebrate-pregnancy">
+                <span className="pregnancy-strip-pulse" aria-hidden="true" />
+                Celebrate Pregnancy <span className="pregnancy-strip-where">at Kinder Kochi</span> <span aria-hidden="true">→</span>
+              </a>
+              <span className="pregnancy-strip-links">
+                {celebration.map((f) => <a key={f.slug} href={f.href}>{f.label}</a>)}
+                {premium && <a className="pregnancy-strip-premium" href={premium.href}>✦ Premium Birthing Centre <span aria-hidden="true">→</span></a>}
+              </span>
+            </div>
+          </nav>
+        )}
       </header>
 
       <div className="nav-backdrop" onClick={closeMenu}></div>

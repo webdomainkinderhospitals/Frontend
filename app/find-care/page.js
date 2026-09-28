@@ -4,6 +4,7 @@ import { slugOfLocation } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import { HubCta, whatsapp } from '@/components/Hub';
+import SpecialityIcon from '@/components/SpecialityIcon';
 
 export const revalidate = 60;
 
@@ -67,7 +68,7 @@ export default async function FindCarePage() {
                   <div className="svc-grid">
                     {group.items.map((item) => (
                       <a className="svc-card" key={item.name} href={`/services/${slugify(item.name)}`} title={item.description || undefined}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                        <SpecialityIcon name={item.name} />
                         <span>{item.name}</span>
                       </a>
                     ))}

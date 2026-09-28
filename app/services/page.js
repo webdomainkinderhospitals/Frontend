@@ -4,6 +4,7 @@ import { groupServices, doctorsForGroup, slugify } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import DoctorCard from '@/components/DoctorCard';
+import SpecialityIcon from '@/components/SpecialityIcon';
 
 export const revalidate = 60;
 
@@ -49,7 +50,7 @@ export default async function ServicesPage() {
                       href={`/services/${slugify(item.name)}`}
                       title={item.description || undefined}
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                      <SpecialityIcon name={item.name} />
                       <span>{item.name}</span>
                     </a>
                   ))}

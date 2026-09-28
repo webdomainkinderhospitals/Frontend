@@ -1,12 +1,16 @@
+import { featureMenuPages } from '@/lib/kochi-features.mjs';
 import { getContent } from '@/lib/api';
-import { centreName, isOwnImageOf, slugOfLocation } from '@/lib/locations';
+import { slugOfLocation } from '@/lib/locations';
 
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
 import HomeHero from '@/components/HomeHero';
 import styles from './home.module.css';
 import QuickBar from '@/components/QuickBar';
+import PromoBanner from '@/components/PromoBanner';
+import { promoSlides } from '@/lib/promo';
 import Stats from '@/components/Stats';
+import CelebratePregnancy from '@/components/CelebratePregnancy';
 import CoeGrid from '@/components/CoeGrid';
 import Doctors from '@/components/Doctors';
 import Procedures from '@/components/Procedures';
@@ -31,16 +35,16 @@ export default async function HomePage() {
   return (
     <>
       <TopBar settings={settings} locations={locations} />
-      <Header settings={settings} locations={locations} specialities={specialities} />
+      <Header settings={settings} locations={locations} specialities={specialities} pages={featureMenuPages(content.pages)} />
       <main className={styles.home}>
       <HomeHero settings={settings} locations={locations} />
       <QuickBar />
+      <PromoBanner slides={promoSlides(settings, 'homePromo')} label="Kinder Hospitals announcements" />
       <Stats
         settings={settings}
-        centres={(locations || [])
-          .filter((loc) => isOwnImageOf(loc.imageUrl))
-          .map((loc) => ({ slug: slugOfLocation(loc), title: centreName(loc), since: loc.since, imageUrl: loc.imageUrl }))}
+        hospitals={(locations || []).map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
       />
+      <CelebratePregnancy pages={content.pages} />
       <CoeGrid />
       <Doctors doctors={doctors} locations={locations} />
       <Procedures procedures={procedures} />

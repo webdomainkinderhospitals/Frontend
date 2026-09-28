@@ -1,0 +1,129 @@
+.wrap { position: relative; min-width: 0; padding-top: 18px; }
+.frame { position: relative; }
+
+.card {
+  position: relative; overflow: hidden; isolation: isolate;
+  aspect-ratio: 1 / 0.92;
+  border-radius: 36px 36px 110px 36px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.10), transparent 60%),
+    linear-gradient(150deg, #5B3BB5 0%, var(--primary-dark, #3F2A86) 55%, #2A1B5E 100%);
+  box-shadow: 0 44px 90px -36px rgba(42, 27, 94, 0.65), 0 14px 30px -16px rgba(42, 27, 94, 0.4);
+  color: #fff;
+}
+.glowA, .glowB { position: absolute; z-index: -1; border-radius: 50%; filter: blur(40px); }
+.glowA { width: 55%; height: 55%; top: -12%; right: -14%; background: rgba(242, 109, 139, 0.45); }
+.glowB { width: 50%; height: 50%; bottom: -14%; left: -12%; background: rgba(130, 170, 255, 0.28); }
+.plus {
+  position: absolute; inset: 0; z-index: -1; opacity: .12; background: #fff;
+  -webkit-mask: radial-gradient(circle, #000 1.2px, transparent 1.3px) 0 0 / 22px 22px;
+  mask: radial-gradient(circle, #000 1.2px, transparent 1.3px) 0 0 / 22px 22px;
+}
+
+/* Orbit system, centred slightly above the middle */
+.system { position: absolute; left: 50%; top: 48%; width: 66%; aspect-ratio: 1; transform: translate(-50%, -50%); container-type: inline-size; }
+.ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.16); }
+.ring1 { inset: 0; border-style: dashed; border-color: rgba(255, 255, 255, 0.22); animation: spin 90s linear infinite; }
+.ring2 { inset: 17%; border-color: rgba(255, 255, 255, 0.12); }
+.ring3 { inset: 30%; background: radial-gradient(circle, rgba(255, 255, 255, 0.10), transparent 70%); border: 0; }
+
+.orbit { position: absolute; inset: 0; animation: spin 60s linear infinite; }
+.slot { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: rotate(var(--a)) translateX(calc(var(--r, 1) * 50cqw)); }
+.node {
+  position: absolute; left: 0; top: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transform: translate(-50%, -28px) rotate(calc(-1 * var(--a)));
+}
+.nodeIcon {
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 18px;
+  background: #fff; color: var(--primary, #6D49C9);
+  box-shadow: 0 10px 24px -8px rgba(12, 6, 30, 0.55), 0 0 0 6px rgba(255, 255, 255, 0.10);
+  animation: counter 60s linear infinite;
+}
+.nodeIcon svg { width: 26px; height: 26px; }
+.nodeLabel {
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+  font-size: 12px; font-weight: 600; letter-spacing: .01em;
+  background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  animation: counter 60s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes counter { to { transform: rotate(-360deg); } }
+
+/* The beating heart */
+.core {
+  position: absolute; left: 50%; top: 50%; width: 36%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, #F4EFFC 70%);
+  box-shadow: 0 24px 50px -16px rgba(12, 6, 30, 0.7), inset 0 -6px 16px rgba(109, 73, 201, 0.15);
+}
+.heart { width: 48%; animation: beat 1.6s ease-in-out infinite; filter: drop-shadow(0 8px 12px rgba(242, 80, 122, 0.4)); }
+.beat { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trace 1.6s ease-in-out infinite; }
+.coreText {
+  font-family: var(--display); font-weight: 600; line-height: 1.1; text-align: center;
+  font-size: clamp(12px, 1.25vw, 16px); color: var(--primary-dark, #3F2A86);
+}
+.pulse { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(255, 143, 168, 0.6); animation: ripple 3.2s ease-out infinite; }
+.pulse2 { animation-delay: 1.6s; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.12); } 28% { transform: scale(1); } 42% { transform: scale(1.08); } 56% { transform: scale(1); } }
+@keyframes trace { 0% { stroke-dashoffset: 100; } 55%, 100% { stroke-dashoffset: 0; } }
+@keyframes ripple { from { transform: scale(1); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+
+/* Heartbeat trace across the foot of the card */
+.ecg { position: absolute; z-index: -1; left: 0; right: 0; top: 48%; width: 100%; height: 56px; margin-top: -28px; overflow: visible; }
+.ecg path {
+  fill: none; stroke: #FF9FB5; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke; opacity: .7;
+  stroke-dasharray: 30 70; animation: sweep 4s linear infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 143, 168, 0.9));
+}
+@keyframes sweep { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+
+.badge {
+  position: absolute; z-index: 3; display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px 10px 10px; border-radius: 16px;
+  background: #fff; color: var(--ink, #241b33);
+  box-shadow: 0 18px 38px -16px rgba(12, 6, 30, 0.6);
+  animation: float 6s ease-in-out infinite;
+}
+.badge strong { display: block; font-size: 13.5px; line-height: 1.25; }
+.badge small { display: block; font-size: 11.5px; color: var(--muted, #7a7188); }
+.badgeTop { top: -18px; right: -14px; }
+.badgeBottom { left: 28px; bottom: -24px; animation-delay: -3s; }
+.badgeIcon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--accent-light, #FCE7EC); color: var(--accent, #F26D8B); }
+.badgeIcon svg { width: 18px; height: 18px; fill: currentColor; }
+.badgeIconLive { background: #E6F9EE; }
+.badgeIconLive i { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); animation: live 1.8s ease-out infinite; }
+@keyframes live { to { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.hospitals {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 44px;
+}
+.hospitalsLabel { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent, #F26D8B); margin-right: 4px; }
+.hospitals a {
+  padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  background: #fff; color: var(--primary-dark, #3F2A86); border: 1px solid rgba(109, 73, 201, 0.16);
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.hospitals a:hover { background: var(--primary, #6D49C9); color: #fff; transform: translateY(-1px); }
+
+@media (max-width: 700px) {
+  .card { aspect-ratio: 1 / 1.08; border-radius: 26px 26px 72px 26px; }
+  .system { width: 62%; top: 50%; }
+  .nodeIcon { width: 40px; height: 40px; border-radius: 13px; box-shadow: 0 8px 18px -8px rgba(12, 6, 30, 0.55), 0 0 0 4px rgba(255, 255, 255, 0.1); }
+  .nodeIcon svg { width: 20px; height: 20px; }
+  .node { transform: translate(-50%, -20px) rotate(calc(-1 * var(--a))); gap: 4px; }
+  .nodeLabel { font-size: 9.5px; padding: 2px 7px; }
+  .badge { padding: 7px 10px 7px 7px; gap: 7px; border-radius: 12px; }
+  .badge strong { font-size: 11.5px; } .badge small { font-size: 10px; }
+  .badgeIcon { width: 28px; height: 28px; border-radius: 9px; }
+  .badgeTop { top: -6px; right: -4px; } .badgeBottom { left: 14px; bottom: -20px; }
+  .ecg { bottom: 16%; height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit, .ring1, .nodeIcon, .nodeLabel, .heart, .beat, .pulse, .ecg path, .badge, .badgeIconLive i { animation: none; }
+  .beat { stroke-dashoffset: 0; }
+}

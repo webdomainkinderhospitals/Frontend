@@ -5,6 +5,8 @@ import { isCarePage } from '@/lib/care-content.mjs';
 import { hospitalData } from '@/lib/hospital';
 
 import KochiCarePage from '@/components/KochiCare';
+import KochiFeaturePage from '@/components/KochiFeaturePage';
+import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SubSiteHeader from '@/components/SubSiteHeader';
 import SubSiteFooter from '@/components/SubSiteFooter';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
@@ -43,8 +45,10 @@ export default async function HospitalCareDetail({ params }) {
 
   return (
     <>
-      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
-      <KochiCarePage page={page} content={content} loc={loc} hospitalSlug={slug} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} pages={content.pages} />
+      {['kochi-premium-birthing-centre', 'kochi-water-birthing-suite'].includes(page.slug)
+        ? <KochiFeaturePage page={page} loc={loc} links={kochiFeaturePages(content.pages, loc.name)} />
+        : <KochiCarePage page={page} content={content} loc={loc} hospitalSlug={slug} />}
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} sections={sections} />
       <WhatsAppFloat />
       <KinderChat content={content} />

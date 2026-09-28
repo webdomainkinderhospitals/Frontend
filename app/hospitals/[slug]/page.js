@@ -34,7 +34,7 @@ export default async function HospitalDetail({ params }) {
 
   return (
     <>
-      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={data.sections} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={data.sections} pages={content.pages} />
       <HospitalPage
         loc={loc}
         hospitalSlug={slug}
