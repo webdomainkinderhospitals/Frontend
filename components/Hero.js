@@ -43,7 +43,7 @@ export default function Hero({ settings, locations = [] }) {
       text: (!settings.heroSubtitle || isSeededDefault) ? liveSubtitle : settings.heroSubtitle,
       ctas: [
         { label: 'Find Your Nearest Hospital →', className: 'btn btn-primary', href: '#hospitals' },
-        { label: 'Book an Appointment', className: 'btn btn-outline', href: WHATSAPP_BOOK, external: true },
+        { label: 'Book an Appointment', className: 'btn btn-outline', href: '/book' },
       ],
       imageUrl:
         settings.heroImageUrl ||

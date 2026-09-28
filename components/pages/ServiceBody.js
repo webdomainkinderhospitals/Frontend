@@ -127,7 +127,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
                   : 'Message us on WhatsApp and our coordinators will arrange your consultation.'}
               </p>
             </div>
-            <a href={enquire(svc.name, here)} target="_blank" rel="noopener" className="btn btn-primary">
+            <a href={`${base}/book`} className="btn btn-primary">
               Book an Appointment →
             </a>
           </div>

@@ -5,9 +5,6 @@ import { atLocation, locationLabel } from '@/lib/locations';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const book = (name) =>
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
-  encodeURIComponent(`Hello Kinder Hospitals, I would like to book an appointment with ${name}.`);
 
 // A doctor's profile. On a centre's sub-site the speciality link, the "all
 // doctors" link and the colleague cards all stay within that centre.
@@ -71,7 +68,7 @@ export default function DoctorProfileBody({ doc, content, base = '', loc = null 
                 </p>
               )}
               <div className="doc-profile-actions">
-                <a href={book(doc.name)} target="_blank" rel="noopener" className="btn btn-primary">
+                <a href={`${base}/book?doctor=${slugify(doc.name)}`} className="btn btn-primary">
                   Book an Appointment →
                 </a>
                 <a href={loc ? `${base}#doctors` : '/doctors'} className="btn btn-soft">

@@ -17,9 +17,9 @@ const HOSPITAL_TAGS = {
   Singapore: 'International · HQ',
 };
 
-const BOOK =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
-  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+// Book Appointment opens the booking page: every doctor, filterable, with a
+// preferred day and a request sent on WhatsApp.
+const BOOK = '/book';
 
 // One line under each pregnancy experience in the Celebrate Pregnancy menu.
 const FEATURE_NOTES = {
@@ -267,7 +267,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
                       <p>Our care coordinators will guide you to the right Kinder doctor.</p>
-                      <a href={BOOK} target="_blank" rel="noopener" className="mega-btn" onClick={onLeafClick}>Book Appointment →</a>
+                      <a href={BOOK} className="mega-btn" onClick={onLeafClick}>Book Appointment →</a>
                     </div>
                   </div>
                 </div>
@@ -302,7 +302,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
               <li className={act('contact')}><a href="/contact" onClick={onLeafClick}><NavIcon name="phone" />Contact</a></li>
 
               <li className="nav-cta-wrap">
-                <a href={BOOK} target="_blank" rel="noopener" className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
+                <a href={BOOK} className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
               </li>
             </ul>
           </div>

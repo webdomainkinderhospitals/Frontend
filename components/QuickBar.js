@@ -1,6 +1,4 @@
-const WHATSAPP_BOOK =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
-  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+const WHATSAPP_BOOK = '/book';
 
 const ITEMS = [
   {
@@ -34,7 +32,6 @@ const ITEMS = [
   },
   {
     href: WHATSAPP_BOOK,
-    external: true,
     title: 'Book Appointment',
     sub: 'OPD & online consult',
     icon: (
