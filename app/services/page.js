@@ -77,7 +77,7 @@ export default async function ServicesPage() {
                 <h3>Need a specialist?</h3>
                 <p>Our care coordinators will guide you to the right department and doctor.</p>
               </div>
-              <a href={WHATSAPP} target="_blank" rel="noopener" className="btn btn-primary">Book an Appointment →</a>
+              <a href="/book" className="btn btn-primary">Book an Appointment →</a>
             </div>
           </div>
         </section>

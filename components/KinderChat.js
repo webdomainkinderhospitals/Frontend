@@ -2,7 +2,7 @@
 
 import { atLocation, locationLabel, locationsOf } from '@/lib/locations';
 import { useEffect, useRef, useState } from 'react';
-import { allServices, doctorsForService } from '@/lib/services';
+import { allServices, doctorsForService, slugify } from '@/lib/services';
 
 // Kinder Assistant — a professional, on-brand hospital chatbot.
 // It answers ONLY from the content this website already shows (services,
@@ -75,9 +75,9 @@ function buildReply(text, content) {
   // 3. Booking.
   if (/book|appointment|consult|schedule|token/.test(q)) {
     return reply(
-      `I can arrange that right away. The quickest way is WhatsApp — our care coordinators reply promptly. You can also call our 24/7 helpline ${settings.helplinePhone || ''}.`,
+      `I can arrange that right away. Choose your doctor and a preferred day, and your request reaches our care coordinators on WhatsApp. You can also call our 24/7 helpline ${settings.helplinePhone || ''}.`,
       [
-        { label: 'Book on WhatsApp', href: WA('Hello Kinder Hospitals, I would like to book an appointment.'), external: true },
+        { label: 'Book an appointment', href: '/book' },
         { label: `Call ${settings.helplinePhone || ''}`, href: `tel:${String(settings.helplinePhone || '').replace(/\s/g, '')}` },
         { label: 'Contact page', href: '/contact' },
       ]
@@ -95,7 +95,7 @@ function buildReply(text, content) {
       `${namedDoc.name} — ${[namedDoc.designation, namedDoc.speciality].filter(Boolean).join(', ')}${where}. ${namedDoc.bio || ''}`,
       [
         { label: 'See all doctors', href: '/doctors' },
-        { label: 'Book with our team', href: WA(`Hello Kinder Hospitals, I would like to book an appointment with ${namedDoc.name}.`), external: true },
+        { label: `Book with ${namedDoc.name}`, href: `/book?doctor=${slugify(namedDoc.name)}` },
       ]
     );
   }
@@ -113,7 +113,7 @@ function buildReply(text, content) {
       [
         { label: `Visit Kinder ${loc.name} page`, href: `/hospitals/${slugOfLoc(loc)}` },
         loc.mapUrl && { label: 'Get directions', href: loc.mapUrl, external: true },
-        { label: 'Book at this centre', href: WA(`Hello Kinder Hospitals, I would like to book an appointment at Kinder ${loc.name}.`), external: true },
+        { label: 'Book at this centre', href: `/hospitals/${slugOfLoc(loc)}/book` },
       ].filter(Boolean)
     );
   }

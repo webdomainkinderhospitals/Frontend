@@ -39,7 +39,7 @@ export default function Footer({ settings, locations = [] }) {
               </p>
             </div>
             <div className="footer-cta-actions">
-              <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener" className="footer-cta-btn primary">Book Appointment →</a>
+              <a href="/book" className="footer-cta-btn primary">Book Appointment →</a>
               <a
                 href={`tel:${(settings.emergencyPhone || '').replace(/\s/g, '')}`}
                 className="footer-cta-btn secondary"

@@ -3480,3 +3480,130 @@ body{ overflow-x: clip; }
 .hospital-link{ line-height: 1.45; }
 /* Each homepage tile's caption band fills its tile, so tiles in a row end level. */
 .overview-tile-cap{ flex: 1; }
+
+/* ============================================================
+   APPOINTMENT BOOKING  (/book and /hospitals/<slug>/book)
+   ============================================================ */
+.bk{ padding-top: var(--s-7); }
+.bk-bar{
+  position: sticky; top: 76px; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--s-3) var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  background: color-mix(in srgb, var(--white) 94%, transparent);
+  backdrop-filter: saturate(1.2) blur(8px);
+  border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--e-2);
+}
+.bk-field{ display: flex; flex-direction: column; gap: 6px; min-width: 190px; }
+.bk-field > span{ font-size: var(--t-micro); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.bk-field select, .bk-field input{
+  height: 46px; padding: 0 14px; font: inherit; font-size: .9375rem; color: var(--ink);
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--r-sm);
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.bk-field select:focus, .bk-field input:focus{ outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); }
+.bk-search{ flex: 1 1 260px; }
+.bk-count{ margin: 0 0 12px auto; font-size: var(--t-small); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bk-how{ margin: var(--s-5) 0 var(--s-6); color: var(--ink-soft); max-width: 70ch; }
+
+.bk-grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--s-5); }
+.bk-card{
+  display: flex; flex-direction: column; gap: var(--s-4);
+  padding: var(--s-5); background: var(--white);
+  border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--e-1);
+  scroll-margin-top: 180px;
+  transition: box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.bk-card:hover{ box-shadow: var(--e-3); border-color: color-mix(in srgb, var(--primary) 26%, var(--line)); }
+.bk-card.is-highlight{ border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent), var(--e-3); }
+.bk-card-head{ display: flex; gap: var(--s-4); align-items: flex-start; }
+.bk-photo{
+  flex: 0 0 76px; width: 76px; height: 76px; border-radius: var(--r-md); overflow: hidden;
+  background: var(--primary-light); display: grid; place-items: center;
+}
+.bk-photo img{ width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.bk-photo-sm{ flex-basis: 60px; width: 60px; height: 60px; }
+.bk-initials{ font-family: var(--display); font-size: 1.5rem; color: var(--primary); }
+.bk-who{ min-width: 0; }
+.bk-who h3{ font-size: 1.1875rem; margin: 0 0 4px; color: var(--primary-dark); }
+.bk-role{ font-size: var(--t-small); color: var(--ink-soft); margin: 0 0 2px; line-height: 1.5; }
+.bk-quals{ font-size: .8125rem; color: var(--muted); margin: 0 0 8px; line-height: 1.5; }
+.bk-tags{ display: flex; flex-wrap: wrap; gap: 6px; }
+.bk-tag{
+  font-size: .6875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: var(--r-pill); background: var(--primary-light); color: var(--primary);
+}
+.bk-tag-centre{ background: var(--accent-light); color: var(--accent-strong, var(--accent)); }
+
+.bk-dates{ display: flex; flex-wrap: wrap; gap: 8px; min-height: 96px; align-content: flex-start; }
+.bk-date, .bk-chip{
+  min-height: 40px; padding: 0 14px; font: inherit; font-size: .875rem; font-weight: 500;
+  color: var(--ink); background: var(--white); cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  font-variant-numeric: tabular-nums;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.bk-date:hover, .bk-chip:hover{ border-color: var(--primary); color: var(--primary); }
+.bk-date:active, .bk-chip:active{ transform: scale(.97); }
+.bk-chip.is-on{ background: var(--primary); border-color: var(--primary); color: var(--white); }
+.bk-select{ margin: auto 0 0; font-size: var(--t-small); font-style: italic; color: var(--muted); }
+
+.bk-empty{ text-align: center; padding: var(--s-8) var(--s-5); border: 1px dashed var(--line); border-radius: var(--r-lg); background: var(--white); }
+.bk-empty p{ color: var(--muted); margin: 6px 0 var(--s-4); }
+
+/* The request dialog */
+.bk-dialog{
+  width: min(620px, calc(100vw - 32px)); max-height: calc(100dvh - 48px);
+  padding: 0; border: none; border-radius: var(--r-lg); box-shadow: var(--e-4);
+  background: var(--white); color: var(--ink);
+}
+.bk-dialog::backdrop{ background: rgba(36,27,51,.55); backdrop-filter: blur(2px); }
+.bk-dialog[open]{ animation: bk-in var(--dur-slow) var(--ease); }
+@keyframes bk-in{ from{ opacity: 0; transform: translateY(12px) scale(.98); } to{ opacity: 1; transform: none; } }
+.bk-dialog-in{ position: relative; padding: var(--s-6); overflow-y: auto; max-height: calc(100dvh - 48px); }
+.bk-close{
+  position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--white); font-size: 1.5rem; line-height: 1; color: var(--muted); cursor: pointer;
+}
+.bk-close:hover{ color: var(--ink); border-color: var(--primary); }
+.bk-summary{ display: flex; gap: var(--s-4); align-items: center; padding-right: 48px; margin-bottom: var(--s-5); }
+.bk-summary h2{ font-size: 1.5rem; margin: 2px 0; color: var(--primary-dark); }
+.bk-summary p{ margin: 0; font-size: var(--t-small); color: var(--muted); }
+.bk-set{ border: 0; padding: 0; margin: 0 0 var(--s-4); min-width: 0; }
+.bk-set legend, .bk-input > span{
+  display: block; margin-bottom: 8px; font-size: var(--t-micro); font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0;
+}
+.bk-set legend small, .bk-input small{ text-transform: none; letter-spacing: 0; font-weight: 400; }
+.bk-input b{ color: var(--accent); }
+.bk-chips{ display: flex; flex-wrap: wrap; gap: 8px; }
+.bk-row{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+.bk-input{ display: flex; flex-direction: column; margin-bottom: var(--s-4); }
+.bk-input input, .bk-input textarea{
+  font: inherit; font-size: 1rem; color: var(--ink); padding: 11px 14px; min-height: 46px;
+  border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--white); resize: vertical;
+}
+.bk-input input:focus, .bk-input textarea:focus{ outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); }
+.bk-input input[aria-invalid="true"]{ border-color: var(--accent); }
+.bk-error{ display: block; margin-top: 6px; font-size: var(--t-small); font-style: normal; color: var(--accent-strong, var(--accent)); }
+.bk-privacy{ font-size: .8125rem; color: var(--muted); margin: 0 0 var(--s-4); }
+.bk-actions{ display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+.bk-send{ min-height: 48px; }
+.bk-app{ font-size: var(--t-small); font-weight: 600; color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.bk-done h3{ font-size: 1.375rem; margin-bottom: 8px; color: var(--primary-dark); }
+.bk-done p{ color: var(--ink-soft); margin-bottom: var(--s-5); }
+
+@media (max-width: 720px){
+  .bk-bar{ position: static; padding: var(--s-4); }
+  .bk-field{ min-width: 0; flex: 1 1 100%; }
+  .bk-count{ margin: 0; }
+  .bk-grid{ grid-template-columns: 1fr; }
+  .bk-card{ padding: var(--s-4); }
+  .bk-date, .bk-chip{ min-height: 44px; }
+  .bk-row{ grid-template-columns: 1fr; gap: 0; }
+  .bk-dialog-in{ padding: var(--s-5) var(--s-4); }
+}
+@media (prefers-reduced-motion: reduce){ .bk-dialog[open]{ animation: none; } }
+/* The global `* { margin: 0 }` reset strips the margin:auto a browser uses
+   to centre a modal dialog; give it back. */
+.bk-dialog{ margin: auto; }

@@ -3,17 +3,14 @@
 import { useEffect, useState } from 'react';
 import UiIcon from '@/components/UiIcon';
 
-const WHATSAPP_BOOK =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
-  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
-
 // Header for a hospital's own sub-website: its Home is its own page, its menu
 // scrolls within its page, and the only way "out" is the clearly-labelled
 // corporate-site link. Other hospitals are never shown here.
 export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   const [open, setOpen] = useState(false);
   // This centre's own booking link when it has one, the group WhatsApp otherwise.
-  const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
+  // Its own booking page: only this centre's doctors, inside this site.
+  const book = `/hospitals/${slug}/book`;
 
   useEffect(() => {
     const header = document.querySelector('.subsite-header');
@@ -81,7 +78,7 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
             </nav>
 
             <div className="subsite-actions">
-              <a href={book} target="_blank" rel="noopener" className="nav-cta subsite-cta">
+              <a href={book} className="nav-cta subsite-cta">
                 Book Appointment →
               </a>
               <button

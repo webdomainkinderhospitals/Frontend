@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './HomeHero.module.css';
 
-const appointment = 'https://api.whatsapp.com/send?phone=919446654500&text=' +
-  encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
+const appointment = '/book';
 
 // How long each slide holds before the next one takes over.
 const SLIDE_MS = 6000;
@@ -101,7 +100,7 @@ export default function HomeHero({ settings = {}, locations = [] }) {
           <p>{slide.text}</p>
           <div className={styles.actions}>
             <a href={slide.href} className="btn btn-primary" tabIndex={i === current ? 0 : -1}>{slide.cta} <span aria-hidden="true">→</span></a>
-            {i === 0 && <a href={appointment} className={styles.book} tabIndex={i === current ? 0 : -1} target="_blank" rel="noopener noreferrer">Book an appointment</a>}
+            {i === 0 && <a href={appointment} className={styles.book} tabIndex={i === current ? 0 : -1}>Book an appointment</a>}
           </div>
         </div>
       </div>

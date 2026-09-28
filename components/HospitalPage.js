@@ -40,11 +40,10 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   const highlights = lines(loc.highlights).map(splitHighlight);
   const about = lines(loc.description);
   const hero = loc.heroImageUrl || loc.imageUrl;
-  // A centre with its own booking link (its hospital app, say) uses it for
-  // every Book Appointment button here; the rest keep the group WhatsApp.
-  const book = String(loc.bookingUrl || '').trim() || WHATSAPP_BOOK;
-  // Every inner link from this page opens inside this centre's own site.
+  // Every inner link from this page opens inside this centre's own site,
+  // and Book Appointment opens its booking page with this centre's doctors.
   const base = `/hospitals/${hospitalSlug}`;
+  const book = `${base}/book`;
   const specialityGroups = groupSpecialities(specialities);
 
   const renderSpeciality = (spec, i) => {
@@ -77,7 +76,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
             </h1>
             {loc.tagline && <p className="hero-text">{loc.tagline}</p>}
             <div className="hosp-hero-ctas">
-              <a href={book} target="_blank" rel="noopener" className="btn btn-primary">
+              <a href={book} className="btn btn-primary">
                 Book an Appointment →
               </a>
               {loc.phone && (
@@ -248,7 +247,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
               { title: 'Packages & health checkups', text: 'Maternity, well-woman, pre-pregnancy and full-body packages with their inclusions and tiers.', href: `${base}/packages`, cta: 'See packages' },
               { title: 'Insurance & TPA / cashless', text: 'Empanelment, pre-authorisation and what to bring for a cashless admission.', href: `${base}/patients/insurance-and-tpa`, cta: 'How it works' },
               { title: 'Online consultation', text: 'Speak to a specialist from home — our coordinators will set up the consultation.', href: WHATSAPP_BOOK, cta: 'Book a consultation', external: true },
-              { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: book, cta: loc.bookingUrl ? 'Book online' : 'Book on WhatsApp', external: true },
+              { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: book, cta: 'Choose a doctor & day' },
               { title: 'Visitor guidelines', text: 'Visiting hours, attendant passes and the rules for NICU, ICU and maternity wards.', href: `${base}/patients/visitor-guidelines`, cta: 'Before you visit' },
               { title: 'Patient rights', text: 'What you can expect from us, and what helps us care for you safely.', href: `${base}/patients/patient-rights`, cta: 'Read the charter' },
             ].map((item) => (
@@ -377,7 +376,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                   : 'Book on WhatsApp — our care coordinators will guide you.'}
               </p>
             </div>
-            <a href={book} target="_blank" rel="noopener" className="btn btn-primary">
+            <a href={book} className="btn btn-primary">
               Book an Appointment →
             </a>
           </div>

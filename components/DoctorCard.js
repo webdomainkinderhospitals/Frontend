@@ -6,9 +6,6 @@ import { locationsOf } from '@/lib/locations';
 // the corporate site and '/hospitals/<slug>' inside a centre, so a card never
 // links a visitor out of the site they are browsing.
 
-const book = (name) =>
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
-  encodeURIComponent(`Hello Kinder Hospitals, I would like to book an appointment with ${name}.`);
 
 export function initials(name) {
   return (name || '')
@@ -63,7 +60,7 @@ export default function DoctorCard({ doc, compact = false, hideHospitals = false
         {doc.designation && <p className="dcard-role">{doc.designation}</p>}
         {doc.bio && !compact && <p className="dcard-bio">{doc.bio}</p>}
         <div className="dcard-actions">
-          <a className="dcard-btn dcard-btn-primary" href={book(doc.name)} target="_blank" rel="noopener">
+          <a className="dcard-btn dcard-btn-primary" href={`${base}/book?doctor=${slugify(doc.name)}`}>
             {compact ? 'Book' : 'Book appointment'}
           </a>
           <a className="dcard-btn" href={profile}>{compact ? 'Profile' : 'View profile'}</a>
