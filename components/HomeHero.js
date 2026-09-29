@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { promoSlides } from '@/lib/promo';
 import styles from './HomeHero.module.css';
 
 const appointment = '/book';
@@ -22,7 +23,12 @@ export default function HomeHero({ settings = {}, locations = [] }) {
   const touchStart = useRef(null);
   const names = locations.map((l) => l.name).filter(Boolean);
   const seeded = /spanning 5 hospitals across Cherthala/.test(settings.heroSubtitle || '');
-  const slides = [
+  // Banners set in the admin (Site Settings → Homepage slider banners) replace
+  // the headline slides. They are finished artworks with their own text and
+  // logo, so they are shown whole with nothing written over them.
+  const banners = promoSlides(settings, 'heroSlide');
+  const bannerMode = banners.length > 0;
+  const slides = bannerMode ? banners.map((b, i) => ({ label: b.alt || `Banner ${i + 1}`, banner: b })) : [
     {
       label: 'Welcome to Kinder Medical Group',
       title: settings.heroTitle || 'Kindness at the heart of <em>every tiny heartbeat</em>',
@@ -83,13 +89,24 @@ export default function HomeHero({ settings = {}, locations = [] }) {
     if (Math.abs(dx) > 50) select(current + (dx < 0 ? 1 : -1));
   }
 
-  return <section id="home" className={styles.hero} aria-label="Kinder Hospitals highlights" aria-roledescription="carousel"
+  return <section id="home" className={`${styles.hero}${bannerMode ? ` ${styles.bannerMode}` : ''}`} aria-label="Kinder Hospitals highlights" aria-roledescription="carousel"
     onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}
     onFocusCapture={() => setHold(true)} onBlurCapture={() => setHold(false)}
     onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
     onKeyDown={onKeyDown} tabIndex={-1}
   >
-    {slides.map((slide, i) => <div key={slide.label} className={`${styles.slide} ${i === current ? styles.active : ''}`}
+    {bannerMode && <h1 className={styles.srOnly}>{settings.siteName || 'Kinder Hospitals'}: {banners[0].alt || 'women’s and children’s hospitals'}</h1>}
+    {bannerMode && slides.map((slide, i) => {
+      const { image, link, alt } = slide.banner;
+      const img = <img className={styles.bannerImg} src={image} alt={alt} width={1600} height={600}
+        fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />;
+      return <div key={i} className={`${styles.slide} ${i === current ? styles.active : ''}`}
+        aria-hidden={i !== current} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
+        {link ? <a href={link} className={styles.bannerLink} tabIndex={i === current ? 0 : -1}
+          {...(/^https?:\/\//.test(link) ? { target: '_blank', rel: 'noopener' } : {})}>{img}</a> : img}
+      </div>;
+    })}
+    {!bannerMode && slides.map((slide, i) => <div key={slide.label} className={`${styles.slide} ${i === current ? styles.active : ''}`}
       aria-hidden={i !== current} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
       <img className={styles.image} src={slide.image} alt="" fetchPriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
       <div className={styles.shade} />
@@ -108,7 +125,7 @@ export default function HomeHero({ settings = {}, locations = [] }) {
     <div className={styles.controls}>
       <button type="button" onClick={() => select(current - 1)} aria-label="Previous highlight">←</button>
       <div className={styles.dots} role="group" aria-label="Choose a highlight">
-        {slides.map((slide, i) => <button type="button" key={slide.label} aria-label={`Show ${slide.label}`} aria-pressed={current === i} onClick={() => select(i)}><span /></button>)}
+        {slides.map((slide, i) => <button type="button" key={i} aria-label={`Show ${slide.label}`} aria-pressed={current === i} onClick={() => select(i)}><span /></button>)}
       </div>
       <button type="button" onClick={() => select(current + 1)} aria-label="Next highlight">→</button>
       {motionOk && <button type="button" className={styles.playPause} onClick={() => setPaused((p) => !p)}

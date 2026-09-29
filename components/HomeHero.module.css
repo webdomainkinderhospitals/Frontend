@@ -56,3 +56,28 @@
  .active .image, .active .eyebrow, .active .copy h1, .active .copy h2, .active .copy p, .active .actions { animation: none; }
  .image { transform: none; }
 }
+
+/* Banner mode: admin-set artworks with their own text and logo. Each is shown
+   whole at its own 8:3 shape — never cropped, never scrimmed, nothing written
+   over it — and the controls sit in a strip beneath, off the artwork. */
+.bannerMode .slide { aspect-ratio: 8 / 3; }
+.bannerImg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bannerLink { display: block; width: 100%; height: 100%; }
+.bannerMode .controls {
+  position: relative; left: auto; bottom: auto; transform: none;
+  grid-row: 2; justify-content: center; padding: 10px 16px;
+  background: var(--primary-dark);
+}
+.bannerMode .controls button { background: #ffffff14; }
+.srOnly {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+@media (max-width: 640px) {
+  .bannerMode .controls { gap: 4px; padding: 6px 8px; }
+}
+/* The homepage quick bar rises 32px over the bottom of the hero (see
+   .quick-bar in globals.css); the headline slides leave room for it in their
+   padding, so the banner strip leaves the same room under its controls. */
+.bannerMode .controls { padding-bottom: 42px; }
+@media (max-width: 640px) { .bannerMode .controls { padding-bottom: 40px; } }
