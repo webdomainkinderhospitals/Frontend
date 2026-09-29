@@ -4185,3 +4185,20 @@ a:hover .spec-3d, summary:hover .spec-3d {
 /* The global `* { margin: 0 }` reset strips the margin:auto a browser uses
    to centre a modal dialog; give it back. */
 .bk-dialog{ margin: auto; }
+
+/* Kinder Maa's portrait is an illustration with its own speech-bubble shape,
+   so it is shown whole rather than cropped into the old circular frame. */
+.kc-bot-wrap{
+  width: 54px; height: 54px;
+  background: none; box-shadow: none; border-radius: 0; overflow: visible;
+}
+.kc-launcher .kc-bot-icon{
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(63,42,134,.22));
+}
+.kc-avatar{
+  width: 46px; height: 46px;
+  background: none; border: 0; border-radius: 0; overflow: visible;
+}
+.kc-avatar img{ object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,.18)); }
+@media (max-width: 640px){ .kc-bot-wrap{ width: 52px; height: 52px; } }

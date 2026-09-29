@@ -4,7 +4,7 @@ import { atLocation, locationLabel, locationsOf } from '@/lib/locations';
 import { useEffect, useRef, useState } from 'react';
 import { allServices, doctorsForService, slugify } from '@/lib/services';
 
-// Dr. Kinder Maa (Kinder Assistant) — a professional, on-brand hospital chatbot.
+// Kinder Maa (Kinder Assistant) — a professional, on-brand hospital chatbot.
 // It answers ONLY from the content this website already shows (services,
 // doctors, hospitals, packages, contact details from the admin), and every
 // answer carries buttons that take the visitor to the right page.
@@ -209,12 +209,15 @@ function buildReply(text, content) {
   );
 }
 
-// Dr. Kinder Maa — the assistant's portrait, a friendly doctor in a white
-// coat with a stethoscope, used on the launcher and in the chat header.
-function DoctorAvatar({ className }) {
+// Kinder Maa — the assistant's portrait: a Kinder care guide with a headset
+// and phone, a child at her side, in the brand's speech bubble. Used on the
+// launcher and in the chat header, shown whole rather than cropped to a circle
+// so the bubble keeps its shape. She is a website guide, not a clinician, so
+// she carries no "Dr." title.
+function MaaAvatar({ className }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={className} src="/dr-kinder-maa.png" alt="" width={100} height={100} aria-hidden="true" />
+    <img className={className} src="/kinder-maa.webp" alt="" width={192} height={192} aria-hidden="true" />
   );
 }
 
@@ -230,7 +233,7 @@ export default function KinderChat({ content }) {
     if (open && msgs.length === 0) {
       setMsgs([{
         from: 'bot',
-        text: `Hello! I'm Dr. Kinder Maa, your guide at Kinder Hospitals. Ask me about our doctors, services, hospitals or packages — or use a shortcut below.`,
+        text: `Hello! I'm Kinder Maa, your guide at Kinder Hospitals. Ask me about our doctors, services, hospitals or packages — or use a shortcut below.`,
         actions: [],
       }]);
     }
@@ -263,21 +266,21 @@ export default function KinderChat({ content }) {
     <>
       <button
         className={`kc-launcher${open ? ' kc-hidden' : ''}`}
-        aria-label="Chat with Dr. Kinder Maa"
+        aria-label="Chat with Kinder Maa"
         onClick={() => setOpen(true)}
       >
-        <span className="kc-bot-wrap"><DoctorAvatar className="kc-bot-icon" /></span>
-        <span className="kc-launcher-label">Chat with Dr.&nbsp;Kinder&nbsp;Maa</span>
+        <span className="kc-bot-wrap"><MaaAvatar className="kc-bot-icon" /></span>
+        <span className="kc-launcher-label">Chat with Kinder&nbsp;Maa</span>
       </button>
 
       {open && (
-        <section className="kc-panel" role="dialog" aria-label="Chat with Dr. Kinder Maa">
+        <section className="kc-panel" role="dialog" aria-label="Chat with Kinder Maa">
           <header className="kc-head">
             <span className="kc-avatar" aria-hidden="true">
-              <DoctorAvatar />
+              <MaaAvatar />
             </span>
             <div className="kc-head-text">
-              <strong>Dr. Kinder Maa · Assistant</strong>
+              <strong>Kinder Maa · Assistant</strong>
               <span><i className="kc-dot" aria-hidden="true"></i> Online · replies instantly</span>
             </div>
             <button className="kc-close" aria-label="Close chat" onClick={() => setOpen(false)}>
@@ -301,7 +304,7 @@ export default function KinderChat({ content }) {
               </div>
             ))}
             {typing && (
-              <div className="kc-msg kc-bot kc-typing" aria-label="Dr. Kinder Maa is typing">
+              <div className="kc-msg kc-bot kc-typing" aria-label="Kinder Maa is typing">
                 <span></span><span></span><span></span>
               </div>
             )}
@@ -322,14 +325,14 @@ export default function KinderChat({ content }) {
               type="text"
               value={input}
               placeholder="Type your question…"
-              aria-label="Type your question for Dr. Kinder Maa"
+              aria-label="Type your question for Kinder Maa"
               onChange={(e) => setInput(e.target.value)}
             />
             <button type="submit" aria-label="Send message" disabled={!input.trim()}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
             </button>
           </form>
-          <p className="kc-foot">Dr. Kinder Maa guides you around this website · for medical advice please consult our doctors</p>
+          <p className="kc-foot">Kinder Maa guides you around this website · for medical advice please consult our doctors</p>
         </section>
       )}
     </>
