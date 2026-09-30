@@ -45,7 +45,7 @@ export default async function HospitalCareDetail({ params }) {
 
   return (
     <>
-      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} pages={content.pages} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={sections} />
       {['kochi-premium-birthing-centre', 'kochi-water-birthing-suite'].includes(page.slug)
         ? <KochiFeaturePage page={page} loc={loc} links={kochiFeaturePages(content.pages, loc.name)} />
         : <KochiCarePage page={page} content={content} loc={loc} hospitalSlug={slug} />}

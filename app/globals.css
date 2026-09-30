@@ -4202,3 +4202,45 @@ a:hover .spec-3d, summary:hover .spec-3d {
 }
 .kc-avatar img{ object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,.18)); }
 @media (max-width: 640px){ .kc-bot-wrap{ width: 52px; height: 52px; } }
+
+/* ---- Accreditation emblem (e.g. NABH) beside a centre's name ---- */
+.subsite-emblem { width: 44px; height: 44px; object-fit: contain; flex: none; margin-left: 2px; }
+.subsite-brand-text .subsite-accreditation { letter-spacing: 0.06em; }
+.hosp-accreditation { display: inline-flex; align-items: center; gap: 8px; }
+.hosp-accreditation img { width: 28px; height: 28px; object-fit: contain; background: #fff; border-radius: 50%; padding: 1px; }
+.hosp-contact-item .hosp-contact-sub { margin-top: 10px; }
+.subsite-footer-addr strong { font-weight: 700; color: inherit; }
+.editorial-body .cb-cta { margin-top: 4px; }
+@media (max-width: 1279px) {
+  .subsite-emblem { width: 38px; height: 38px; }
+}
+@media (max-width: 420px) {
+  .subsite-emblem { width: 32px; height: 32px; }
+}
+/* The emblem stands in for the tag line, so the name gets the room. */
+.subsite-brand:has(.subsite-emblem) .subsite-brand-text small { display: none; }
+.subsite-brand-text strong { white-space: nowrap; }
+.subsite-cta { white-space: nowrap; }
+.hosp-accreditation::before { display: none !important; }
+.hosp-hero .hero-title .hero-lead { white-space: nowrap; }
+.editorial-body ul.cb-cols { columns: 2; column-gap: 32px; }
+.editorial-body ul.cb-cols li { break-inside: avoid; }
+@media (max-width: 640px) { .editorial-body ul.cb-cols { columns: 1; } }
+.subsite-brand { flex: none; }
+.subsite-nav { min-width: 0; }
+@media (min-width: 1025px) and (max-width: 1520px) {
+  .subsite-brand:has(.subsite-emblem) ~ .subsite-nav a { padding: 8px 7px !important; font-size: 13.5px !important; }
+  .subsite-brand:has(.subsite-emblem) { gap: 9px; }
+  .subsite-brand:has(.subsite-emblem) .subsite-brand-text strong { font-size: 16.5px; }
+}
+@media (min-width: 1025px) and (max-width: 1240px) {
+  /* Too narrow for name, emblem and full menu; the hero still shows it. */
+  .subsite-emblem { display: none; }
+  .subsite-brand:has(.subsite-emblem) ~ .subsite-nav a { padding: 8px 5px !important; }
+}
+@media (max-width: 600px) {
+  .subsite-emblem { display: none; }
+}
+@media (max-width: 400px) {
+  .subsite-brand-text strong { white-space: normal; }
+}

@@ -51,6 +51,26 @@ function Media({ images }) {
   );
 }
 
+// [Link text](/path) — a link inside a paragraph or list item. Only site
+// paths and https addresses become links; anything else stays as text.
+const LINK = /\[([^\]\n]+)\]\((\/(?!\/)[^\s)]*|https:\/\/[^\s)]+)\)/g;
+
+function inline(text) {
+  const parts = [];
+  let last = 0;
+  for (const m of String(text).matchAll(LINK)) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    const external = m[2].startsWith('https://');
+    parts.push(
+      <a key={m.index} href={m[2]} {...(external ? { target: '_blank', rel: 'noopener' } : {})}>{m[1]}</a>
+    );
+    last = m.index + m[0].length;
+  }
+  if (!parts.length) return text;
+  if (last < text.length) parts.push(text.slice(last));
+  return parts;
+}
+
 export default function ContentBody({ text = '' }) {
   return <div className="editorial-body">{String(text).split(/\n\s*\n/).filter(Boolean).map((block, i) => {
     const lines = block.split('\n').filter((l) => l.trim());
@@ -71,11 +91,14 @@ export default function ContentBody({ text = '' }) {
       );
     }
     if (lines.every((line) => /^[-*•]\s+/.test(line))) {
-      return <ul key={i}>{lines.map((line, j) => <li key={j}>{line.replace(/^[-*•]\s+/, '')}</li>)}</ul>;
+      return <ul key={i} className={lines.length >= 10 ? 'cb-cols' : undefined}>{lines.map((line, j) => <li key={j}>{inline(line.replace(/^[-*•]\s+/, ''))}</li>)}</ul>;
     }
     if (/^###\s/.test(block)) return <h3 key={i}>{block.replace(/^###\s+/, '')}</h3>;
     if (/^##\s/.test(block)) return <h2 key={i}>{block.replace(/^##\s+/, '')}</h2>;
     if (block.length < 85 && /^[A-Z][A-Z &(),/’'–:-]+$/.test(block)) return <h2 key={i}>{block}</h2>;
-    return <p key={i}>{block}</p>;
+    // A paragraph that is nothing but a link reads as a call to action.
+    const only = block.trim().match(new RegExp(`^${LINK.source}$`));
+    if (only) return <p key={i} className="cb-cta"><a className="view-all" href={only[2]}>{only[1]}</a></p>;
+    return <p key={i}>{inline(block)}</p>;
   })}</div>;
 }

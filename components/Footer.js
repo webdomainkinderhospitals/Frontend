@@ -10,7 +10,6 @@ const FOOTER_LOC_TAGS = {
 
 const FOOTER_LOC_ADDR = {
   Cherthala: 'Maruthorvattom Temple Road, Near NH 66, Cherthala — 688 539',
-  Kochi: 'Kadavil Castle, Pukkattupady Road, Edappally — Kochi 682024',
   Bengaluru: '40F, Doddanekundi Industrial Area, Hoodi Village, Krishnarajapura — 560048',
   Singapore: '290 Orchard Road, The Paragon, Unit #07-02 — 238859',
 };

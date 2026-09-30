@@ -1,7 +1,8 @@
 import ContentPages from '@/components/ContentPages';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
-import { findLocationBySlug } from '@/lib/locations';
+import { centreName, findLocationBySlug } from '@/lib/locations';
+import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import { hospitalData } from '@/lib/hospital';
 
 import WhatsAppFloat from '@/components/WhatsAppFloat';
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }) {
   const loc = findLocationBySlug(content.locations, slug);
   if (!loc) return { title: 'Kinder Hospitals' };
   return {
-    title: `Kinder ${loc.name} — ${loc.city}, ${loc.country} · Kinder Hospitals`,
+    title: `${centreName(loc)} — ${loc.city}, ${loc.country} · Kinder Hospitals`,
     description: loc.tagline || loc.address,
   };
 }
@@ -31,10 +32,18 @@ export default async function HospitalDetail({ params }) {
   if (!loc) notFound();
 
   const data = hospitalData(content, loc);
+  // Pregnancy Club Membership opens the WOW MOM pregnancy club page when it is
+  // published, else the centre's Celebrate Pregnancy hub; with neither, the
+  // card opens a WhatsApp enquiry instead.
+  const features = kochiFeaturePages(content.pages, loc.name);
+  const club = features.find((f) => f.slug === 'kochi-wow-mom');
+  const pregnancyClubHref = club
+    ? club.href
+    : features.some((f) => f.group === 'Celebrate Pregnancy') ? `/hospitals/${slug}/celebrate-pregnancy` : '';
 
   return (
     <>
-      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={data.sections} pages={content.pages} />
+      <SubSiteHeader loc={loc} settings={content.settings} slug={slug} sections={data.sections} />
       <HospitalPage
         loc={loc}
         hospitalSlug={slug}
@@ -47,6 +56,7 @@ export default async function HospitalDetail({ params }) {
         testimonials={data.testimonials}
         news={data.news}
         settings={content.settings}
+        pregnancyClubHref={pregnancyClubHref}
       />
       <ContentPages title="Information for your visit" pages={data.infoPages} base={`/hospitals/${slug}`} />
       <SubSiteFooter loc={loc} settings={content.settings} slug={slug} sections={data.sections} privacyHref={data.privacyHref} />

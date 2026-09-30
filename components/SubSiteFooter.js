@@ -1,23 +1,33 @@
 import { locationSectionsFor } from '@/lib/site-tree';
+import { centreName } from '@/lib/locations';
+
+const tel = (phone) => `tel:${String(phone).replace(/[^+\d]/g, '')}`;
 
 // Compact footer for a hospital sub-website: this centre's details only,
 // plus the corporate-site link. No other hospitals are listed here.
 export default function SubSiteFooter({ loc, settings, slug, sections = {}, privacyHref = '/policies/privacy-policy' }) {
   const home = `/hospitals/${slug}`;
   const book = `${home}/book`;
+  const name = centreName(loc);
   return (
     <footer className="subsite-footer" id="contact">
       <div className="container">
         <div className="subsite-footer-grid">
           <div>
             <img src={settings.logoUrl || '/logo.png'} alt="Kinder" className="subsite-footer-logo" />
-            <h4>Kinder {loc.name}</h4>
+            <h4>{name}</h4>
             {loc.tagline && <p className="subsite-footer-tag">{loc.tagline}</p>}
             <p className="subsite-footer-addr">{loc.address}</p>
+            {loc.officeAddress && (
+              <p className="subsite-footer-addr">
+                <strong>Office</strong> · {loc.officeAddress}
+              </p>
+            )}
           </div>
           <div>
             <h5>Contact</h5>
-            {loc.phone && <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>{loc.phone}</a>}
+            {loc.phone && <a href={tel(loc.phone)}>{loc.phone}</a>}
+            {loc.phone2 && <a href={tel(loc.phone2)}>{loc.phone2}</a>}
             {loc.email && <a href={`mailto:${loc.email}`}>{loc.email}</a>}
             {loc.mapUrl && (
               <a href={loc.mapUrl} target="_blank" rel="noopener">Directions →</a>
@@ -37,11 +47,12 @@ export default function SubSiteFooter({ loc, settings, slug, sections = {}, priv
             ))}
             <a href={book}>Book an appointment →</a>
             <a href={privacyHref}>Privacy Policy</a>
+            <a href="/patients/patient-rights">Patient Rights &amp; Responsibilities</a>
             <a href="/" className="subsite-footer-corp">Kinder Medical Group — Corporate Website →</a>
           </div>
         </div>
         <div className="subsite-footer-bottom">
-          <span>© {new Date().getFullYear()} {settings.siteName || 'Kinder Hospitals'} · Kinder {loc.name}</span>
+          <span>© {new Date().getFullYear()} {settings.siteName || 'Kinder Hospitals'} · {name}</span>
           <span>A unit of Kindorama Healthcare Pvt Ltd</span>
         </div>
       </div>

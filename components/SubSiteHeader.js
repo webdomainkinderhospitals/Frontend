@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import UiIcon from '@/components/UiIcon';
 import NavIcon from '@/components/NavIcon';
-import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
+import { centreName } from '@/lib/locations';
 
 // Header for a hospital's own sub-website: its Home is its own page, its menu
 // scrolls within its page, and the only way "out" is the clearly-labelled
 // corporate-site link. Other hospitals are never shown here.
-export default function SubSiteHeader({ loc, settings, slug, sections = {}, pages = [] }) {
+export default function SubSiteHeader({ loc, settings, slug, sections = {} }) {
   const [open, setOpen] = useState(false);
   // This centre's own booking link when it has one, the group WhatsApp otherwise.
   // Its own booking page: only this centre's doctors, inside this site.
@@ -23,9 +23,7 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, page
   }, []);
 
   const home = `/hospitals/${slug}`;
-  const features = kochiFeaturePages(pages, loc.name);
-  const celebration = features.filter((link) => link.group === 'Celebrate Pregnancy');
-  const premium = features.find((link) => link.group === 'Premium Birthing Centre');
+  const name = centreName(loc);
   // The centre's own menu, in the order the group site tree lists it. The
   // full list lives in the footer; the bar carries what a visitor needs most.
   const items = [
@@ -66,15 +64,28 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, page
       <header className="subsite-header">
         <div className="container">
           <div className="subsite-header-in">
-            <a href={home} className="subsite-brand" aria-label={`Kinder ${loc.name} — Home`}>
+            <a href={home} className="subsite-brand" aria-label={`${name} — Home`}>
               <img src={settings.logoUrl || '/logo.png'} alt="Kinder" className="subsite-logo" />
               <span className="subsite-brand-text">
-                <strong>Kinder {loc.name}</strong>
-                <small>{loc.since || `${loc.city} · ${loc.country}`}</small>
+                <strong>{name}</strong>
+                {loc.accreditation || loc.accreditationLogoUrl ? (
+                  <small className="subsite-accreditation">{loc.accreditation || 'Accredited'}</small>
+                ) : (
+                  <small>{loc.since || `${loc.city} · ${loc.country}`}</small>
+                )}
               </span>
+              {loc.accreditationLogoUrl && (
+                <img
+                  src={loc.accreditationLogoUrl}
+                  alt={loc.accreditation || 'Accreditation emblem'}
+                  className="subsite-emblem"
+                  width="48"
+                  height="48"
+                />
+              )}
             </a>
 
-            <nav className={`subsite-nav${open ? ' open' : ''}`} aria-label={`Kinder ${loc.name} menu`}>
+            <nav className={`subsite-nav${open ? ' open' : ''}`} aria-label={`${name} menu`}>
               {items.map((item) => (
                 <a key={item.label} href={item.href} onClick={() => setOpen(false)}>
                   <NavIcon name={item.icon} />{item.label}
@@ -98,13 +109,6 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, page
           </div>
         </div>
       </header>
-      {features.length > 0 && <nav className="kochi-feature-menu" aria-label="Kochi pregnancy and birthing menu">
-        <div className="container kochi-feature-menu-inner">
-          {celebration.length > 0 && <a className="kochi-feature-lead" href={`${home}/celebrate-pregnancy`} onClick={() => setOpen(false)}>Celebrate Pregnancy <span aria-hidden="true">→</span></a>}
-          {celebration.map((link) => <a key={link.slug} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
-          {premium && <a className="kochi-feature-premium" href={premium.href} onClick={() => setOpen(false)}>✦ Premium Birthing Centre <span aria-hidden="true">→</span></a>}
-        </div>
-      </nav>}
     </>
   );
 }
