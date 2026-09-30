@@ -9,7 +9,7 @@ import { locationsOf } from '@/lib/locations';
 
 export function initials(name) {
   return (name || '')
-    .replace(/^(Brigadier|Brig\.?|Dr\.?|\(Dr\.\))\s*/gi, '')
+    .replace(/^((Brigadier|Brig\.?|Dr\.?|\(Dr\.?\))\s*)+/gi, '')
     .replace(/[()]/g, '')
     .split(/\s+/)
     .filter(Boolean)

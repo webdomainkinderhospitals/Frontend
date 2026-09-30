@@ -16,14 +16,46 @@ export const metadata = {
 const MILESTONES = [
   ['2000', 'Kinder Clinic founded in Singapore — grows into one of its largest paediatric group practices.'],
   ['2011', 'Kinder Cherthala opens: the first NABH-accredited women & children hospital in Alappuzha.'],
-  ['2018', 'Kinder Kochi opens — a 125-bed multispeciality hospital with 25 specialities in Edappally.'],
+  ['2018', 'Kinder Hospital Kochi opens — a 125-bed multispeciality hospital, now with 35 specialities.'],
   ['2022', "Kinder Bengaluru opens in Whitefield — now among Bangalore's best-known IVF centres."],
   ['2023', "Kinder Women's & Children's Clinic opens in Alappuzha town."],
   ['Today', '5 centres · 6,00,000+ women treated · 18,000+ births · 1,500+ IVF successes.'],
 ];
 
+// The brand book's philosophy, edited in the admin under Site Settings →
+// Brand philosophy. These are the words it ships with.
+const BRAND = {
+  brandVision: 'To be a trusted healthcare partner offering compassionate, advanced, and affordable care.',
+  brandMission:
+    'To make available high-quality, personalised care with specialised and comprehensive range of services, in a cost-effective health care facility in India at par with international standards.',
+  brandValues: 'Compassion\nIntegrity\nExcellence\nInnovation\nAccessibility',
+  brandMark:
+    "The red form represents a mother, symbolising love, care, protection and nurturing, while the blue form represents a child, reflecting innocence, trust and the promise of a healthy future. Together, the two forms create a warm and distinctive symbol of the unbreakable bond between mother and child, embodying Kinder Hospitals' commitment to nurturing life with compassion and care.",
+  brandCoreIdea: 'A caring presence protecting and nurturing life.',
+};
+
+const VALUE_ICONS = {
+  compassion: <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" />,
+  integrity: <><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a3.8 3.8 0 0 1 4.6-.6l.5.3a2 2 0 0 0 1.5.2L21 4" /><path d="m21 3 1 11h-2" /><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" /><path d="M3 4h8" /></>,
+  excellence: <><circle cx="12" cy="9" r="6" /><path d="m9 14.5-1.5 7L12 19l4.5 2.5-1.5-7" /><path d="m9.5 9 1.8 1.8L14.5 7.5" /></>,
+  innovation: <><path d="M9 18h6" /><path d="M10 22h4" /><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z" /></>,
+  accessibility: <><circle cx="12" cy="4" r="2" /><path d="M5 8h14" /><path d="M12 8v6" /><path d="m8 21 4-7 4 7" /></>,
+};
+
+function brandOf(settings = {}) {
+  const pick = (key) => String(settings[key] || '').trim() || BRAND[key];
+  return {
+    vision: pick('brandVision'),
+    mission: pick('brandMission'),
+    values: pick('brandValues').split(/\\n|\n/).map((v) => v.trim()).filter(Boolean),
+    mark: pick('brandMark'),
+    coreIdea: pick('brandCoreIdea'),
+  };
+}
+
 export default async function AboutPage() {
   const content = await getContent();
+  const brand = brandOf(content.settings);
   return (
     <SiteChrome content={content}>
       <main className={styles.about}>
@@ -39,9 +71,9 @@ export default async function AboutPage() {
                 <span className={styles.legal}>A unit of Kindorama Healthcare Pvt Ltd</span>
               </div>
               <aside className={styles.brandPanel} aria-label="The Kinder philosophy">
-                <span className={styles.panelLabel}>OUR PURPOSE, EVERY DAY</span>
+                <span className={styles.panelLabel}>OUR CORE IDEA</span>
                 <svg className={styles.heart} viewBox="0 0 120 110" fill="none" aria-hidden="true"><path d="M60 96 17 55C-12 25 30-9 60 23 90-9 132 25 103 55Z" stroke="currentColor" strokeWidth="2"/><path d="M30 55h15l8-17 14 35 9-18h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                <h2>Kindness at the heart<br />of every tiny heartbeat.</h2>
+                <h2>{brand.coreIdea}</h2>
                 <div className={styles.panelFooter}><span>Rooted in Singapore</span><span>Connected by care</span></div>
               </aside>
             </div>
@@ -92,22 +124,44 @@ export default async function AboutPage() {
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="section-eyebrow">Vision &amp; Mission</span>
+                <span className="section-eyebrow">Brand philosophy</span>
                 <h2 className="section-title">Kindness at the heart of <em>everything we do</em></h2>
               </div>
             </div>
-            <div className="value-grid">
+            <div className={styles.philosophy}>
               <div className="value-card">
                 <span className={styles.cardNumber}>01 / THE FUTURE WE SEE</span><h3>Our Vision</h3>
-                <p>To be the most trusted women's and children's healthcare network in the region — where every family receives international-standard care with genuine warmth.</p>
+                <p>{brand.vision}</p>
               </div>
               <div className="value-card">
                 <span className={styles.cardNumber}>02 / THE WORK WE DO</span><h3>Our Mission</h3>
-                <p>Comprehensive, personalised maternity, IVF, neonatology and paediatric care at affordable cost — upholding international protocols in every city we serve.</p>
+                <p>{brand.mission}</p>
               </div>
-              <div className="value-card">
-                <span className={styles.cardNumber}>03 / WHAT GUIDES US</span><h3>Our Values</h3>
-                <p>Kindness first. Clinical excellence. Honesty with every family. One standard of care across every Kinder centre.</p>
+            </div>
+            <div className={styles.values}>
+              <span className={styles.cardNumber}>03 / WHAT GUIDES US · CORE VALUES</span>
+              <ul>
+                {brand.values.map((value) => (
+                  <li key={value}>
+                    <span className={styles.valueIcon} aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        {VALUE_ICONS[value.toLowerCase()] || <circle cx="12" cy="12" r="5" />}
+                      </svg>
+                    </span>
+                    {value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.mark}>
+              <div className={styles.markLogo}>
+                <img src={content.settings.logoUrl || '/logo.png'} alt="The Kinder Hospitals brand mark" width="540" height="276" loading="lazy" />
+              </div>
+              <div>
+                <span className={styles.cardNumber}>04 / OUR BRAND MARK</span>
+                <h3>A mother and child, together</h3>
+                <p>{brand.mark}</p>
+                <p className={styles.coreIdea}><span>Core idea</span>{brand.coreIdea}</p>
               </div>
             </div>
           </div>

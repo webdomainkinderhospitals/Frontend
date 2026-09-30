@@ -4,6 +4,8 @@ import DoctorCard from '@/components/DoctorCard';
 import PromoBanner from '@/components/PromoBanner';
 import { promoSlides } from '@/lib/promo';
 import { isOwnImageOf } from '@/lib/hospital';
+import { centreName } from '@/lib/locations';
+import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -39,7 +41,9 @@ function groupSpecialities(specialities) {
   return groups.length > 1 || groups[0]?.title ? groups : [];
 }
 
-export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings }) {
+const tel = (phone) => `tel:${String(phone).replace(/[^+\d]/g, '')}`;
+
+export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings, pregnancyClubHref = '' }) {
   const highlights = lines(loc.highlights).map(splitHighlight);
   const about = lines(loc.description);
   const hero = loc.heroImageUrl || loc.imageUrl;
@@ -48,6 +52,13 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   const base = `/hospitals/${hospitalSlug}`;
   const book = `${base}/book`;
   const specialityGroups = groupSpecialities(specialities);
+  // "Kinder Hospital Kochi": the name is set in the display face with the
+  // place picked out, so split it into its lead-in and the place itself.
+  const name = centreName(loc);
+  const lead = name.endsWith(loc.name) ? name.slice(0, -loc.name.length).trim() : 'Kinder';
+  const isKochi = /^(kochi|cochin)$/i.test(String(loc.name).trim());
+  const phones = [loc.phone, loc.phone2].filter((p) => String(p || '').trim());
+  const enquire = (topic) => whatsappLink(whatsappNumber(loc), `Hello ${name}, I would like to ${topic}.`);
 
   const renderSpeciality = (spec, i) => {
     const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -71,11 +82,18 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
       >
         <div className="container">
           <div className="hosp-hero-content">
-            <span className="hero-eyebrow">
-              {loc.since || `${loc.city} · ${loc.country}`}
-            </span>
+            {!loc.since && (loc.accreditation || loc.accreditationLogoUrl) ? (
+              <span className="hero-eyebrow hosp-accreditation">
+                {loc.accreditationLogoUrl && <img src={loc.accreditationLogoUrl} alt="" width="28" height="28" />}
+                {loc.accreditation || 'Accredited'}
+              </span>
+            ) : (
+              <span className="hero-eyebrow">
+                {loc.since || `${loc.city} · ${loc.country}`}
+              </span>
+            )}
             <h1 className="hero-title">
-              Kinder <em>{loc.name}</em>
+              <span className="hero-lead">{lead}</span> <em>{loc.name}</em>
             </h1>
             {loc.tagline && <p className="hero-text">{loc.tagline}</p>}
             <div className="hosp-hero-ctas">
@@ -83,7 +101,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                 Book an Appointment →
               </a>
               {loc.phone && (
-                <a href={`tel:${loc.phone.replace(/\s/g, '')}`} className="btn btn-outline">
+                <a href={tel(loc.phone)} className="btn btn-outline">
                   Call {loc.phone}
                 </a>
               )}
@@ -96,13 +114,19 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
       <div className="container">
         <div className="hosp-contact-bar">
           <div className="hosp-contact-item">
-            <strong>Address</strong>
+            <strong>{loc.officeAddress ? 'Hospital address' : 'Address'}</strong>
             <span>{loc.address}</span>
+            {loc.officeAddress && (
+              <>
+                <strong className="hosp-contact-sub">Office address</strong>
+                <span>{loc.officeAddress}</span>
+              </>
+            )}
           </div>
-          {loc.phone && (
+          {phones.length > 0 && (
             <div className="hosp-contact-item">
               <strong>Phone</strong>
-              <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>{loc.phone}</a>
+              {phones.map((p) => <a key={p} href={tel(p)}>{p}</a>)}
             </div>
           )}
           {loc.email && (
@@ -113,7 +137,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           )}
           {(loc.mapUrl || loc.website) && (
             <div className="hosp-contact-item">
-              <strong>Links</strong>
+              <strong>{loc.website ? 'Links' : 'Find us'}</strong>
               <span className="hosp-links">
                 {loc.mapUrl && (
                   <a href={loc.mapUrl} target="_blank" rel="noopener">Directions →</a>
@@ -181,24 +205,31 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
             <figure className="hosp-plate-fig">
               <img
                 src={loc.imageUrl}
-                alt={`Illustration of the Kinder ${loc.name} building`}
+                alt={`Illustration of the ${name} building`}
                 width={1400}
                 height={875}
                 loading="lazy"
                 decoding="async"
               />
-              <figcaption>
-                <span className="section-eyebrow">The centre</span>
-                <strong>Kinder {loc.name}</strong>
-                {loc.address && <span>{loc.address}</span>}
-              </figcaption>
             </figure>
           </div>
         </section>
       )}
 
       {/* Care pages for this centre — each opens as its own page */}
-      <KochiCareCards pages={carePages} hospitalSlug={hospitalSlug} hospitalName={loc.name} />
+      <KochiCareCards
+        pages={carePages}
+        hospitalSlug={hospitalSlug}
+        hospitalName={loc.name}
+        centreLabel={name}
+        extra={[{
+          slug: 'packages',
+          title: 'Packages & Health Check-ups',
+          excerpt: 'Maternity, fertility and health check-up packages — what each includes, so you can plan with confidence.',
+          href: `${base}/packages`,
+          cta: 'View packages',
+        }]}
+      />
 
       {/* Specialities at this centre */}
       {specialities.length > 0 && (
@@ -206,21 +237,15 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="section-eyebrow">Departments at Kinder {loc.name}</span>
+                <span className="section-eyebrow">Departments at {name}</span>
                 <h2 className="section-title">
                   {centreSpecific ? (
-                    <>Specialities <em>at this centre</em></>
+                    <>Our <em>departments</em></>
                   ) : (
                     <>Specialities <em>across our group</em></>
                   )}
                 </h2>
-                <p className="hosp-section-intro">
-                  Grouped by the kind of care you are looking for — {specialities.length} departments in all.
-                </p>
               </div>
-              {carePages.length > 0 && (
-                <a className="view-all" href="#care">Read our care pages →</a>
-              )}
             </div>
             {specialityGroups.length > 0 ? (
               <div className="hosp-spec-groups">
@@ -243,7 +268,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="section-eyebrow">Patient services · Kinder {loc.name}</span>
+              <span className="section-eyebrow">Patient services · {name}</span>
               <h2 className="section-title">Packages, insurance <em>&amp; consultations</em></h2>
               <p className="hosp-section-intro">Arrangements run across the group; our team at this centre confirms what applies to your visit.</p>
             </div>
@@ -253,10 +278,12 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
               { title: 'Packages & health checkups', text: 'Maternity, well-woman, pre-pregnancy and full-body packages with their inclusions and tiers.', href: `${base}/packages`, cta: 'See packages' },
               { title: 'Insurance & TPA / cashless', text: 'Empanelment, pre-authorisation and what to bring for a cashless admission.', href: `${base}/patients/insurance-and-tpa`, cta: 'How it works' },
               { title: 'Online consultation', text: 'Speak to a specialist from home — our coordinators will set up the consultation.', href: WHATSAPP_BOOK, cta: 'Book a consultation', external: true },
-              { title: 'Book an appointment', text: `Book at Kinder ${loc.name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: book, cta: 'Choose a doctor & day' },
+              { title: 'Book an appointment', text: `Book at ${name}${loc.phone ? ` or call ${loc.phone}` : ''}.`, href: book, cta: 'Choose a doctor & day' },
+              // Requested for Kochi; other centres add these once they offer them.
+              isKochi && { title: 'Pregnancy Club membership', text: 'Join our pregnancy club — classes, celebrations and a care team beside you from the first trimester to your baby’s arrival.', href: pregnancyClubHref || enquire('know about the Pregnancy Club membership'), cta: pregnancyClubHref ? 'Explore the club' : 'Ask about membership', external: !pregnancyClubHref },
+              isKochi && { title: 'Mammogram booking', text: 'Book a screening mammogram — our team will confirm a convenient date and time with you.', href: enquire('book a mammogram'), cta: 'Book a mammogram', external: true },
               { title: 'Visitor guidelines', text: 'Visiting hours, attendant passes and the rules for NICU, ICU and maternity wards.', href: `${base}/patients/visitor-guidelines`, cta: 'Before you visit' },
-              { title: 'Patient rights', text: 'What you can expect from us, and what helps us care for you safely.', href: `${base}/patients/patient-rights`, cta: 'Read the charter' },
-            ].map((item) => (
+            ].filter(Boolean).map((item) => (
               <article className="editorial-card" key={item.title}>
                 <h3><a href={item.href} {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}>{item.title}</a></h3>
                 <p>{item.text}</p>
@@ -273,7 +300,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="section-eyebrow">Our team at Kinder {loc.name}</span>
+                <span className="section-eyebrow">Our team at {name}</span>
                 <h2 className="section-title">
                   Specialists <em>at this centre</em>
                 </h2>
@@ -294,7 +321,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="section-eyebrow">Treatments at Kinder {loc.name}</span>
+                <span className="section-eyebrow">Treatments at {name}</span>
                 <h2 className="section-title">
                   Procedures <em>at this centre</em>
                 </h2>
@@ -318,7 +345,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="section-eyebrow">Patient stories · Kinder {loc.name}</span>
+                <span className="section-eyebrow">Patient stories · {name}</span>
                 <h2 className="section-title">
                   Stories of <em>joy from this centre</em>
                 </h2>
@@ -345,7 +372,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="section-eyebrow">Updates from Kinder {loc.name}</span>
+                <span className="section-eyebrow">Updates from {name}</span>
                 <h2 className="section-title">
                   News &amp; <em>events here</em>
                 </h2>
@@ -375,7 +402,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         <div className="container">
           <div className="cta-strip">
             <div>
-              <h3>Visit Kinder {loc.name}</h3>
+              <h3>Visit {name}</h3>
               <p>
                 {loc.phone
                   ? `Call ${loc.phone} or book on WhatsApp — our care coordinators will guide you.`
