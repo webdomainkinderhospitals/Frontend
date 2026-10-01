@@ -4466,3 +4466,117 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 @media (prefers-reduced-motion: reduce) {
   .hc-panel, .hc-caret, .hc-trigger { transition: none; }
 }
+
+/* =====================================================================
+   Centre departments menu (hospital sub-site, under the banner): one big
+   card per department group, each opening every department in it.
+   ===================================================================== */
+.csm { position: relative; z-index: 3; margin-top: -58px; }
+.csm-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.csm-card {
+  --c1: #3B6FC0; --c2: #1B3A73; --glow: 27, 58, 115;
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px;
+  min-height: 132px; padding: 22px 24px; border: 0; border-radius: 22px; cursor: pointer; text-align: left;
+  color: #fff; font: inherit;
+  background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 22px 40px -18px rgba(var(--glow), .65), 0 8px 18px -10px rgba(var(--glow), .45);
+  transition: transform .25s var(--ease-out, ease), box-shadow .25s var(--ease-out, ease);
+}
+.csm-red { --c1: #EE4148; --c2: #A3151C; --glow: 163, 21, 28; }
+/* soft light and a fine dot texture make the cards feel crafted, not flat */
+.csm-card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(255,255,255,.22), transparent 55%),
+    radial-gradient(circle, rgba(255,255,255,.14) 1px, transparent 1.3px) 0 0 / 16px 16px;
+}
+.csm-card::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -45%; width: 35%; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent);
+  transform: skewX(-18deg); transition: left .7s var(--ease-out, ease);
+}
+.csm-card:hover { transform: translateY(-4px); box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 30px 50px -20px rgba(var(--glow), .7), 0 10px 22px -10px rgba(var(--glow), .5); }
+.csm-card:hover::after { left: 115%; }
+.csm-card:focus-visible { outline: 3px solid #fff; outline-offset: -6px; }
+.csm-card.is-open { transform: translateY(-2px); box-shadow: 0 0 0 4px rgba(var(--glow), .18), 0 24px 44px -18px rgba(var(--glow), .7); }
+.csm-icon {
+  display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+.csm-icon svg { width: 32px; height: 32px; }
+.csm-body { display: grid; gap: 4px; min-width: 0; }
+.csm-kicker { font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.82); }
+.csm-title { font-family: var(--display); font-size: clamp(20px, 1.4vw + 12px, 26px); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+.csm-tag { font-size: 14px; line-height: 1.45; color: rgba(255,255,255,.88); }
+.csm-go {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: #fff; color: rgb(var(--glow)); box-shadow: 0 8px 18px -8px rgba(0,0,0,.4);
+  transition: transform .3s var(--ease-out, ease);
+}
+.csm-go svg { width: 20px; height: 20px; }
+.csm-card.is-open .csm-go { transform: rotate(180deg); }
+
+.csm-panel {
+  margin-top: 16px; padding: 22px 24px 24px; border-radius: 22px; background: #fff;
+  border: 1px solid var(--line); border-top: 4px solid #2F62B0;
+  box-shadow: 0 28px 60px -28px rgba(19,33,59,.35);
+  animation: csmIn .32s var(--ease-out, ease) both;
+}
+.csm-panel-red { border-top-color: #D8232B; }
+.csm-panel[hidden] { display: none; }
+@keyframes csmIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.csm-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.csm-panel-kicker { font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.csm-panel-head h3 { margin: 2px 0 0; font-size: clamp(20px, 1vw + 14px, 26px); color: var(--ink); }
+.csm-close {
+  width: 44px; height: 44px; flex: none; border-radius: 50%; border: 1px solid var(--line); background: #fff;
+  font-size: 24px; line-height: 1; color: var(--ink-soft); cursor: pointer;
+}
+.csm-close:hover { border-color: var(--primary); color: var(--primary); }
+.csm-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.csm-dept {
+  display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 14px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--bg, #F7F9FC);
+  color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14.5px; line-height: 1.3;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.csm-dept:hover { border-color: rgba(47,98,176,.45); background: #fff; transform: translateY(-2px); box-shadow: 0 10px 20px -14px rgba(27,58,115,.5); }
+.csm-panel-red .csm-dept:hover { border-color: rgba(216,35,43,.4); box-shadow: 0 10px 20px -14px rgba(163,21,28,.5); }
+.csm-dept > span:not(.spec-3d) { flex: 1; }
+.csm-dept .spec-3d { flex: none; }
+.csm-arrow { width: 16px; height: 16px; flex: none; color: var(--muted); transition: transform .2s ease, color .2s ease; }
+.csm-dept:hover .csm-arrow { transform: translateX(3px); color: var(--primary); }
+
+/* Visit us: the centre's address and a map, near the end of its page */
+.hosp-visit-card {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 0; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 24px; background: #fff; box-shadow: var(--e-3);
+}
+.hosp-visit-info { padding: clamp(24px, 3vw, 40px); display: grid; align-content: start; gap: 6px; }
+.hosp-visit-info .section-title { margin-bottom: 10px; }
+.hosp-visit-details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin: 8px 0 18px; }
+.hosp-visit-details .hosp-contact-item:first-child { grid-column: 1 / -1; }
+.hosp-visit-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hosp-visit-map { min-height: 380px; background: var(--primary-light); }
+.hosp-visit-map iframe { display: block; width: 100%; height: 100%; min-height: 380px; border: 0; }
+
+@media (max-width: 900px) {
+  .csm { margin-top: -36px; }
+  .hosp-visit-card { grid-template-columns: 1fr; }
+  .hosp-visit-map, .hosp-visit-map iframe { min-height: 300px; }
+}
+@media (max-width: 560px) {
+  .csm-card { grid-template-columns: auto 1fr; padding: 18px; gap: 14px; min-height: 0; }
+  .csm-go { display: none; }
+  .csm-icon { width: 52px; height: 52px; border-radius: 14px; }
+  .csm-icon svg { width: 26px; height: 26px; }
+  .csm-panel { padding: 18px 16px; }
+  .csm-grid { grid-template-columns: 1fr; }
+  .hosp-visit-details { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .csm-card, .csm-card::after, .csm-go, .csm-dept, .csm-arrow { transition: none; }
+  .csm-panel { animation: none; }
+}
