@@ -4580,3 +4580,34 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
   .csm-card, .csm-card::after, .csm-go, .csm-dept, .csm-arrow { transition: none; }
   .csm-panel { animation: none; }
 }
+
+/* ---- Booking: preferred day as a dropdown on each doctor card ---- */
+.bk-book { margin-top: auto; padding-top: var(--s-4); border-top: 1px solid var(--line); display: grid; gap: 6px; }
+.bk-book-label, .bk-legend {
+  font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
+}
+.bk-legend b { color: var(--accent); }
+.bk-book-row { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+.bk-book-btn { flex: 0 0 auto; min-height: 48px; padding: 12px 20px !important; white-space: nowrap; }
+.bk-day { position: relative; flex: 1 1 200px; display: block; min-width: 0; }
+.bk-day select {
+  width: 100%; min-height: 48px; padding: 12px 40px 12px 42px;
+  border: 1px solid #C9D4E5; border-radius: 12px; background: #fff;
+  font: 500 15px var(--body); color: var(--ink); cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F62B0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 18px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.bk-day select:invalid, .bk-day select:has(option[value='']:checked) { color: var(--muted); }
+.bk-day select:hover { border-color: var(--primary); }
+.bk-day select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(47,98,176,.18); }
+.bk-day.is-invalid select { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(207,28,36,.12); }
+.bk-day > svg {
+  position: absolute; left: 14px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%);
+  color: var(--primary); pointer-events: none;
+}
+.bk-dialog .bk-set .bk-day { margin-top: 8px; display: block; }
+@media (max-width: 480px) {
+  .bk-book-btn { flex: 1 1 100%; }
+}

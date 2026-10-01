@@ -21,6 +21,29 @@ function DoctorPhoto({ doctor, small = false }) {
   );
 }
 
+// Preferred day as a dropdown: the next working days, each written out in
+// full ("Friday, 2 October") so nothing is left to guess.
+function DaySelect({ id, dates, value, onChange, label, invalid = false, describedBy }) {
+  return (
+    <span className={`bk-day${invalid ? ' is-invalid' : ''}`}>
+      <select
+        id={id}
+        value={value || ''}
+        onChange={(e) => onChange(dates.find((d) => d.iso === e.target.value) || null)}
+        aria-label={label}
+        aria-invalid={invalid || undefined}
+        aria-describedby={describedBy}
+      >
+        <option value="" disabled>Select a preferred day</option>
+        {dates.map((d) => <option key={d.iso} value={d.iso}>{d.long}</option>)}
+      </select>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+      </svg>
+    </span>
+  );
+}
+
 // The appointment request flow shared by /book (every doctor) and a centre's
 // own /hospitals/<slug>/book (that centre's doctors only, in its own chrome).
 //
@@ -35,6 +58,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   const [query, setQuery] = useState('');
   const [highlight, setHighlight] = useState('');
   const [pick, setPick] = useState(null);       // { doctor, date }
+  const [chosen, setChosen] = useState({});     // doctor id -> the day picked on its card
   const dialogRef = useRef(null);
 
   // Dates are the visitor's own local days, so they are worked out in the
@@ -145,15 +169,21 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                     </div>
                   </div>
                 </header>
-                <div className="bk-dates" role="group" aria-label={`Preferred day with ${doc.name}`}>
-                  {dates.map((date) => (
-                    <button key={date.iso} type="button" className="bk-date" onClick={() => open(doc, date)}
-                      aria-label={`${date.long} with ${doc.name}`}>
-                      {date.label}
+                <div className="bk-book">
+                  <label className="bk-book-label" htmlFor={`bk-day-${doc.id}`}>Preferred day</label>
+                  <div className="bk-book-row">
+                    <DaySelect
+                      id={`bk-day-${doc.id}`}
+                      dates={dates}
+                      value={chosen[doc.id]?.iso}
+                      onChange={(date) => setChosen((c) => ({ ...c, [doc.id]: date }))}
+                      label={`Preferred day with ${doc.name}`}
+                    />
+                    <button type="button" className="btn btn-primary bk-book-btn" onClick={() => open(doc, chosen[doc.id] || null)}>
+                      Book appointment
                     </button>
-                  ))}
+                  </div>
                 </div>
-                <p className="bk-select">Select a preferred day to continue</p>
               </article>
             ))}
           </div>
@@ -161,7 +191,10 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
       </div>
 
       <BookingDialog ref={dialogRef} pick={pick} dates={dates} fixedCentre={fixedCentre}
-        onChangeDate={(date) => setPick((p) => ({ ...p, date }))} />
+        onChangeDate={(date) => {
+          setPick((p) => ({ ...p, date }));
+          if (date && pick?.doctor) setChosen((c) => ({ ...c, [pick.doctor.id]: date }));
+        }} />
     </section>
   );
 }
@@ -208,6 +241,7 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
     if (!name.trim()) next.name = 'Please enter the patient’s name.';
     if (!tidyPhone) next.phone = 'Please enter a valid mobile number, e.g. 98765 43210.';
     if (choices.length > 1 && !centre) next.centre = 'Please choose the hospital you would like to visit.';
+    if (!pick.date) next.day = 'Please choose a preferred day.';
     setErrors(next);
     if (Object.keys(next).length) {
       document.getElementById(`bk-${Object.keys(next)[0]}`)?.focus();
@@ -277,17 +311,19 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
               </fieldset>
             )}
 
-            <fieldset className="bk-set">
-              <legend>Preferred day</legend>
-              <div className="bk-chips">
-                {dates.map((d) => (
-                  <button key={d.iso} type="button" className={`bk-chip${pick.date.iso === d.iso ? ' is-on' : ''}`}
-                    aria-pressed={pick.date.iso === d.iso} onClick={() => onChangeDate(d)}>
-                    {d.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
+            <div className="bk-set">
+              <label className="bk-legend" htmlFor="bk-day">Preferred day <b aria-hidden="true">*</b></label>
+              <DaySelect
+                id="bk-day"
+                dates={dates}
+                value={pick.date?.iso}
+                onChange={(d) => { onChangeDate(d); if (errors.day) setErrors((x) => ({ ...x, day: undefined })); }}
+                label="Preferred day"
+                invalid={!!errors.day}
+                describedBy={errors.day ? 'bk-day-err' : undefined}
+              />
+              {errors.day && <p id="bk-day-err" className="bk-error" role="alert">{errors.day}</p>}
+            </div>
 
             <fieldset className="bk-set">
               <legend>Preferred time <small>(optional)</small></legend>
