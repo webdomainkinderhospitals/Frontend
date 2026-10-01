@@ -9,11 +9,11 @@ const norm = (s) => String(s || '').toLowerCase().trim();
 
 // A doctor's photo, or their initials when there is none or it fails to load:
 // a broken-image icon never reaches a patient.
-function DoctorPhoto({ doctor, small = false }) {
+function DoctorPhoto({ doctor, small = false, large = false }) {
   const [failed, setFailed] = useState(false);
   const show = doctor.imageUrl && !failed;
   return (
-    <span className={`bk-photo${small ? ' bk-photo-sm' : ''}`} aria-hidden="true">
+    <span className={`bk-photo${small ? ' bk-photo-sm' : ''}${large ? ' bk-photo-lg' : ''}`} aria-hidden="true">
       {show
         ? <img src={doctor.imageUrl} alt="" loading="lazy" decoding="async" onError={() => setFailed(true)} />
         : <span className="bk-initials">{initials(doctor.name)}</span>}
@@ -21,28 +21,37 @@ function DoctorPhoto({ doctor, small = false }) {
   );
 }
 
-// Preferred day as a dropdown: the next working days, each written out in
-// full ("Friday, 2 October") so nothing is left to guess.
-function DaySelect({ id, dates, value, onChange, label, invalid = false, describedBy }) {
+const ICONS = {
+  calendar: <><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></>,
+  clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
+};
+
+// A styled dropdown for the booking choices (preferred day and time).
+//   options  [{ value, label }]; placeholder is the empty choice
+function ChoiceSelect({ id, options, value, onChange, label, placeholder, icon = 'calendar', invalid = false, describedBy, placeholderSelectable = false }) {
   return (
     <span className={`bk-day${invalid ? ' is-invalid' : ''}`}>
       <select
         id={id}
         value={value || ''}
-        onChange={(e) => onChange(dates.find((d) => d.iso === e.target.value) || null)}
+        onChange={(e) => onChange(e.target.value)}
         aria-label={label}
         aria-invalid={invalid || undefined}
         aria-describedby={describedBy}
+        className={value ? undefined : 'is-empty'}
       >
-        <option value="" disabled>Select a preferred day</option>
-        {dates.map((d) => <option key={d.iso} value={d.iso}>{d.long}</option>)}
+        <option value="" disabled={!placeholderSelectable}>{placeholder}</option>
+        {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+        {ICONS[icon]}
       </svg>
     </span>
   );
 }
+
+const dayOptions = (dates) => dates.map((d) => ({ value: d.iso, label: d.long }));
+const TIME_OPTIONS = TIMES.map((t) => ({ value: t, label: t }));
 
 // The appointment request flow shared by /book (every doctor) and a centre's
 // own /hospitals/<slug>/book (that centre's doctors only, in its own chrome).
@@ -58,7 +67,8 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   const [query, setQuery] = useState('');
   const [highlight, setHighlight] = useState('');
   const [pick, setPick] = useState(null);       // { doctor, date }
-  const [chosen, setChosen] = useState({});     // doctor id -> the day picked on its card
+  const [chosen, setChosen] = useState({});     // doctor id -> { date, time } picked on its card
+  const choose = (id, patch) => setChosen((c) => ({ ...c, [id]: { ...c[id], ...patch } }));
   const dialogRef = useRef(null);
 
   // Dates are the visitor's own local days, so they are worked out in the
@@ -93,8 +103,8 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
       (!q || [d.name, d.speciality, d.designation, d.bio].some((f) => norm(f).includes(q))));
   }, [inCentre, dept, query]);
 
-  const open = (doctor, date) => {
-    setPick({ doctor, date });
+  const open = (doctor, date, time = '') => {
+    setPick({ doctor, date, time, opened: Date.now() });
     requestAnimationFrame(() => dialogRef.current?.showModal());
   };
 
@@ -155,8 +165,8 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                 id={`doctor-${doc.slug}`}
                 className={`bk-card${highlight === doc.slug ? ' is-highlight' : ''}`}
               >
+                <DoctorPhoto doctor={doc} large />
                 <header className="bk-card-head">
-                  <DoctorPhoto doctor={doc} />
                   <div className="bk-who">
                     <h3>{doc.name}</h3>
                     {doc.designation && <p className="bk-role">{doc.designation}</p>}
@@ -170,19 +180,36 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                   </div>
                 </header>
                 <div className="bk-book">
-                  <label className="bk-book-label" htmlFor={`bk-day-${doc.id}`}>Preferred day</label>
                   <div className="bk-book-row">
-                    <DaySelect
-                      id={`bk-day-${doc.id}`}
-                      dates={dates}
-                      value={chosen[doc.id]?.iso}
-                      onChange={(date) => setChosen((c) => ({ ...c, [doc.id]: date }))}
-                      label={`Preferred day with ${doc.name}`}
-                    />
-                    <button type="button" className="btn btn-primary bk-book-btn" onClick={() => open(doc, chosen[doc.id] || null)}>
-                      Book appointment
-                    </button>
+                    <label className="bk-book-field">
+                      <span className="bk-book-label">Preferred day</span>
+                      <ChoiceSelect
+                        id={`bk-day-${doc.id}`}
+                        options={dayOptions(dates)}
+                        value={chosen[doc.id]?.date?.iso}
+                        onChange={(iso) => choose(doc.id, { date: dates.find((d) => d.iso === iso) || null })}
+                        label={`Preferred day with ${doc.name}`}
+                        placeholder="Select day"
+                      />
+                    </label>
+                    <label className="bk-book-field">
+                      <span className="bk-book-label">Preferred time</span>
+                      <ChoiceSelect
+                        id={`bk-time-${doc.id}`}
+                        options={TIME_OPTIONS}
+                        value={chosen[doc.id]?.time}
+                        onChange={(time) => choose(doc.id, { time })}
+                        label={`Preferred time with ${doc.name}`}
+                        placeholder="Any time"
+                        placeholderSelectable
+                        icon="clock"
+                      />
+                    </label>
                   </div>
+                  <button type="button" className="btn btn-primary bk-book-btn"
+                    onClick={() => open(doc, chosen[doc.id]?.date || null, chosen[doc.id]?.time || '')}>
+                    Book appointment
+                  </button>
                 </div>
               </article>
             ))}
@@ -193,8 +220,9 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
       <BookingDialog ref={dialogRef} pick={pick} dates={dates} fixedCentre={fixedCentre}
         onChangeDate={(date) => {
           setPick((p) => ({ ...p, date }));
-          if (date && pick?.doctor) setChosen((c) => ({ ...c, [pick.doctor.id]: date }));
-        }} />
+          if (pick?.doctor) choose(pick.doctor.id, { date });
+        }}
+        onChangeTime={(time) => { if (pick?.doctor) choose(pick.doctor.id, { time }); }} />
     </section>
   );
 }
@@ -202,7 +230,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
 // ---------------------------------------------------------------------------
 
 
-const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCentre, onChangeDate }, ref) {
+const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCentre, onChangeDate, onChangeTime }, ref) {
   const [time, setTime] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -219,13 +247,14 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
   const choices = fixedCentre ? [fixedCentre] : doctor?.centres || [];
   const centre = choices.find((c) => c.slug === centreSlug) || (choices.length === 1 ? choices[0] : null);
 
-  // A fresh request for each doctor; patient details stay filled in so a
-  // family booking two doctors doesn't type them twice.
+  // A fresh request each time the form opens (day and time come from the
+  // card); patient details stay filled in so a family booking two doctors
+  // doesn't type them twice.
   useEffect(() => {
-    setSent(false); setFailure(''); setErrors({}); setTime('');
+    setSent(false); setFailure(''); setErrors({}); setTime(pick?.time || '');
     setCentreSlug(choices.length === 1 ? choices[0].slug : '');
     if (doctor) setTimeout(() => nameRef.current?.focus(), 30);
-  }, [doctor?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pick?.opened]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!pick) return <dialog ref={ref} className="bk-dialog" />;
 
@@ -313,29 +342,32 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
 
             <div className="bk-set">
               <label className="bk-legend" htmlFor="bk-day">Preferred day <b aria-hidden="true">*</b></label>
-              <DaySelect
+              <ChoiceSelect
                 id="bk-day"
-                dates={dates}
+                options={dayOptions(dates)}
                 value={pick.date?.iso}
-                onChange={(d) => { onChangeDate(d); if (errors.day) setErrors((x) => ({ ...x, day: undefined })); }}
+                onChange={(iso) => { onChangeDate(dates.find((d) => d.iso === iso) || null); if (errors.day) setErrors((x) => ({ ...x, day: undefined })); }}
                 label="Preferred day"
+                placeholder="Select a preferred day"
                 invalid={!!errors.day}
                 describedBy={errors.day ? 'bk-day-err' : undefined}
               />
               {errors.day && <p id="bk-day-err" className="bk-error" role="alert">{errors.day}</p>}
             </div>
 
-            <fieldset className="bk-set">
-              <legend>Preferred time <small>(optional)</small></legend>
-              <div className="bk-chips">
-                {TIMES.map((t) => (
-                  <button key={t} type="button" className={`bk-chip${time === t ? ' is-on' : ''}`}
-                    aria-pressed={time === t} onClick={() => setTime(time === t ? '' : t)}>
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
+            <div className="bk-set">
+              <label className="bk-legend" htmlFor="bk-time">Preferred time <small>(optional)</small></label>
+              <ChoiceSelect
+                id="bk-time"
+                options={TIME_OPTIONS}
+                value={time}
+                onChange={(t) => { setTime(t); onChangeTime?.(t); }}
+                label="Preferred time"
+                placeholder="Any time"
+                placeholderSelectable
+                icon="clock"
+              />
+            </div>
 
             <div className="bk-row">
               <label className="bk-input">

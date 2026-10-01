@@ -4611,3 +4611,31 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 @media (max-width: 480px) {
   .bk-book-btn { flex: 1 1 100%; }
 }
+
+/* ---- Booking cards: large portrait, then details, then day + time ---- */
+.bk-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+.bk-card { padding: 0; overflow: hidden; gap: 0; }
+.bk-photo.bk-photo-lg {
+  flex: none; width: 100%; height: auto; aspect-ratio: 4 / 3.6; border-radius: 0;
+  background: linear-gradient(160deg, #E7EEF9 0%, #D5E1F3 100%);
+}
+.bk-photo-lg img { object-position: center 18%; transition: transform .5s var(--ease-out, ease); }
+.bk-card:hover .bk-photo-lg img { transform: scale(1.03); }
+.bk-photo-lg .bk-initials { font-size: 3.4rem; font-weight: 700; color: var(--primary); opacity: .75; letter-spacing: -.02em; }
+.bk-card .bk-card-head { padding: var(--s-4) var(--s-5) 0; }
+.bk-card .bk-who h3 { font-size: 1.125rem; }
+.bk-card .bk-book { margin: auto var(--s-5) var(--s-5); padding-top: var(--s-4); gap: 10px; }
+.bk-book-row { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.bk-book-field { display: grid; gap: 5px; min-width: 0; }
+.bk-book-field .bk-day { flex: none; }
+.bk-book-field .bk-day select { min-height: 46px; padding: 10px 32px 10px 38px; font-size: 14px; background-position: right 10px center; background-size: 16px; text-overflow: ellipsis; }
+.bk-book-field .bk-day > svg { left: 12px; width: 17px; height: 17px; }
+.bk-day select.is-empty { color: var(--muted); }
+.bk-card .bk-book-btn { width: 100%; justify-content: center; text-align: center; }
+.bk-legend small { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--muted); }
+.bk-dialog .bk-set + .bk-set { margin-top: 0; }
+@media (max-width: 760px) {
+  .bk-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+}
+.bk-book-field { grid-template-columns: 1fr; }
+.bk-book-field .bk-day select { font-size: 14.5px; }
