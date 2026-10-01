@@ -4,6 +4,8 @@ import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { initials } from '@/components/DoctorCard';
 import { TIMES, bookingDates, normalisePhone } from '@/lib/booking.mjs';
 import { sendEnquiry } from '@/lib/enquiries.mjs';
+import { cardSummary, profileText, tidyQualifications } from '@/lib/doctor-profile.mjs';
+import ContentBody from '@/components/ContentBody';
 
 const norm = (s) => String(s || '').toLowerCase().trim();
 
@@ -67,6 +69,8 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   const [query, setQuery] = useState('');
   const [highlight, setHighlight] = useState('');
   const [pick, setPick] = useState(null);       // { doctor, date }
+  const [profile, setProfile] = useState(null); // doctor whose profile is open
+  const profileRef = useRef(null);
   const [chosen, setChosen] = useState({});     // doctor id -> { date, time } picked on its card
   const choose = (id, patch) => setChosen((c) => ({ ...c, [id]: { ...c[id], ...patch } }));
   const dialogRef = useRef(null);
@@ -102,6 +106,17 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
       (!dept || d.speciality === dept) &&
       (!q || [d.name, d.speciality, d.designation, d.bio].some((f) => norm(f).includes(q))));
   }, [inCentre, dept, query]);
+
+  const centreTitle = (doc) => fixedCentre?.title || doc.centres[0]?.title || '';
+  const openProfile = (doctor) => {
+    setProfile(doctor);
+    requestAnimationFrame(() => profileRef.current?.showModal());
+  };
+  const bookFromProfile = () => {
+    const doc = profile;
+    profileRef.current?.close();
+    open(doc, chosen[doc.id]?.date || null, chosen[doc.id]?.time || '');
+  };
 
   const open = (doctor, date, time = '') => {
     setPick({ doctor, date, time, opened: Date.now() });
@@ -165,20 +180,25 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                 id={`doctor-${doc.slug}`}
                 className={`bk-card${highlight === doc.slug ? ' is-highlight' : ''}`}
               >
-                <DoctorPhoto doctor={doc} large />
-                <header className="bk-card-head">
-                  <div className="bk-who">
-                    <h3>{doc.name}</h3>
-                    {doc.designation && <p className="bk-role">{doc.designation}</p>}
-                    {doc.bio && <p className="bk-quals">{doc.bio}</p>}
-                    <div className="bk-tags">
-                      {doc.speciality && <span className="bk-tag">{doc.speciality}</span>}
-                      {!fixedCentre && doc.centres.map((c) => (
-                        <span key={c.slug} className="bk-tag bk-tag-centre">{c.title}</span>
-                      ))}
-                    </div>
-                  </div>
-                </header>
+                <div className="bk-media">
+                  <DoctorPhoto doctor={doc} large />
+                  {!fixedCentre && doc.centres.length > 0 && (
+                    <span className="bk-media-centre">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+                      {doc.centres.map((c) => c.title.replace(/^Kinder (Hospital )?/, '')).join(' · ')}
+                    </span>
+                  )}
+                </div>
+                <div className="bk-body">
+                  {doc.speciality && <span className="bk-dept">{doc.speciality}</span>}
+                  <h3>{doc.name}</h3>
+                  {doc.designation && <p className="bk-role">{doc.designation}</p>}
+                  {doc.bio && <p className="bk-quals">{tidyQualifications(doc.bio)}</p>}
+                  <p className="bk-excerpt">{cardSummary(doc, centreTitle(doc))}</p>
+                  <button type="button" className="bk-profile-link" onClick={() => openProfile(doc)}>
+                    View full profile <span aria-hidden="true">→</span>
+                  </button>
+                </div>
                 <div className="bk-book">
                   <div className="bk-book-row">
                     <label className="bk-book-field">
@@ -223,6 +243,40 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
           if (pick?.doctor) choose(pick.doctor.id, { date });
         }}
         onChangeTime={(time) => { if (pick?.doctor) choose(pick.doctor.id, { time }); }} />
+
+      <dialog ref={profileRef} className="bk-dialog bk-profile" aria-labelledby="bk-profile-name"
+        onClick={(e) => { if (e.target === profileRef.current) profileRef.current.close(); }}>
+        {profile && (
+          <div className="bk-profile-in">
+            <button type="button" className="bk-close" onClick={() => profileRef.current?.close()} aria-label="Close">×</button>
+            <div className="bk-profile-side">
+              <DoctorPhoto doctor={profile} large />
+            </div>
+            <div className="bk-profile-main">
+              {profile.speciality && <span className="bk-dept">{profile.speciality}</span>}
+              <h2 id="bk-profile-name">{profile.name}</h2>
+              {profile.designation && <p className="bk-role">{profile.designation}</p>}
+              {profile.bio && (
+                <p className="bk-profile-quals"><span>Qualifications</span>{tidyQualifications(profile.bio)}</p>
+              )}
+              {profile.centres.length > 0 && (
+                <p className="bk-profile-centres">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+                  {profile.centres.map((c) => c.title).join(' · ')}
+                </p>
+              )}
+              <div className="bk-profile-text">
+                <ContentBody text={profileText(profile, centreTitle(profile))} />
+              </div>
+              <div className="bk-actions">
+                <button type="button" className="btn btn-primary" onClick={bookFromProfile}>
+                  Book appointment with {profile.name.replace(/^Brigadier \(Dr\.\)/, 'Dr.')} →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </dialog>
     </section>
   );
 }
