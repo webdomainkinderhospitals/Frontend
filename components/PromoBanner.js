@@ -3,28 +3,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './PromoBanner.module.css';
 
-const INTERVAL = 6000;
+const INTERVAL = 5000;
 
 // Ready-made campaign artwork (text and branding baked into the image),
 // managed from the admin portal. Every slide is shown at its natural
 // 1920 × 720 proportion so nothing in the design is ever cropped. Two or more
-// slides change on their own every few seconds, always — visitors who have
-// asked for reduced motion get an instant switch instead of the fade. Hovering
-// holds the current poster only while the pointer rests on it, and a click on
-// a dot or arrow simply restarts the timer.
+// slides change on their own every few seconds, always — even while the
+// pointer rests on the banner. Visitors who have asked for reduced motion get
+// an instant switch instead of the fade, and a click on a dot or arrow simply
+// restarts the timer.
 export default function PromoBanner({ slides = [], label = 'Announcements' }) {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const count = slides.length;
   const touch = useRef(null);
 
   const go = useCallback((i) => setIndex(((i % count) + count) % count), [count]);
 
   useEffect(() => {
-    if (count < 2 || paused) return undefined;
+    if (count < 2) return undefined;
     const timer = setTimeout(() => go(index + 1), INTERVAL);
     return () => clearTimeout(timer);
-  }, [count, index, paused, go]);
+  }, [count, index, go]);
 
   if (!count) return null;
   const multi = count > 1;
@@ -34,8 +33,6 @@ export default function PromoBanner({ slides = [], label = 'Announcements' }) {
       className={styles.promo}
       aria-label={label}
       aria-roledescription={multi ? 'carousel' : undefined}
-      onPointerEnter={(e) => { if (e.pointerType === 'mouse') setPaused(true); }}
-      onPointerLeave={() => setPaused(false)}
       onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
       onTouchEnd={(e) => {
         if (touch.current === null || !multi) return;
@@ -93,7 +90,7 @@ export default function PromoBanner({ slides = [], label = 'Announcements' }) {
                     aria-label={`Show banner ${i + 1} of ${count}`}
                     aria-current={i === index ? 'true' : undefined}
                   >
-                    {i === index && !paused && <span key={index} className={styles.progress} style={{ animationDuration: `${INTERVAL}ms` }} />}
+                    {i === index && <span key={index} className={styles.progress} style={{ animationDuration: `${INTERVAL}ms` }} />}
                   </button>
                 ))}
               </div>
