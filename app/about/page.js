@@ -18,7 +18,7 @@ const MILESTONES = [
   ['2011', 'Kinder Cherthala opens: the first NABH-accredited women & children hospital in Alappuzha.'],
   ['2018', 'Kinder Hospital Kochi opens — a 125-bed multispeciality hospital, now with 35 specialities.'],
   ['2022', "Kinder Bengaluru opens in Whitefield — now among Bangalore's best-known IVF centres."],
-  ['2023', "Kinder Women's & Children's Clinic opens in Alappuzha town."],
+  ['2023', "Kinder Cherthala opens its women's & children's clinic in Alappuzha town."],
   ['Today', '5 centres · 6,00,000+ women treated · 18,000+ births · 1,500+ IVF successes.'],
 ];
 
@@ -88,12 +88,12 @@ export default async function AboutPage() {
             <div className="hosp-about-grid">
               <div className="hosp-about-text">
                 <span className="section-eyebrow">Our story</span>
-                <h2 className="section-title">From one clinic to <em>five centres</em></h2>
+                <h2 className="section-title">From one clinic to <em>a growing network</em></h2>
                 <p>
                   Kinder began in Singapore in 2000 and grew into one of its largest paediatric
                   group practices. In 2011 we brought that experience home to Kerala, opening the
                   first NABH-accredited women &amp; children hospital in Alappuzha. Today the group
-                  spans Cherthala, Kochi, Bengaluru, Alappuzha and Singapore — every centre
+                  has hospitals across Kerala, in Bengaluru and in Singapore — every centre
                   practising under shared protocols, clinical audit and governance.
                 </p>
                 <p>

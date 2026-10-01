@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { hospitalsOnly } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import EnquiryForm from '@/components/EnquiryForm';
@@ -23,7 +24,8 @@ function slugOf(loc) {
 
 export default async function ContactPage() {
   const content = await getContent();
-  const { settings, locations } = content;
+  const { settings } = content;
+  const locations = hospitalsOnly(content.locations || []);
   return (
     <SiteChrome content={content}>
       <main>
