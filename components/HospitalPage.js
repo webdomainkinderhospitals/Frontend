@@ -7,6 +7,7 @@ import { isOwnImageOf } from '@/lib/hospital';
 import { centreName } from '@/lib/locations';
 import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
+import CentreServiceMenu from '@/components/CentreServiceMenu';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
@@ -43,6 +44,51 @@ function groupSpecialities(specialities) {
 
 const tel = (phone) => `tel:${String(phone).replace(/[^+\d]/g, '')}`;
 
+// The centre's address, numbers and email.
+function ContactDetails({ loc, phones, className = 'hosp-contact-bar', links = true }) {
+  return (
+    <div className={className}>
+      <div className="hosp-contact-item">
+        <strong>{loc.officeAddress ? 'Hospital address' : 'Address'}</strong>
+        <span>{loc.address}</span>
+        {loc.officeAddress && (
+          <>
+            <strong className="hosp-contact-sub">Office address</strong>
+            <span>{loc.officeAddress}</span>
+          </>
+        )}
+      </div>
+      {phones.length > 0 && (
+        <div className="hosp-contact-item">
+          <strong>Phone</strong>
+          {phones.map((p) => <a key={p} href={tel(p)}>{p}</a>)}
+        </div>
+      )}
+      {loc.email && (
+        <div className="hosp-contact-item">
+          <strong>Email</strong>
+          <a href={`mailto:${loc.email}`}>{loc.email}</a>
+        </div>
+      )}
+      {links && (loc.mapUrl || loc.website) && (
+        <div className="hosp-contact-item">
+          <strong>{loc.website ? 'Links' : 'Find us'}</strong>
+          <span className="hosp-links">
+            {loc.mapUrl && (
+              <a href={loc.mapUrl} target="_blank" rel="noopener">Directions →</a>
+            )}
+            {loc.website && (
+              <a href={loc.website} target="_blank" rel="noopener">
+                {loc.websiteLabel || 'Official website →'}
+              </a>
+            )}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings, pregnancyClubHref = '' }) {
   const highlights = lines(loc.highlights).map(splitHighlight);
   const about = lines(loc.description);
@@ -60,8 +106,20 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   const phones = [loc.phone, loc.phone2].filter((p) => String(p || '').trim());
   const enquire = (topic) => whatsappLink(whatsappNumber(loc), `Hello ${name}, I would like to ${topic}.`);
 
+  const specSlug = (name) => String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  // A centre whose departments fall into two or three substantial groups
+  // (Kochi: Multispeciality Services and the Women & Fertility Centre) gets
+  // them as its headline menu under the banner; its address then moves down
+  // to a Visit us section near the end of the page.
+  const menuGroups = specialityGroups.length >= 2 && specialityGroups.length <= 3 && specialityGroups.every((g) => g.title && g.items.length >= 3)
+    ? specialityGroups.map((g) => ({
+      title: g.title,
+      items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
+    }))
+    : [];
+
   const renderSpeciality = (spec, i) => {
-    const slug = String(spec.name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const slug = specSlug(spec.name);
     if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary><SpecialityIcon name={spec.name} /><span>{spec.name}</span></summary><ContentBody text={spec.fullDescription} /></details>;
     return (
       <a className="svc-card" key={spec.id ?? i} title={spec.description || undefined} href={`${base}/services/${slug}`}>
@@ -110,47 +168,13 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       </section>
 
-      {/* Contact strip */}
+      {/* Departments menu (or, for other centres, the contact strip) */}
       <div className="container">
-        <div className="hosp-contact-bar">
-          <div className="hosp-contact-item">
-            <strong>{loc.officeAddress ? 'Hospital address' : 'Address'}</strong>
-            <span>{loc.address}</span>
-            {loc.officeAddress && (
-              <>
-                <strong className="hosp-contact-sub">Office address</strong>
-                <span>{loc.officeAddress}</span>
-              </>
-            )}
-          </div>
-          {phones.length > 0 && (
-            <div className="hosp-contact-item">
-              <strong>Phone</strong>
-              {phones.map((p) => <a key={p} href={tel(p)}>{p}</a>)}
-            </div>
-          )}
-          {loc.email && (
-            <div className="hosp-contact-item">
-              <strong>Email</strong>
-              <a href={`mailto:${loc.email}`}>{loc.email}</a>
-            </div>
-          )}
-          {(loc.mapUrl || loc.website) && (
-            <div className="hosp-contact-item">
-              <strong>{loc.website ? 'Links' : 'Find us'}</strong>
-              <span className="hosp-links">
-                {loc.mapUrl && (
-                  <a href={loc.mapUrl} target="_blank" rel="noopener">Directions →</a>
-                )}
-                {loc.website && (
-                  <a href={loc.website} target="_blank" rel="noopener">
-                    {loc.websiteLabel || 'Official website →'}
-                  </a>
-                )}
-              </span>
-            </div>
-          )}
-        </div>
+        {menuGroups.length ? (
+          <CentreServiceMenu groups={menuGroups} centre={name} />
+        ) : (
+          <ContactDetails loc={loc} phones={phones} />
+        )}
       </div>
 
       {/* Campaign banner, set per centre in the admin portal */}
@@ -396,6 +420,35 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </section>
       )}
 
+
+      {/* Visit us: where the centre is, for centres whose top slot holds the departments menu */}
+      {menuGroups.length > 0 && (
+        <section className="hosp-visit" id="location">
+          <div className="container">
+            <div className="hosp-visit-card">
+              <div className="hosp-visit-info">
+                <span className="section-eyebrow">Visit us</span>
+                <h2 className="section-title">Find <em>{name}</em></h2>
+                <ContactDetails loc={loc} phones={phones} className="hosp-visit-details" links={false} />
+                <div className="hosp-visit-actions">
+                  {loc.mapUrl && <a className="btn btn-primary" href={loc.mapUrl} target="_blank" rel="noopener">Get directions →</a>}
+                  {loc.phone && <a className="btn btn-soft" href={tel(loc.phone)}>Call {loc.phone}</a>}
+                </div>
+              </div>
+              {loc.address && (
+                <div className="hosp-visit-map">
+                  <iframe
+                    title={`Map showing ${name}`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(`${name}, ${loc.address}`)}&output=embed`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="hosp-cta-wrap">
