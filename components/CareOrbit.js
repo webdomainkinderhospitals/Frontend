@@ -45,8 +45,8 @@ export default function CareOrbit({ hospitals = [], since }) {
             <svg className={styles.heart} viewBox="0 0 64 58">
               <defs>
                 <linearGradient id="co-heart" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#FF8FA8" />
-                  <stop offset="1" stopColor="#F2507A" />
+                  <stop offset="0" stopColor="#FF8A8E" />
+                  <stop offset="1" stopColor="#E62129" />
                 </linearGradient>
               </defs>
               <path d="M32 56S3 38.5 3 18.5A15.5 15.5 0 0 1 32 10.8 15.5 15.5 0 0 1 61 18.5C61 38.5 32 56 32 56Z" fill="url(#co-heart)" />
