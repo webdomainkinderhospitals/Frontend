@@ -6,7 +6,7 @@
 /* the live slide drifts slowly inwards, so the hero never looks like a still */
 .active .image { animation: kenburns 9s ease-out both; }
 @keyframes kenburns { from { transform: scale(1.09) translate3d(0, 0, 0); } to { transform: scale(1) translate3d(0, -1.2%, 0); } }
-.shade { z-index: -1; background: linear-gradient(90deg, rgba(36,27,51,.84) 0%, rgba(36,27,51,.72) 46%, rgba(36,27,51,.25) 100%); }
+.shade { z-index: -1; background: linear-gradient(90deg, rgba(19,33,59,.84) 0%, rgba(19,33,59,.72) 46%, rgba(19,33,59,.25) 100%); }
 .inner { width: 100%; display: flex; align-items: center; min-height: 590px; padding-top: 64px; padding-bottom: 116px; }
 .copy { max-width: 720px; }
 .active .eyebrow, .active .copy h1, .active .copy h2, .active .copy p, .active .actions { animation: rise .7s cubic-bezier(.22, .8, .3, 1) both; }
@@ -14,12 +14,12 @@
 .active .copy p { animation-delay: .18s; }
 .active .actions { animation-delay: .26s; }
 @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
-.eyebrow { display: inline-block; padding: 7px 14px; border: 1px solid #f26d8b70; background: #f26d8b20; border-radius: 30px; color: #ffe4eb; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.eyebrow { display: inline-block; padding: 7px 14px; border: 1px solid #ffffff52; background: #ffffff1f; border-radius: 30px; color: #EAF1FB; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 .copy h1, .copy h2 { font-size: clamp(40px, 4.3vw, 66px); line-height: 1.1; font-weight: 600; letter-spacing: -.035em; margin: 24px 0; color: white; }
-.copy em { font-style: normal; color: var(--accent); }
-.copy p { max-width: 570px; font-size: 17px; line-height: 1.85; color: white; text-shadow: 0 1px 6px #241b3360; }
+.copy em { font-style: normal; color: var(--accent-on-dark, #FF7378); }
+.copy p { max-width: 570px; font-size: 17px; line-height: 1.85; color: white; text-shadow: 0 1px 6px #13213B60; }
 .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 30px; }
-.book { padding: 13px 22px; border: 1px solid #ffffffa0; border-radius: 50px; font-size: 14px; font-weight: 600; background: #241b3330; }
+.book { padding: 13px 22px; border: 1px solid #ffffffa0; border-radius: 50px; font-size: 14px; font-weight: 600; background: #13213B30; }
 .book:hover { background: #ffffff20; }
 .controls { position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; z-index: 2; }
 .playPause { display: grid; place-items: center; }
@@ -31,7 +31,7 @@
 .progress { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #ffffff26; z-index: 2; }
 .progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #fff); transform-origin: left center; animation: drain linear both; }
 @keyframes drain { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.controls button { min-width: 44px; min-height: 44px; border: 1px solid #ffffff50; background: #241b3370; color: white; border-radius: 50%; cursor: pointer; font: inherit; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
+.controls button { min-width: 44px; min-height: 44px; border: 1px solid #ffffff50; background: #13213B70; color: white; border-radius: 50%; cursor: pointer; font: inherit; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
 .controls button:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
 .dots button:hover { background: transparent; transform: none; }
 .dots button:hover span { background: #fff; }
@@ -45,7 +45,7 @@
  .inner { min-height: 590px; padding-top: 44px; padding-bottom: 124px; }
  .copy h1, .copy h2 { font-size: clamp(36px, 7.5vw, 48px); }
  .copy p { font-size: 15px; line-height: 1.75; }
- .shade { background: linear-gradient(90deg, #241b33d9, #241b3399); }
+ .shade { background: linear-gradient(90deg, #13213Bd9, #13213B99); }
  .image { object-position: 60% center; }
  .controls { bottom: 38px; gap: 2px; }
  .counter { display: none; }
