@@ -78,7 +78,7 @@ export default function CareOrbit({ hospitals = [], since }) {
 
       {hospitals.length > 0 && (
         <nav className={styles.hospitals} aria-label="Our hospitals">
-          <span className={styles.hospitalsLabel}>{hospitals.length} hospitals</span>
+          <span className={styles.hospitalsLabel}>Our hospitals</span>
           {hospitals.map((h) => (
             <a key={h.slug} href={`/hospitals/${h.slug}`}>{h.name}</a>
           ))}
