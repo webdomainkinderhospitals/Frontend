@@ -4295,3 +4295,103 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 .footer-brand .footer-tagline { font-weight: 600 !important; }
 .stat-num, .stat-value, .stats strong, .overview-tile-cap strong, .bk-initials,
 .subsite-brand-text strong, .dcard-name { font-weight: 700; }
+
+/* =====================================================================
+   Hospitals bar (corporate header): the hospitals menu as one premium,
+   highlighted control under the main menu — a navy band with a gold
+   button that opens every hospital as a card.
+   ===================================================================== */
+.hospitals-strip {
+  position: relative; z-index: 40;
+  background:
+    radial-gradient(55% 160% at 0% 50%, rgba(92,140,211,.35), transparent 60%),
+    radial-gradient(45% 160% at 100% 50%, rgba(227,184,106,.16), transparent 60%),
+    linear-gradient(90deg, #0F1F3D, #1A3463 55%, #22457F);
+  border-top: 1px solid rgba(227,184,106,.35);
+  border-bottom: 1px solid rgba(0,0,0,.25);
+}
+.hospitals-strip-in {
+  position: relative;
+  display: flex; align-items: center; justify-content: center; gap: 22px;
+  padding-top: 8px; padding-bottom: 8px;
+}
+.hospitals-strip-note {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: rgba(249,231,189,.92); font-size: 12.5px; font-weight: 600; letter-spacing: .04em;
+}
+.hospitals-strip-pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--lux-gold-2, #e3b86a);
+  animation: luxPulse 1.8s ease-out infinite;
+}
+/* The panel centres on the page, not on the button. */
+.hospitals-menu { position: static; }
+.hospitals-trigger {
+  --face1: #fbeccb; --face2: #e0b060; --edge: #a8772a; --glow: 224, 176, 96;
+  display: inline-flex; align-items: center; gap: 9px;
+  min-height: 44px; padding: 10px 22px; border: 0; border-radius: 999px; cursor: pointer;
+  font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: .01em;
+  color: #3a2208;
+  background: linear-gradient(180deg, var(--face1), var(--face2));
+  text-shadow: 0 1px 0 rgba(255,255,255,.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 0 rgba(0,0,0,.1),
+    0 3px 0 var(--edge), 0 10px 20px -8px rgba(var(--glow), .7);
+  transition: transform .18s ease, box-shadow .18s ease, filter .2s ease;
+}
+.hospitals-trigger svg { width: 17px; height: 17px; }
+.hospitals-trigger .caret { font-size: 11px; transition: transform .25s ease; }
+.hospitals-trigger:hover, .hospitals-menu:focus-within .hospitals-trigger {
+  transform: translateY(-2px); filter: brightness(1.03);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -2px 0 rgba(0,0,0,.1),
+    0 5px 0 var(--edge), 0 16px 26px -10px rgba(var(--glow), .75);
+}
+.hospitals-trigger:active { transform: translateY(2px); box-shadow: inset 0 2px 6px rgba(0,0,0,.18), 0 1px 0 var(--edge); }
+.hospitals-trigger:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.hospitals-menu.is-active .hospitals-trigger { box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 3px 0 var(--edge), 0 0 0 3px rgba(249,231,189,.45); }
+
+.hospitals-panel {
+  position: absolute; top: calc(100% + 10px); left: 50%;
+  width: min(1180px, calc(100vw - 32px));
+  padding: 22px; border-radius: 18px; background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 28px 60px -24px rgba(19,33,59,.4), 0 10px 20px -12px rgba(27,58,115,.22);
+  opacity: 0; visibility: hidden; transform: translate(-50%, 8px);
+  transition: opacity .25s var(--ease-out, ease), transform .3s var(--ease-out, ease), visibility 0s .3s;
+}
+/* A hover bridge so the pointer can travel from the button to the panel. */
+.hospitals-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: 20px; }
+.hospitals-menu.is-open .hospitals-panel { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 0s; }
+.hospitals-menu.is-open .hospitals-trigger .caret { transform: rotate(180deg); }
+@media (hover: hover) and (min-width: 1025px) {
+  .hospitals-menu:hover .hospitals-panel { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 0s; }
+  .hospitals-menu:hover .hospitals-trigger .caret { transform: rotate(180deg); }
+}
+.hospitals-panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+.hospitals-panel .hospital-card { opacity: 1; transform: none; }
+.hospitals-panel-all {
+  display: block; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  text-align: center; font-size: 14px; font-weight: 700; color: var(--primary); text-decoration: none;
+}
+.hospitals-panel-all:hover { color: var(--primary-dark); text-decoration: underline; }
+
+@media (max-width: 1024px) {
+  .hospitals-strip-in { justify-content: space-between; gap: 12px; padding-top: 7px; padding-bottom: 7px; }
+  .hospitals-strip-note { font-size: 11.5px; }
+  .hospitals-menu { position: static; }
+  .hospitals-panel {
+    top: 100%; left: 0; width: 100%; border-radius: 0 0 18px 18px; transform: translateY(6px);
+    max-height: 70vh; overflow-y: auto; padding: 16px;
+  }
+  .hospitals-menu.is-open .hospitals-panel { transform: translateY(0); }
+  .hospitals-panel-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+}
+@media (max-width: 560px) {
+  .hospitals-strip-note { display: none; }
+  .hospitals-strip-in { justify-content: center; }
+  .hospitals-trigger { width: 100%; justify-content: center; }
+  .hospitals-panel-grid { grid-template-columns: 1fr 1fr; }
+  .hospitals-panel .hospital-meta p { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hospitals-strip-pulse { animation: none; }
+  .hospitals-panel, .hospitals-trigger, .hospitals-trigger .caret { transition: none; }
+}
