@@ -3110,11 +3110,12 @@ a.dcard-spec:hover{ text-decoration:underline; text-underline-offset:3px; }
    of one, or a neutral shadow.
    ============================================================ */
 :root{
-  /* Display serif for headlines, neutral sans for reading. The
-     contrast between the two is most of the premium feel. */
-  --display: var(--font-display), 'Playfair Display', Georgia, serif;
+  /* Sans throughout: Figtree for headlines (close to the logo's
+     lettering), Inter for reading. Weight, not a second typeface,
+     carries the hierarchy. */
+  --display: var(--font-display), 'Figtree', system-ui, -apple-system, sans-serif;
   --body: var(--font-body), 'Inter', system-ui, -apple-system, sans-serif;
-  --display-weight: 500;
+  --display-weight: 700;
 
   /* Fluid type scale — 1.25 ratio, clamped so nothing shouts on a
      laptop or shrinks below readable on a phone. */
@@ -3168,15 +3169,14 @@ h1, h2, h3, h4, .hero-title, .section-title, .page-hero-title{
 }
 h3, h4{ line-height: 1.25; letter-spacing: -0.01em; }
 
-/* A serif at display size needs air below it and none around it. */
+/* Display sizes need air below them and none around them. */
 .hero-title{ font-size: var(--t-hero); font-style: normal; margin-bottom: var(--s-5); }
 .hero-title em{ font-style: italic; font-weight: 400; }
 .section-title{ font-size: var(--t-display); margin-bottom: var(--s-4); }
 .section-title em{ font-style: italic; font-weight: 400; }
 .page-hero-title{ font-size: var(--t-display); }
 
-/* Labels, buttons and eyebrows stay in the sans — a serif at small
-   sizes reads as decoration, not as interface. */
+/* Labels, buttons and eyebrows use the reading sans. */
 .section-eyebrow, .hero-eyebrow, .btn, .view-all, .nav-list, .quick-text,
 .dcard-spec, .crumbs, .loc-since, .hosp-other-since, button, input,
 select, textarea, .badge, .accred-badge, .blog-tag{
@@ -4278,3 +4278,20 @@ a:hover .spec-3d, summary:hover .spec-3d {
 .footer-emergency a:hover,
 .footer-accred svg,
 .top-bar a:hover { color: var(--accent-on-dark) !important; }
+
+/* =====================================================================
+   Sans-serif headings. Emphasis inside a heading is carried by colour,
+   not italics (italic sans at display size reads as a mistake), and
+   every place that set its own light weight for the old serif is
+   brought up to a weight that holds in a sans.
+   ===================================================================== */
+h1, h2, h3, h4, .hero-title, .section-title, .page-hero-title { letter-spacing: -0.022em; }
+h3, h4 { font-weight: 650; letter-spacing: -0.012em; }
+h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title em,
+.footer-cta h3 em, .footer-brand .footer-tagline {
+  font-style: normal !important;
+  font-weight: inherit !important;
+}
+.footer-brand .footer-tagline { font-weight: 600 !important; }
+.stat-num, .stat-value, .stats strong, .overview-tile-cap strong, .bk-initials,
+.subsite-brand-text strong, .dcard-name { font-weight: 700; }

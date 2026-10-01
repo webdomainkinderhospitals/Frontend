@@ -1,13 +1,13 @@
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Figtree, Inter } from 'next/font/google';
 import './globals.css';
 
-// Display serif for headlines, neutral sans for everything read at length.
+// A friendly sans for headlines (close to the Kinder logo's lettering), a
+// neutral sans for everything read at length.
 // Self-hosted by next/font: no render-blocking request to Google, no flash of
 // invisible text, and no layout shift as the face swaps in.
-const display = Playfair_Display({
+const display = Figtree({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight: ['500', '600', '700', '800'],
   display: 'swap',
   variable: '--font-display',
 });

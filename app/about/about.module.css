@@ -70,7 +70,7 @@
 .values { margin-top: 24px; padding: 32px; border: 1px solid var(--line); border-radius: 16px; background: white; }
 .values .cardNumber { margin-bottom: 22px; }
 .values ul { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-.values li { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; font-family: var(--display); font-size: 19px; color: var(--primary-dark); }
+.values li { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; font-family: var(--display); font-weight: 650; font-size: 18px; color: var(--primary-dark); }
 .valueIcon { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: #EEF3FA; color: var(--primary); }
 .valueIcon svg { width: 28px; height: 28px; }
 .mark { display: grid; grid-template-columns: minmax(200px, .8fr) 2fr; gap: 40px; align-items: center; margin-top: 24px; padding: 36px; border: 1px solid var(--line); border-radius: 16px; background: white; }
@@ -78,7 +78,7 @@
 .markLogo img { width: 100%; max-width: 260px; height: auto; }
 .mark h3 { font-size: 26px; margin-bottom: 14px; color: var(--primary-dark); }
 .mark .cardNumber { margin-bottom: 18px; }
-.coreIdea { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); font-family: var(--display); font-size: 21px; color: var(--primary-dark) !important; }
+.coreIdea { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); font-family: var(--display); font-weight: 650; font-size: 21px; color: var(--primary-dark) !important; }
 .coreIdea span { display: block; font-family: var(--body); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
 @media (max-width: 900px) {
   .values ul { grid-template-columns: repeat(3, 1fr); row-gap: 24px; }
