@@ -8,7 +8,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: 'Book an Appointment · Kinder Hospitals',
-  description: 'Find a Kinder doctor by hospital, department or name, choose a preferred day, and send your appointment request on WhatsApp.',
+  description: 'Find a Kinder doctor by hospital, department or name, choose a preferred day, and send your appointment request to our care team.',
 };
 
 export default async function BookPage() {
@@ -21,7 +21,7 @@ export default async function BookPage() {
           crumb="Book an appointment"
           eyebrow="Appointments"
           titleHtml="Book an <em>appointment</em>"
-          intro="Find your doctor by hospital, department or name, and choose a day that suits you. Our care coordinators confirm the time with you on WhatsApp."
+          intro="Find your doctor by hospital, department or name, and choose a day that suits you. Our care coordinators call you to confirm the time."
         />
         <BookingPage doctors={doctors} centres={bookingCentres(content, doctors)} />
       </main>

@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
   if (!ctx) return { title: 'Page not found' };
   return {
     title: `Book an Appointment · ${centreName(ctx.loc)}`,
-    description: `Choose a doctor at ${centreName(ctx.loc)} and a preferred day, and send your appointment request on WhatsApp.`,
+    description: `Choose a doctor at ${centreName(ctx.loc)} and a preferred day, and send your appointment request to our care team.`,
   };
 }
 
@@ -34,7 +34,7 @@ export default async function HospitalBookPage({ params }) {
           titleHtml="Book an <em>appointment</em>"
           homeHref={base}
           homeLabel={title}
-          intro={`Choose your doctor at ${title} and a day that suits you. Our care coordinators confirm the time with you on WhatsApp.`}
+          intro={`Choose your doctor at ${title} and a day that suits you. Our care coordinators call you to confirm the time.`}
         />
         <BookingPage doctors={bookingDoctors(content, loc)} fixedCentre={centreOf(loc)} />
       </main>

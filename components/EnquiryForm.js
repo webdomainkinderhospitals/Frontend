@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import styles from './EnquiryForm.module.css';
-
-const WHATSAPP = 'https://api.whatsapp.com/send?phone=919446654500&text=';
+import { sendEnquiry } from '@/lib/enquiries.mjs';
 
 const MODES = {
   enquiry: {
@@ -20,12 +19,13 @@ const MODES = {
   },
 };
 
-// The form composes the message and hands it to email or WhatsApp — nothing
-// is stored in the browser and nothing is sent without the visitor acting.
+// Sent to the admin portal (Bookings & Enquiries), where the team replies.
+// If that fails, the message can still go by email or WhatsApp.
 export default function EnquiryForm({ mode = 'enquiry', email = '', locations = [] }) {
   const config = MODES[mode] || MODES.enquiry;
   const [form, setForm] = useState({ name: '', phone: '', email: '', centre: '', subject: config.subjects[0], message: '' });
   const set = (key) => (event) => setForm((f) => ({ ...f, [key]: event.target.value }));
+  const [state, setState] = useState({ sending: false, sent: false, error: '' });
 
   const body = [
     `Name: ${form.name}`,
@@ -38,11 +38,26 @@ export default function EnquiryForm({ mode = 'enquiry', email = '', locations = 
   ].filter(Boolean).join('\n');
 
   const mailto = `mailto:${email}?subject=${encodeURIComponent(`${config.heading} — ${form.subject}`)}&body=${encodeURIComponent(body)}`;
-  const whatsapp = WHATSAPP + encodeURIComponent(`${config.heading}\n\n${body}`);
   const ready = form.name.trim() && form.phone.trim() && form.message.trim();
 
   return (
-    <form className={styles.form} onSubmit={(e) => { e.preventDefault(); window.location.href = mailto; }}>
+    state.sent ? (
+      <div className={styles.form} role="status">
+        <h3>Thank you, {form.name.trim().split(' ')[0]} — we have your message.</h3>
+        <p>Our team will get back to you on {form.phone}{form.email ? ` or ${form.email}` : ''} shortly.</p>
+      </div>
+    ) : (
+    <form className={styles.form} onSubmit={async (e) => {
+      e.preventDefault();
+      setState({ sending: true, sent: false, error: '' });
+      const result = await sendEnquiry({
+        type: mode === 'feedback' ? 'feedback' : 'enquiry',
+        hospital: form.centre ? `Kinder ${form.centre}` : '',
+        subject: form.subject, name: form.name, phone: form.phone, email: form.email,
+        message: form.message, website: e.target.website.value,
+      });
+      setState({ sending: false, sent: result.ok, error: result.ok ? '' : result.error });
+    }}>
       <div className={styles.row}>
         <label>
           <span>Your name *</span>
@@ -77,13 +92,16 @@ export default function EnquiryForm({ mode = 'enquiry', email = '', locations = 
         <textarea rows={5} required value={form.message} onChange={set('message')} />
       </label>
       <div className={styles.actions}>
-        <button type="submit" className="btn btn-primary" disabled={!ready}>{config.submit} →</button>
-        <a className={styles.whatsapp} href={ready ? whatsapp : WHATSAPP} target="_blank" rel="noopener">Send on WhatsApp instead</a>
+        <button type="submit" className="btn btn-primary" disabled={!ready || state.sending}>{state.sending ? 'Sending…' : `${config.submit} →`}</button>
+        {state.error && <a className={styles.whatsapp} href={mailto}>Send by email instead</a>}
       </div>
+      {state.error && <p className={styles.note} role="alert">{state.error}</p>}
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hc-trap" aria-hidden="true" />
       <p className={styles.note}>
         Please do not share detailed medical history or reports here. For anything urgent, call the
         emergency number — this form is not monitored around the clock.
       </p>
     </form>
+    )
   );
 }

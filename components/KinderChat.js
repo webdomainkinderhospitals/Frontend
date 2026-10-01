@@ -75,7 +75,7 @@ function buildReply(text, content) {
   // 3. Booking.
   if (/book|appointment|consult|schedule|token/.test(q)) {
     return reply(
-      `I can arrange that right away. Choose your doctor and a preferred day, and your request reaches our care coordinators on WhatsApp. You can also call our 24/7 helpline ${settings.helplinePhone || ''}.`,
+      `I can arrange that right away. Choose your doctor and a preferred day, and your request goes straight to our care coordinators, who will call you to confirm.`,
       [
         { label: 'Book an appointment', href: '/book' },
         { label: `Call ${settings.helplinePhone || ''}`, href: `tel:${String(settings.helplinePhone || '').replace(/\s/g, '')}` },

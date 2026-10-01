@@ -2,9 +2,8 @@
 
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { initials } from '@/components/DoctorCard';
-import {
-  TIMES, bookingDates, bookingMessage, normalisePhone, whatsappLink, whatsappNumber,
-} from '@/lib/booking.mjs';
+import { TIMES, bookingDates, normalisePhone } from '@/lib/booking.mjs';
+import { sendEnquiry } from '@/lib/enquiries.mjs';
 
 const norm = (s) => String(s || '').toLowerCase().trim();
 
@@ -112,8 +111,8 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
         </div>
 
         <p className="bk-how">
-          Choose a doctor and a preferred day. Your request goes to our care team on WhatsApp,
-          and a coordinator confirms your appointment time with you.
+          Choose a doctor and a preferred day. Your request goes straight to our care team,
+          and a coordinator calls you to confirm the appointment time.
         </p>
 
         {shown.length === 0 ? (
@@ -178,7 +177,9 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
   const [note, setNote] = useState('');
   const [centreSlug, setCentreSlug] = useState('');
   const [errors, setErrors] = useState({});
-  const [sent, setSent] = useState('');
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState('');
   const nameRef = useRef(null);
 
   const doctor = pick?.doctor;
@@ -188,7 +189,7 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
   // A fresh request for each doctor; patient details stay filled in so a
   // family booking two doctors doesn't type them twice.
   useEffect(() => {
-    setSent(''); setErrors({}); setTime('');
+    setSent(false); setFailure(''); setErrors({}); setTime('');
     setCentreSlug(choices.length === 1 ? choices[0].slug : '');
     if (doctor) setTimeout(() => nameRef.current?.focus(), 30);
   }, [doctor?.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -197,8 +198,11 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
 
   const close = () => ref.current?.close();
 
-  const submit = (e) => {
+  // The request goes straight to the admin portal (Bookings & Enquiries),
+  // where a coordinator confirms the time with the patient by phone.
+  const submit = async (e) => {
     e.preventDefault();
+    if (sending) return;
     const tidyPhone = normalisePhone(phone);
     const next = {};
     if (!name.trim()) next.name = 'Please enter the patient’s name.';
@@ -209,13 +213,23 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
       document.getElementById(`bk-${Object.keys(next)[0]}`)?.focus();
       return;
     }
-    const message = bookingMessage({
-      centreName: centre?.title, doctor, date: pick.date, time,
-      patient: name, phone: tidyPhone, type, note,
+    setSending(true); setFailure('');
+    const result = await sendEnquiry({
+      type: 'appointment',
+      hospital: centre?.title || '',
+      doctor: doctor.name,
+      speciality: doctor.speciality || '',
+      preferredDate: pick.date.long,
+      preferredTime: time,
+      name: name.trim(),
+      phone: tidyPhone,
+      patientType: type,
+      message: note.trim(),
+      website: e.target.website?.value || '',
     });
-    const link = whatsappLink(whatsappNumber(centre), message);
-    setSent(link);
-    window.open(link, '_blank', 'noopener');
+    setSending(false);
+    if (result.ok) setSent(true);
+    else setFailure(result.error);
   };
 
   return (
@@ -235,14 +249,14 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
 
         {sent ? (
           <div className="bk-done" role="status">
-            <h3>Your request is ready in WhatsApp</h3>
+            <h3>Request received — thank you, {name.trim().split(' ')[0]}</h3>
             <p>
-              Press <strong>send</strong> in WhatsApp to share it with our care team. A coordinator
-              will confirm your appointment time with {doctor.name} for {pick.date.long}.
+              Our care team has your request for <strong>{doctor.name}</strong> on <strong>{pick.date.long}</strong>
+              {time ? <> ({time.toLowerCase()})</> : null}. A coordinator will call you on <strong>{normalisePhone(phone)}</strong> to
+              confirm the appointment time.
             </p>
             <div className="bk-actions">
-              <a className="btn btn-primary" href={sent} target="_blank" rel="noopener">Open WhatsApp again →</a>
-              <button type="button" className="btn btn-soft" onClick={close}>Done</button>
+              <button type="button" className="btn btn-primary" onClick={close}>Done</button>
             </div>
           </div>
         ) : (
@@ -318,11 +332,16 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
               <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} />
             </label>
 
+            {/* Hidden from people; bots fill it in and are ignored. */}
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hc-trap" aria-hidden="true" />
             <p className="bk-privacy">
-              Your details are sent to Kinder Hospitals on WhatsApp, only to arrange this appointment.
+              Your details go only to Kinder Hospitals' care team, to arrange this appointment.
             </p>
+            {failure && <p className="bk-error bk-fail" role="alert">{failure}</p>}
             <div className="bk-actions">
-              <button type="submit" className="btn btn-primary bk-send">Send request on WhatsApp →</button>
+              <button type="submit" className="btn btn-primary bk-send" disabled={sending}>
+                {sending ? 'Sending…' : 'Request appointment →'}
+              </button>
               {fixedCentre?.bookingUrl && (
                 <a className="bk-app" href={fixedCentre.bookingUrl} target="_blank" rel="noopener">
                   Prefer the app? Book in the Kinder app
