@@ -1,7 +1,10 @@
 import PageHero from '@/components/PageHero';
 import DoctorCard from '@/components/DoctorCard';
 import { slugify, matchesService, allServices } from '@/lib/services';
-import { atLocation, locationLabel } from '@/lib/locations';
+import { atLocation, centreName, locationLabel } from '@/lib/locations';
+import ContentBody from '@/components/ContentBody';
+import { profileText, tidyQualifications } from '@/lib/doctor-profile.mjs';
+import { initials } from '@/components/DoctorCard';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -12,8 +15,10 @@ export default function DoctorProfileBody({ doc, content, base = '', loc = null 
   const here = loc ? loc.name : '';
   const service = allServices(content.specialities).find((s) => matchesService(doc.speciality, s.name));
   const docLocs = content.locations.filter((l) => atLocation(doc, l.name));
-  const bioText = doc.fullBio || doc.bio || '';
-  const paragraphs = bioText.split(/\n\s*\n|\n/).map((p) => p.trim()).filter(Boolean);
+  // The written profile (lead, then Expertise / Education lists), or one
+  // factual sentence for a doctor without one yet.
+  const centre = loc ? centreName(loc) : docLocs.length === 1 ? centreName(docLocs[0]) : '';
+  const profile = profileText(doc, centre);
   const colleagues = content.doctors
     .filter((d) => d.id !== doc.id && matchesService(d.speciality, doc.speciality || '__none__'))
     .filter((d) => !loc || atLocation(d, loc.name))
@@ -39,7 +44,9 @@ export default function DoctorProfileBody({ doc, content, base = '', loc = null 
               style={{ backgroundImage: doc.imageUrl ? `url('${doc.imageUrl}')` : 'var(--mesh-card)' }}
               role="img"
               aria-label={`Portrait of ${doc.name}`}
-            ></div>
+            >
+              {!doc.imageUrl && <span className="doc-profile-initials" aria-hidden="true">{initials(doc.name)}</span>}
+            </div>
             <div className="doc-profile-body">
               <span className="section-eyebrow">About the doctor</span>
               <h2 className="section-title">{doc.name}</h2>
@@ -57,16 +64,12 @@ export default function DoctorProfileBody({ doc, content, base = '', loc = null 
                   <a className="doc-tag" key={l.id} href={`/hospitals/${l.slug || slugify(l.name)}`}>Kinder {l.name} →</a>
                 ))}
               </div>
-              {paragraphs.length > 0 ? (
-                paragraphs.map((p, i) => <p key={i} className="doc-profile-text">{p}</p>)
-              ) : (
-                <p className="doc-profile-text">
-                  {doc.name} practises {doc.speciality ? `${doc.speciality} ` : ''}with the Kinder
-                  family of doctors — under the group&apos;s shared protocols, audit and clinical
-                  governance. Our care coordinators will gladly tell you more and arrange a
-                  consultation.
-                </p>
+              {doc.bio && (
+                <p className="doc-profile-quals"><span>Qualifications</span>{tidyQualifications(doc.bio)}</p>
               )}
+              <div className="doc-profile-text">
+                <ContentBody text={profile} />
+              </div>
               <div className="doc-profile-actions">
                 <a href={`${base}/book?doctor=${slugify(doc.name)}`} className="btn btn-primary">
                   Book an Appointment →
