@@ -1,6 +1,6 @@
 import { featureMenuPages } from '@/lib/kochi-features.mjs';
 import { getContent } from '@/lib/api';
-import { slugOfLocation } from '@/lib/locations';
+import { isClinic, slugOfLocation } from '@/lib/locations';
 
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
@@ -31,29 +31,32 @@ export const revalidate = 60;
 export default async function HomePage() {
   const content = await getContent();
   const { settings, specialities, locations, doctors, testimonials, news, procedures } = content;
+  // The homepage presents the hospitals; clinics (Alappuzha) have their own
+  // Clinics menu in the header and their own pages.
+  const hospitals = (locations || []).filter((loc) => !isClinic(loc));
 
   return (
     <>
-      <TopBar settings={settings} locations={locations} />
+      <TopBar settings={settings} locations={hospitals} />
       <Header settings={settings} locations={locations} specialities={specialities} pages={featureMenuPages(content.pages)} />
       <main className={styles.home}>
-      <HomeHero settings={settings} locations={locations} />
+      <HomeHero settings={settings} locations={hospitals} />
       <QuickBar />
       <PromoBanner slides={promoSlides(settings, 'homePromo')} label="Kinder Hospitals announcements" />
       <Stats
         settings={settings}
-        hospitals={(locations || []).map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
+        hospitals={hospitals.map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
       />
       <CelebratePregnancy pages={content.pages} />
       <CoeGrid />
-      <Doctors doctors={doctors} locations={locations} />
+      <Doctors doctors={doctors} locations={hospitals} />
       <Procedures procedures={procedures} />
       <Care />
       <Support />
       <Testimonials testimonials={testimonials} />
       <News news={news} />
       <Accreditations />
-      <Locations locations={locations} />
+      <Locations locations={hospitals} />
       </main>
       <Footer settings={settings} locations={locations} />
       <KinderChat content={content} />

@@ -20,7 +20,7 @@ export default function Support() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 2a5 5 0 0 0-5 5v3a7 7 0 1 0 10 0V7a5 5 0 0 0-5-5zM9 21h6" /></svg>
             </div>
             <h4>NICU – Level 3</h4>
-            <p>Advanced neonatal intensive care for premature and critically ill newborns — the 1st in Alappuzha.</p>
+            <p>Advanced neonatal intensive care for premature and critically ill newborns — a first for the district, at Kinder Cherthala.</p>
           </div>
           <div className="support-card">
             <div className="support-icon">
@@ -34,7 +34,7 @@ export default function Support() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z" /><circle cx="12" cy="10" r="2" /></svg>
             </div>
             <h4>ART-Certified IVF Lab</h4>
-            <p>Modular IVF laboratory meeting India&apos;s ART certification — the 1st in Alappuzha.</p>
+            <p>Modular IVF laboratory meeting India&apos;s ART certification — a first for the district, at Kinder Cherthala.</p>
           </div>
           <div className="support-card">
             <div className="support-icon support-icon-image">

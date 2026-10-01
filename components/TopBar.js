@@ -3,7 +3,7 @@ import UiIcon from '@/components/UiIcon';
 export default function TopBar({ settings, locations = [] }) {
   const cities = locations.length
     ? locations.map((l) => l.name).join(' · ')
-    : 'Cherthala · Kochi · Bengaluru · Alappuzha · Singapore';
+    : 'Kochi · Cherthala · Bengaluru · Kollam · Singapore';
 
   return (
     <div className="top-bar">

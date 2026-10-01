@@ -76,9 +76,9 @@ export default function Stats({ settings, hospitals = [], since = 2011 }) {
               across India and Singapore, with a clear vision: world-class care, close to home.
             </p>
             <p>
-              In India, our centres in <strong>Cherthala (2011)</strong>,{' '}
-              <strong>Kochi (2018)</strong>, <strong>Bengaluru (2022)</strong>, and{' '}
-              <strong>Alappuzha (2023)</strong> uphold international standards — providing
+              Our hospitals in India — from the flagship in <strong>Cherthala (2011)</strong> to{' '}
+              <strong>Kochi (2018)</strong>, <strong>Bengaluru (2022)</strong> and beyond — uphold
+              international standards, providing
               comprehensive, personalised maternity, IVF, neonatology, and paediatric care at
               affordable cost, to all strata of society.
             </p>

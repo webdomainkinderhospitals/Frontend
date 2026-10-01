@@ -4708,3 +4708,37 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 }
 .doc-profile-photo { position: relative; display: grid; place-items: center; }
 .doc-profile-initials { font-family: var(--display); font-size: clamp(3.5rem, 6vw, 5.5rem); font-weight: 800; color: rgba(255,255,255,.85); letter-spacing: -.02em; }
+
+/* ---- Hospitals bar in the brand colours (logo blue band, red accents) ---- */
+.hospitals-strip {
+  background:
+    radial-gradient(60% 180% at 50% 0%, rgba(255,255,255,.14), transparent 60%),
+    linear-gradient(90deg, #1B3A73 0%, #2F62B0 50%, #1B3A73 100%);
+  border-top: 1px solid rgba(255,255,255,.12);
+  border-bottom: 0;
+  box-shadow: inset 0 -2px 0 #E62129;
+}
+.hospitals-strip-note { color: rgba(255,255,255,.9); }
+.hospitals-strip-pulse { background: #FF5A60; animation-name: hsPulse; }
+@keyframes hsPulse { from { box-shadow: 0 0 0 0 rgba(255,90,96,.7); } to { box-shadow: 0 0 0 9px rgba(255,90,96,0); } }
+.hospitals-trigger {
+  gap: 10px; padding: 7px 18px 7px 8px;
+  background: #fff; color: #1B3A73; text-shadow: none;
+  font-weight: 800;
+  box-shadow: 0 3px 0 #BFD0EA, 0 10px 22px -10px rgba(5,18,45,.6);
+}
+.hospitals-trigger svg { width: 16px; height: 16px; }
+.hospitals-trigger > svg:first-child, .hospitals-trigger .nav-ico {
+  box-sizing: content-box; width: 16px; height: 16px; padding: 7px; border-radius: 50%;
+  background: #FDE8E9; color: #D8232B;
+}
+.hospitals-trigger .caret { color: #2F62B0; font-size: 12px; }
+.hospitals-trigger:hover, .hospitals-menu:focus-within .hospitals-trigger {
+  background: #F4F7FD; filter: none;
+  box-shadow: 0 5px 0 #BFD0EA, 0 16px 26px -12px rgba(5,18,45,.65);
+}
+.hospitals-trigger:active { box-shadow: 0 1px 0 #BFD0EA, inset 0 2px 6px rgba(19,33,59,.12); }
+.hospitals-menu.is-active .hospitals-trigger { box-shadow: 0 3px 0 #BFD0EA, 0 0 0 3px rgba(255,255,255,.45); }
+.hospitals-trigger:focus-visible { outline: 3px solid #FF7378; outline-offset: 3px; }
+.hospitals-panel { border-top: 3px solid #2F62B0; }
+@media (prefers-reduced-motion: reduce) { .hospitals-strip-pulse { animation: none; } }
