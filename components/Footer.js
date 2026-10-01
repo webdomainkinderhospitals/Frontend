@@ -1,10 +1,10 @@
 import { siteTree, LEGAL_LINKS } from '@/lib/site-tree';
+import { hospitalsOnly } from '@/lib/locations';
 
 const FOOTER_LOC_TAGS = {
   Cherthala: 'Cherthala · Flagship',
   Kochi: 'Kochi · Multispeciality',
   Bengaluru: 'Bengaluru · Whitefield',
-  Alappuzha: 'Alappuzha · Clinic',
   Singapore: 'Singapore · International HQ',
 };
 
@@ -14,12 +14,14 @@ const FOOTER_LOC_ADDR = {
   Singapore: '290 Orchard Road, The Paragon, Unit #07-02 — 238859',
 };
 
-export default function Footer({ settings, locations = [] }) {
+export default function Footer({ settings, locations: allLocations = [] }) {
+  // Hospitals only — clinics are listed on their home hospital's sub-site.
+  const locations = hospitalsOnly(allLocations);
   const stats = settings.stats || [];
   // The footer lists the site tree's top level, so every branch is reachable
   // from the bottom of every page.
   const sections = siteTree(locations).filter((node) => node.href !== '/');
-  const footerLocations = locations.filter((l) => l.name !== 'Alappuzha').slice(0, 4);
+  const footerLocations = locations.slice(0, 4);
   const year = new Date().getFullYear();
 
   return (

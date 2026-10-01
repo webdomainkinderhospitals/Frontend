@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { hospitalsOnly } from '@/lib/locations';
 import { siteTree, LEGAL_LINKS } from '@/lib/site-tree';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -14,7 +15,7 @@ export const metadata = {
 // actual structure rather than a copy of it.
 export default async function SitemapPage() {
   const content = await getContent();
-  const tree = siteTree(content.locations || []).filter((node) => node.href !== '/');
+  const tree = siteTree(hospitalsOnly(content.locations || [])).filter((node) => node.href !== '/');
 
   return (
     <SiteChrome content={content}>

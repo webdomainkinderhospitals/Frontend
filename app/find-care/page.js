@@ -1,6 +1,6 @@
 import { getContent } from '@/lib/api';
 import { allServices, groupServices, slugify } from '@/lib/services';
-import { slugOfLocation } from '@/lib/locations';
+import { hospitalsOnly, slugOfLocation } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import { HubCta, whatsapp } from '@/components/Hub';
@@ -16,7 +16,7 @@ export const metadata = {
 export default async function FindCarePage() {
   const content = await getContent();
   const groups = groupServices(content.specialities);
-  const locations = content.locations || [];
+  const locations = hospitalsOnly(content.locations || []);
   const total = allServices(content.specialities).length;
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { atLocation, locationLabel, locationsOf } from '@/lib/locations';
+import { atLocation, hospitalsOnly, locationLabel, locationsOf } from '@/lib/locations';
 import { useEffect, useRef, useState } from 'react';
 import { allServices, doctorsForService, slugify } from '@/lib/services';
 
@@ -118,10 +118,11 @@ function buildReply(text, content) {
     );
   }
   if (/hospital|centre|center|location|branch|where|near/.test(q)) {
+    const hospitals = hospitalsOnly(locations);
     return reply(
-      `We are a growing network of ${locations.length} centres: ${locations.map((l) => `Kinder ${l.name}`).join(', ')}. Which one would you like to know about?`,
+      `We are a growing network of hospitals: ${hospitals.map((l) => `Kinder ${l.name}`).join(', ')}. Which one would you like to know about?`,
       [
-        ...locations.slice(0, 5).map((l) => ({ label: `Kinder ${l.name}`, href: `/hospitals/${slugOfLoc(l)}` })),
+        ...hospitals.slice(0, 5).map((l) => ({ label: `Kinder ${l.name}`, href: `/hospitals/${slugOfLoc(l)}` })),
         { label: 'All contact details', href: '/contact' },
       ]
     );

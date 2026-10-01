@@ -1,5 +1,5 @@
 import { getContent } from '@/lib/api';
-import { slugOfLocation } from '@/lib/locations';
+import { hospitalsOnly, slugOfLocation } from '@/lib/locations';
 import { LOCATION_SECTIONS } from '@/lib/site-tree';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -11,7 +11,7 @@ export const revalidate = 60;
 // description listing yesterday's network.
 export async function generateMetadata() {
   const content = await getContent();
-  const names = (content.locations || []).map((loc) => loc.name);
+  const names = hospitalsOnly(content.locations || []).map((loc) => loc.name);
   const listed = names.length
     ? `${names.slice(0, -1).join(', ')}${names.length > 1 ? ' and ' : ''}${names[names.length - 1]}`
     : 'every city we serve';
@@ -23,7 +23,7 @@ export async function generateMetadata() {
 
 export default async function LocationsPage() {
   const content = await getContent();
-  const locations = content.locations || [];
+  const locations = hospitalsOnly(content.locations || []);
   return (
     <SiteChrome content={content}>
       <main>

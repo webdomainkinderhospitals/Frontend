@@ -4024,26 +4024,6 @@ a:hover .spec-3d, summary:hover .spec-3d {
   .subsite-nav .nav-ico { margin-right: 12px; }
 }
 
-/* ============ Clinics menu ============ */
-.dropdown-clinics { min-width: 340px; padding: 14px !important; }
-.dropdown-clinics-head { display: block; padding: 2px 8px 10px; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #0e8c7b; }
-.dropdown-clinics a.clinic-card { display: flex !important; align-items: flex-start; gap: 14px; padding: 14px !important; border-radius: 14px; }
-.clinic-card-ico {
-  display: grid; place-items: center; flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px;
-  background: linear-gradient(150deg, #5fe0c8, #0e8c7b); color: #fff;
-  box-shadow: inset 0 2px 1px rgba(255,255,255,.45), inset 0 -4px 6px rgba(0,0,0,.18), 0 8px 14px -6px rgba(14,140,123,.6);
-}
-.clinic-card-ico .nav-ico { display: block !important; width: 22px; height: 22px; margin: 0; padding: 0; background: none; color: #fff !important; }
-.clinic-card-body { display: grid; gap: 3px; min-width: 0; }
-.clinic-card-body strong { font-size: 15px; color: var(--ink); }
-.clinic-card-tag { font-size: 11.5px !important; font-weight: 700 !important; letter-spacing: .06em; text-transform: uppercase; color: #0e8c7b !important; }
-.clinic-card-addr { font-size: 12.5px !important; line-height: 1.5; color: var(--muted) !important; white-space: normal; }
-.clinic-card-go { margin-top: 4px; font-size: 12.5px; font-weight: 700; color: var(--primary); }
-.dropdown-clinics a.clinic-card:hover .clinic-card-go { color: var(--lux-rose, #E0393F); }
-@media (max-width: 1024px) {
-  .dropdown-clinics { min-width: 0; padding: 6px !important; }
-  .dropdown-clinics-head { display: none; }
-}
 /* Find Care is in the top bar on desktop; the menu keeps it for phones */
 @media (min-width: 1025px) { .nav-list > li.nav-findcare { display: none; } }
 
@@ -4742,3 +4722,83 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 .hospitals-trigger:focus-visible { outline: 3px solid #FF7378; outline-offset: 3px; }
 .hospitals-panel { border-top: 3px solid #2F62B0; }
 @media (prefers-reduced-motion: reduce) { .hospitals-strip-pulse { animation: none; } }
+
+/* ---- Hospital sub-site: Clinics menu ---- */
+.subsite-topbar-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.subsite-home-link { color: #FFD9DB !important; }
+.subsite-clinics { position: relative; }
+.subsite-nav-btn {
+  display: inline-flex; align-items: center; gap: 0;
+  padding: 10px 13px; font: inherit; font-size: 14px; font-weight: 600;
+  color: var(--ink-soft); background: none; border: 1px solid transparent; border-radius: 9px;
+  cursor: pointer; white-space: nowrap;
+  transition: background .25s ease, box-shadow .25s ease, transform .25s ease, color .2s ease, border-color .25s ease;
+}
+.subsite-nav-btn .caret { margin-left: 4px; font-size: 10px; color: var(--primary); transition: transform .2s ease; }
+.subsite-nav-btn:hover, .subsite-clinics.is-open .subsite-nav-btn {
+  color: var(--primary-dark); background: linear-gradient(180deg, #ffffff, #EFF4FC);
+  border-color: rgba(47,98,176,.14); box-shadow: var(--lift-shadow);
+}
+.subsite-clinics.is-open .subsite-nav-btn .caret { transform: rotate(180deg); }
+.subsite-nav-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.subsite-clinics-panel {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 60;
+  width: min(360px, 92vw); padding: 14px;
+  background: #fff; border: 1px solid #DDE5F2; border-top: 3px solid var(--primary);
+  border-radius: 14px; box-shadow: 0 24px 50px -18px rgba(19,33,59,.35);
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+}
+.subsite-clinics.is-open .subsite-clinics-panel { opacity: 1; visibility: visible; transform: none; transition: opacity .2s ease, transform .2s ease; }
+.subsite-clinics-head { margin: 0 0 10px; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.subsite-nav .subsite-clinic-card {
+  display: flex; gap: 12px; align-items: flex-start; padding: 12px; white-space: normal;
+  border: 1px solid #E3EAF5 !important; border-radius: 12px; background: #F8FAFE; color: var(--ink);
+}
+.subsite-nav .subsite-clinic-card + .subsite-clinic-card { margin-top: 8px; }
+.subsite-nav .subsite-clinic-card:hover { border-color: rgba(47,98,176,.35) !important; background: #fff !important; }
+.subsite-clinic-ico {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px;
+  background: linear-gradient(135deg, #2F62B0, #1B3A73); color: #fff;
+}
+.subsite-clinic-ico svg { width: 20px; height: 20px; margin: 0; }
+.subsite-clinic-body { display: grid; gap: 3px; min-width: 0; }
+.subsite-clinic-body strong { font-family: var(--display); font-size: 15.5px; color: var(--primary-dark); }
+.subsite-clinic-tag { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.subsite-clinic-addr { font-size: 12.5px; font-weight: 500; line-height: 1.45; color: var(--ink-soft); }
+.subsite-clinic-go { margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--primary); }
+.subsite-clinics-soon { display: grid; justify-items: center; gap: 8px; padding: 10px 6px 6px; text-align: center; }
+.subsite-clinics-soon .subsite-clinic-ico { width: 48px; height: 48px; border-radius: 14px; }
+.subsite-soon-badge {
+  display: inline-block; padding: 4px 11px; border-radius: 999px;
+  background: #FDE8E9; color: #C81E26; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+}
+.subsite-clinics-soon strong { font-family: var(--display); font-size: 17px; color: var(--primary-dark); }
+.subsite-clinics-soon p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); white-space: normal; }
+.subsite-nav .subsite-soon-call {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 4px;
+  background: var(--primary) !important; color: #fff !important; border-radius: 999px; padding: 9px 16px; font-size: 13.5px;
+}
+.subsite-nav .subsite-soon-call:hover { background: var(--primary-dark) !important; color: #fff !important; }
+.subsite-soon-call svg { width: 15px; height: 15px; }
+@media (max-width: 1024px) {
+  .subsite-nav-btn { width: 100%; justify-content: flex-start; }
+  .subsite-nav-btn .caret { margin-left: auto; }
+  .subsite-clinics-panel { position: static; width: auto; margin: 4px 0 6px; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; }
+  .subsite-clinics.is-open .subsite-clinics-panel { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .subsite-clinics-panel, .subsite-nav-btn, .subsite-nav-btn .caret { transition: none; }
+}
+.subsite-clinic-ico .nav-ico { display: block !important; width: 20px; height: 20px; margin: 0; padding: 0; background: none; color: #fff !important; transform: none !important; }
+.subsite-clinics-soon .subsite-clinic-ico .nav-ico { width: 24px; height: 24px; }
+.subsite-nav-btn:hover .nav-ico, .subsite-clinics.is-open .subsite-nav-btn .nav-ico { color: var(--lux-rose, #E0393F); }
+/* A hospital with a long menu (Kochi) keeps every item on one line beside Book Appointment. */
+@media (min-width: 1025px) and (max-width: 1599px) {
+  .subsite-header-in { gap: 12px; }
+  .subsite-nav { gap: 0; }
+  .subsite-nav a, .subsite-nav-btn { padding: 9px 9px; font-size: 13.5px; }
+}
+@media (min-width: 1025px) { .subsite-nav .nav-ico { display: none; } .subsite-clinic-ico .nav-ico { display: block !important; } }
+/* The logo already leads home, so small laptops drop the Home link. */
+@media (min-width: 1025px) and (max-width: 1199px) { .subsite-nav > a.subsite-nav-home { display: none; } }

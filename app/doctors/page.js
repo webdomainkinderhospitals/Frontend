@@ -1,4 +1,5 @@
 import { getContent } from '@/lib/api';
+import { hospitalsOnly } from '@/lib/locations';
 import { allServices } from '@/lib/services';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -32,7 +33,7 @@ export default async function DoctorsPage() {
 
         <section className="dd-section" id="directory">
           <div className="container">
-            <DoctorDirectory doctors={doctors} locations={locations} servicePages={servicePages} />
+            <DoctorDirectory doctors={doctors} locations={hospitalsOnly(locations)} servicePages={servicePages} />
           </div>
         </section>
 

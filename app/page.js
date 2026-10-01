@@ -1,6 +1,6 @@
 import { featureMenuPages } from '@/lib/kochi-features.mjs';
 import { getContent } from '@/lib/api';
-import { isClinic, slugOfLocation } from '@/lib/locations';
+import { hospitalsOnly, slugOfLocation } from '@/lib/locations';
 
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
@@ -31,9 +31,9 @@ export const revalidate = 60;
 export default async function HomePage() {
   const content = await getContent();
   const { settings, specialities, locations, doctors, testimonials, news, procedures } = content;
-  // The homepage presents the hospitals; clinics (Alappuzha) have their own
-  // Clinics menu in the header and their own pages.
-  const hospitals = (locations || []).filter((loc) => !isClinic(loc));
+  // The group site presents the hospitals; each clinic is listed on its home
+  // hospital's sub-site (Alappuzha under Cherthala).
+  const hospitals = hospitalsOnly(locations || []);
 
   return (
     <>

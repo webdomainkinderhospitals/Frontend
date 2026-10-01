@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
-import { centreName, isClinic, slugOfLocation } from '@/lib/locations';
+import { centreName, hospitalsOnly, slugOfLocation } from '@/lib/locations';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import NavIcon from '@/components/NavIcon';
@@ -15,7 +15,6 @@ const HOSPITAL_TAGS = {
   Cherthala: 'Flagship · Since 2011',
   Kochi: 'Multispeciality · Since 2018',
   Bengaluru: "Women's & Fertility · Since 2022",
-  Alappuzha: "Women's Clinic · Since 2023",
   Singapore: 'International · HQ',
 };
 
@@ -31,13 +30,13 @@ const FEATURE_NOTES = {
   'kochi-premium-birthing-centre': 'LDRP suites & painless labour',
 };
 
-export default function Header({ settings, locations = [], specialities = [], pages = [] }) {
+export default function Header({ settings, locations: allLocations = [], specialities = [], pages = [] }) {
   // Kinder Kochi's pregnancy experiences, from the same published pages as the
   // Kochi menu bar, listed in the Celebrate Pregnancy dropdown.
-  // Hospitals and clinics get a menu each; a centre is a clinic when the
-  // admin marks it so.
-  const clinics = locations.filter(isClinic);
-  const hospitals = clinics.length ? locations.filter((l) => !isClinic(l)) : locations;
+  // The group site lists hospitals only; clinics are reached from the
+  // sub-site of the hospital they belong to.
+  const hospitals = hospitalsOnly(allLocations);
+  const locations = hospitals;
   const features = kochiFeaturePages(pages, 'Kochi');
   const premium = features.find((f) => f.group === 'Premium Birthing Centre');
   const serviceGroups = groupServices(specialities);
@@ -204,28 +203,6 @@ export default function Header({ settings, locations = [], specialities = [], pa
                 <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
               )}
 
-              {clinics.length > 0 && (
-                <li className={dd('clinics') + ' nav-clinics'}>
-                  <a href={`/hospitals/${slugOfLocation(clinics[0])}`} onClick={(e) => toggleDropdown(e, 'clinics')}>
-                    <NavIcon name="clinic" />Clinics <span className="caret">▾</span>
-                  </a>
-                  <div className="dropdown dropdown-clinics">
-                    <span className="dropdown-clinics-head">Kinder clinics · care close to home</span>
-                    {clinics.map((loc) => (
-                      <a key={loc.id ?? loc.name} className="clinic-card" href={`/hospitals/${slugOfLocation(loc)}`} onClick={onLeafClick}>
-                        <span className="clinic-card-ico" aria-hidden="true"><NavIcon name="clinic" /></span>
-                        <span className="clinic-card-body">
-                          <strong>{centreName(loc)}</strong>
-                          <small className="clinic-card-tag">{['Clinic', loc.since || loc.city].filter(Boolean).join(' · ')}</small>
-                          {loc.address && <small className="clinic-card-addr">{loc.address}</small>}
-                          <span className="clinic-card-go">Visit clinic →</span>
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </li>
-              )}
-
               <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
                   <NavIcon name="stethoscope" />Specialities <span className="caret">▾</span>
@@ -305,7 +282,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
                 onClick={() => setHospitalsOpen((v) => !v)}
               >
                 <NavIcon name="pin" />
-                {clinics.length ? 'Our Hospitals' : 'Our Locations'}
+                Our Hospitals
                 <span className="caret" aria-hidden="true">▾</span>
               </button>
               <div className="hospitals-panel" id="hospitals-panel">
