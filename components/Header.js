@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
@@ -31,14 +31,12 @@ const FEATURE_NOTES = {
 
 export default function Header({ settings, locations = [], specialities = [], pages = [] }) {
   // Kinder Kochi's pregnancy experiences, from the same published pages as the
-  // Kochi menu bar: a highlighted strip under the menu and a dropdown on
-  // Celebrate Pregnancy. Both disappear if the pages are unpublished.
+  // Kochi menu bar, listed in the Celebrate Pregnancy dropdown.
   // Hospitals and clinics get a menu each; a centre is a clinic when the
   // admin marks it so.
   const clinics = locations.filter(isClinic);
   const hospitals = clinics.length ? locations.filter((l) => !isClinic(l)) : locations;
   const features = kochiFeaturePages(pages, 'Kochi');
-  const celebration = features.filter((f) => f.group === 'Celebrate Pregnancy');
   const premium = features.find((f) => f.group === 'Premium Birthing Centre');
   const serviceGroups = groupServices(specialities);
   // Menus are built from the agreed site tree, so the navigation cannot drift
@@ -50,6 +48,9 @@ export default function Header({ settings, locations = [], specialities = [], pa
   const library = node('Health Library');
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  // The hospitals menu lives in its own highlighted bar under the main menu.
+  const [hospitalsOpen, setHospitalsOpen] = useState(false);
+  const hospitalsRef = useRef(null);
   const pathname = usePathname() || '/';
 
   // Which top-level menu item owns the current page.
@@ -79,8 +80,12 @@ export default function Header({ settings, locations = [], specialities = [], pa
     const header = document.querySelector('.header');
     const onScroll = () => header && header.classList.toggle('is-stuck', window.scrollY > 12);
     const onKey = (e) => {
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape') { closeMenu(); setHospitalsOpen(false); }
     };
+    const onPointer = (e) => {
+      if (hospitalsRef.current && !hospitalsRef.current.contains(e.target)) setHospitalsOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointer);
     const onResize = () => {
       if (!window.matchMedia('(max-width: 1024px)').matches) closeMenu();
     };
@@ -91,6 +96,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
     return () => {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointer);
       window.removeEventListener('resize', onResize);
     };
   }, []);
@@ -189,41 +195,6 @@ export default function Header({ settings, locations = [], specialities = [], pa
                 <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
               )}
 
-              <li className={`${dd('locations')} has-mega` + act('locations')}>
-                <a href="/hospitals" onClick={(e) => toggleDropdown(e, 'locations')}>
-                  <NavIcon name="pin" />{clinics.length ? 'Hospitals' : 'Our Locations'} <span className="caret">▾</span>
-                </a>
-                <div className="dropdown mega mega-hospitals">
-                  {hospitals.map((loc) => (
-                    <a
-                      key={loc.id}
-                      href={`/hospitals/${loc.slug || String(loc.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                      className={`hospital-card${loc.international ? ' hospital-international' : ''}`}
-                      onClick={onLeafClick}
-                    >
-                      <div
-                        className="hospital-img"
-                        style={{
-                          backgroundImage: loc.imageUrl
-                            ? `url('${loc.imageUrl}'), var(--mesh-card)`
-                            : 'var(--mesh-card)',
-                        }}
-                      ></div>
-                      <div className="hospital-meta">
-                        <span className={`hospital-since${loc.international ? ' hospital-since-intl' : ''}`}>
-                          {loc.since || HOSPITAL_TAGS[loc.name] || `${loc.city} · ${loc.country}`}
-                        </span>
-                        <h6>{centreName(loc)}</h6>
-                        <p>{loc.address}</p>
-                        <span className="hospital-link">
-                          {`Explore ${centreName(loc)} →`}
-                        </span>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </li>
-
               {clinics.length > 0 && (
                 <li className={dd('clinics') + ' nav-clinics'}>
                   <a href={`/hospitals/${slugOfLocation(clinics[0])}`} onClick={(e) => toggleDropdown(e, 'clinics')}>
@@ -307,20 +278,62 @@ export default function Header({ settings, locations = [], specialities = [], pa
             </ul>
           </div>
         </nav>
-        {features.length > 0 && (
-          <nav className="pregnancy-strip" aria-label="Celebrate Pregnancy at Kinder Kochi">
-            <div className="container pregnancy-strip-in">
-              <a className="pregnancy-strip-lead" href="/hospitals/kochi/celebrate-pregnancy">
-                <span className="pregnancy-strip-pulse" aria-hidden="true" />
-                Celebrate Pregnancy <span className="pregnancy-strip-where">at Kinder Kochi</span> <span aria-hidden="true">→</span>
-              </a>
-              <span className="pregnancy-strip-links">
-                {celebration.map((f) => <a key={f.slug} href={f.href}>{f.label}</a>)}
-                {premium && <a className="pregnancy-strip-premium" href={premium.href}>✦ Premium Birthing Centre <span aria-hidden="true">→</span></a>}
-              </span>
+        <nav className="hospitals-strip" aria-label="Kinder hospitals">
+          <div className="container hospitals-strip-in">
+            <span className="hospitals-strip-note">
+              <span className="hospitals-strip-pulse" aria-hidden="true" />
+              {hospitals.length} hospitals · one standard of care
+            </span>
+            <div
+              ref={hospitalsRef}
+              className={`hospitals-menu${hospitalsOpen ? ' is-open' : ''}${active === 'locations' ? ' is-active' : ''}`}
+            >
+              <button
+                type="button"
+                className="hospitals-trigger"
+                aria-expanded={hospitalsOpen}
+                aria-controls="hospitals-panel"
+                onClick={() => setHospitalsOpen((v) => !v)}
+              >
+                <NavIcon name="pin" />
+                {clinics.length ? 'Our Hospitals' : 'Our Locations'}
+                <span className="caret" aria-hidden="true">▾</span>
+              </button>
+              <div className="hospitals-panel" id="hospitals-panel">
+                <div className="hospitals-panel-grid">
+                  {hospitals.map((loc) => (
+                    <a
+                      key={loc.id ?? loc.name}
+                      href={`/hospitals/${slugOfLocation(loc)}`}
+                      className={`hospital-card${loc.international ? ' hospital-international' : ''}`}
+                      onClick={() => setHospitalsOpen(false)}
+                    >
+                      <div
+                        className="hospital-img"
+                        style={{
+                          backgroundImage: loc.imageUrl
+                            ? `url('${loc.imageUrl}'), var(--mesh-card)`
+                            : 'var(--mesh-card)',
+                        }}
+                      ></div>
+                      <div className="hospital-meta">
+                        <span className={`hospital-since${loc.international ? ' hospital-since-intl' : ''}`}>
+                          {loc.since || HOSPITAL_TAGS[loc.name] || `${loc.city} · ${loc.country}`}
+                        </span>
+                        <h6>{centreName(loc)}</h6>
+                        <p>{loc.address}</p>
+                        <span className="hospital-link">{`Explore ${centreName(loc)} →`}</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+                <a className="hospitals-panel-all" href="/hospitals" onClick={() => setHospitalsOpen(false)}>
+                  View all hospitals →
+                </a>
+              </div>
             </div>
-          </nav>
-        )}
+          </div>
+        </nav>
       </header>
 
       <div className="nav-backdrop" onClick={closeMenu}></div>
