@@ -282,7 +282,7 @@ export default function Header({ settings, locations = [], specialities = [], pa
           <div className="container hospitals-strip-in">
             <span className="hospitals-strip-note">
               <span className="hospitals-strip-pulse" aria-hidden="true" />
-              {hospitals.length} hospitals · one standard of care
+              One standard of care, at every Kinder hospital
             </span>
             <div
               ref={hospitalsRef}
