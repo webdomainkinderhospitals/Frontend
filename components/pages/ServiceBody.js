@@ -27,6 +27,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         crumb={svc.name}
         eyebrow={loc ? `${svc.group.title} · Kinder ${here}` : svc.group.title}
         titleHtml={esc(svc.name)}
+        icon={<SpecialityIcon name={svc.name} className="page-hero-icon" />}
         homeHref={base || '/'}
         homeLabel={loc ? `Kinder ${here}` : 'Home'}
         trail={[{ label: 'Specialities', href: loc ? `${base}#specialities` : '/services' }]}

@@ -3579,11 +3579,6 @@ body{ overflow-x: clip; }
 .mega-col a.mega-spec:hover { padding-left: 10px; }
 .mega-col a.mega-spec:hover .spec-glyph { background: var(--primary); color: #fff; }
 .mega-col h6 + a.mega-spec { margin-top: 2px; }
-/* Alternate the tint per column so the groups read apart */
-.mega-col:nth-child(2) .spec-glyph { background: linear-gradient(145deg, var(--accent-light), #FFF4F4); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(230,33,41, 0.14); }
-.mega-col:nth-child(3) .spec-glyph { background: linear-gradient(145deg, #E3F6F2, #f2fbf9); color: #0E8C7B; box-shadow: inset 0 0 0 1px rgba(14, 140, 123, 0.14); }
-.mega-col:nth-child(2) a.mega-spec:hover .spec-glyph { background: var(--accent); color: #fff; }
-.mega-col:nth-child(3) a.mega-spec:hover .spec-glyph { background: #0E8C7B; color: #fff; }
 
 /* Expandable specialities on hospital pages */
 .editorial-speciality summary { display: flex; align-items: center; gap: 12px; list-style: none; }
@@ -3597,71 +3592,6 @@ body{ overflow-x: clip; }
 
 @media (prefers-reduced-motion: reduce) { .spec-glyph { transition: none; } .svc-card:hover .spec-glyph { transform: none; } }
 
-/* ============ 3D "clay" speciality icons ============
-   A raised, glossy tile: tone gradient, a soft top highlight, an inner
-   shade at the base and a coloured drop shadow; the glyph is white with its
-   own depth. Tones come from SpecialityIcon (data-tone). */
-.spec-3d {
-  --t1: #5C8BD6; --t2: #24539E; --glow: 36,83,158;
-  position: relative; isolation: isolate; overflow: hidden;
-  display: inline-grid; place-items: center; flex-shrink: 0;
-  background: linear-gradient(150deg, var(--t1) 0%, var(--t2) 100%) !important;
-  color: #fff !important;
-  box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, .45),
-    inset 0 -4px 6px rgba(0, 0, 0, .18),
-    0 6px 12px -4px rgba(var(--glow), .55),
-    0 2px 3px rgba(var(--glow), .25) !important;
-  transform: translateZ(0);
-  transition: transform .3s cubic-bezier(.2,.8,.3,1.4), box-shadow .3s ease !important;
-}
-.spec-3d::before {
-  content: ""; position: absolute; z-index: -1; left: 8%; right: 8%; top: 5%; height: 46%;
-  border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0));
-}
-.spec-3d::after {
-  content: ""; position: absolute; z-index: -1; right: -20%; bottom: -30%; width: 70%; height: 70%;
-  border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, .22), transparent 70%);
-}
-.spec-3d svg { color: #fff; filter: drop-shadow(0 1.5px 1px rgba(0, 0, 0, .28)); }
-
-.spec-3d[data-tone="rose"]   { --t1: #FF9B9E; --t2: #E0454A; --glow: 224,69,74; }
-.spec-3d[data-tone="berry"]  { --t1: #F08B8E; --t2: #A83135; --glow: 168,49,53; }
-.spec-3d[data-tone="teal"]   { --t1: #5fe0c8; --t2: #0e8c7b; --glow: 14, 140, 123; }
-.spec-3d[data-tone="blue"]   { --t1: #7cc4ff; --t2: #2f6fd6; --glow: 47, 111, 214; }
-.spec-3d[data-tone="coral"]  { --t1: #ffae8f; --t2: #E84A4F; --glow: 232,74,79; }
-.spec-3d[data-tone="violet"] { --t1: #7FA6E6; --t2: #24539E; --glow: 36,83,158; }
-.spec-3d[data-tone="amber"]  { --t1: #ffd27a; --t2: #e08a1e; --glow: 224, 138, 30; }
-.spec-3d[data-tone="green"]  { --t1: #9be37e; --t2: #3a9a3f; --glow: 58, 154, 63; }
-.spec-3d[data-tone="gold"]   { --t1: #ffe08a; --t2: #c98a1c; --glow: 201, 138, 28; }
-
-/* Lift on hover wherever the tile sits inside a link */
-a:hover .spec-3d, summary:hover .spec-3d {
-  transform: translateY(-2px) rotate(-4deg) scale(1.06);
-  box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, .5),
-    inset 0 -4px 6px rgba(0, 0, 0, .18),
-    0 10px 18px -6px rgba(var(--glow), .6),
-    0 3px 5px rgba(var(--glow), .25) !important;
-}
-/* Sizes: roomier tiles on cards, compact in the menu */
-.svc-card .spec-3d { width: 40px; height: 40px; border-radius: 12px; }
-.svc-card .spec-3d svg { width: 21px; height: 21px; }
-.mega-col a.mega-spec .spec-3d { width: 30px; height: 30px; border-radius: 9px; }
-.mega-col a.mega-spec .spec-3d svg { width: 16px; height: 16px; }
-.editorial-speciality summary .spec-3d { width: 40px; height: 40px; border-radius: 12px; }
-.editorial-speciality summary .spec-3d svg { width: 21px; height: 21px; }
-.spec-card .spec-3d { width: 56px !important; height: 56px !important; border-radius: 16px !important; }
-.spec-card .spec-3d svg { width: 28px; height: 28px; }
-/* The earlier flat hover fills no longer apply */
-.svc-card:hover .spec-glyph, .mega-col a.mega-spec:hover .spec-glyph,
-.mega-col:nth-child(2) a.mega-spec:hover .spec-glyph, .mega-col:nth-child(3) a.mega-spec:hover .spec-glyph { background: linear-gradient(150deg, var(--t1), var(--t2)) !important; color: #fff !important; }
-
-@media (prefers-reduced-motion: reduce) {
-  .spec-3d { transition: none !important; }
-  a:hover .spec-3d, summary:hover .spec-3d { transform: none; }
-}
 
 /* =====================================================================
    3D polish — menus and buttons (homepage, corporate pages, hospital sites)
@@ -3787,25 +3717,22 @@ a:hover .spec-3d, summary:hover .spec-3d {
   transform: translateY(-1px);
 }
 
-/* ---- Quick bar: clay icon tiles and lifting cards ---- */
+/* ---- Quick bar: brand icon tiles (same family as the speciality tiles) ---- */
 .quick-icon {
-  --t1: #7FA6E6; --t2: #24539E; --glow: 36,83,158;
-  position: relative; overflow: hidden; isolation: isolate;
-  background: linear-gradient(150deg, var(--t1), var(--t2)) !important; color: #fff !important;
+  position: relative; display: grid; place-items: center;
+  background: #EEF3FB !important; color: #1B3A73 !important;
   border-radius: 14px !important;
-  box-shadow: inset 0 2px 1px rgba(255,255,255,.45), inset 0 -4px 6px rgba(0,0,0,.18), 0 8px 14px -6px rgba(var(--glow), .6) !important;
-  transition: transform .3s cubic-bezier(.2,.8,.3,1.4);
+  box-shadow: inset 0 0 0 1px #D6E1F2 !important;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease !important;
 }
-.quick-icon::before { content: ""; position: absolute; z-index: -1; left: 10%; right: 10%; top: 6%; height: 45%; border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%; background: linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,0)); }
-.quick-icon svg { filter: drop-shadow(0 1.5px 1px rgba(0,0,0,.25)); }
-.quick-item:nth-child(1) .quick-icon { --t1: #FF9B9E; --t2: #E0454A; --glow: 224,69,74; }
-.quick-item:nth-child(2) .quick-icon { --t1: #5fe0c8; --t2: #0e8c7b; --glow: 14, 140, 123; }
-.quick-item:nth-child(3) .quick-icon { --t1: #F08B8E; --t2: #A83135; --glow: 168,49,53; }
-.quick-item:nth-child(4) .quick-icon { --t1: #7cc4ff; --t2: #2f6fd6; --glow: 47, 111, 214; }
-.quick-item:nth-child(5) .quick-icon { --t1: #ffd27a; --t2: #e08a1e; --glow: 224, 138, 30; }
+.quick-icon .spec-ico { width: 72%; height: 72%; }
+.quick-item:hover .quick-icon, .quick-item:focus-visible .quick-icon {
+  background: #2F62B0 !important; color: #fff !important;
+  box-shadow: inset 0 0 0 1px #2F62B0, 0 8px 18px -10px rgba(27,58,115,.7) !important;
+}
 .quick-item { transition: background .25s ease, box-shadow .25s ease, transform .25s ease !important; }
 .quick-item:hover { background: linear-gradient(180deg, #fff, #F5F9FE) !important; box-shadow: inset 0 1px 0 #fff, 0 14px 30px -18px rgba(27,58,115,.5); transform: translateY(-2px); z-index: 1; }
-.quick-item:hover .quick-icon { transform: translateY(-2px) rotate(-5deg) scale(1.06); }
+.quick-item:hover .quick-icon { transform: none !important; }
 .quick-bar { box-shadow: 0 24px 50px -28px rgba(27,58,115,.45), 0 2px 0 rgba(27,58,115,.05) !important; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4802,3 +4729,54 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 @media (min-width: 1025px) { .subsite-nav .nav-ico { display: none; } .subsite-clinic-ico .nav-ico { display: block !important; } }
 /* The logo already leads home, so small laptops drop the Home link. */
 @media (min-width: 1025px) and (max-width: 1199px) { .subsite-nav > a.subsite-nav-home { display: none; } }
+
+/* ============ Speciality icons — the hospital's own icon set ============
+   One calm tile everywhere: a light brand-blue surface with a navy icon,
+   turning solid brand blue when its link is hovered or focused. The icon
+   is the client's artwork (public/icons/specialities), drawn as a mask in
+   currentColor so it takes the tile's colour. */
+.spec-3d {
+  --tile: 44px;
+  position: relative; display: inline-grid; place-items: center; flex: none;
+  width: var(--tile) !important; height: var(--tile) !important;
+  border-radius: calc(var(--tile) * .28) !important;
+  background: #EEF3FB !important; color: #1B3A73 !important;
+  box-shadow: inset 0 0 0 1px #D6E1F2 !important;
+  transform: none !important;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease !important;
+}
+.spec-ico {
+  display: block; width: 68%; height: 68%; background: currentColor;
+  -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
+}
+a:hover .spec-3d, a:focus-visible .spec-3d, summary:hover .spec-3d, summary:focus-visible .spec-3d {
+  background: #2F62B0 !important; color: #fff !important;
+  box-shadow: inset 0 0 0 1px #2F62B0, 0 8px 18px -10px rgba(27,58,115,.7) !important;
+}
+/* Sizes: compact in the menu, roomier on cards */
+.mega-col a.mega-spec .spec-3d { --tile: 32px; }
+.svc-card .spec-3d, .editorial-speciality summary .spec-3d, .csm-dept .spec-3d { --tile: 44px; }
+.spec-card .spec-3d { --tile: 60px; }
+/* The homepage card turns blue on hover, so its tile turns white */
+.spec-card:hover .spec-3d { background: #fff !important; color: #1B3A73 !important; box-shadow: none !important; }
+@media (prefers-reduced-motion: reduce) { .spec-3d { transition: none !important; } }
+
+/* Home "Our services" cards: the speciality icon sits on the photo in a glass tile */
+.coe-card .spec-3d.coe-icon {
+  --tile: 52px; margin-bottom: 14px;
+  background: rgba(255,255,255,.14) !important; color: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.32) !important;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.coe-card:hover .spec-3d.coe-icon, .coe-card:focus-visible .spec-3d.coe-icon {
+  background: #fff !important; color: #1B3A73 !important; box-shadow: 0 10px 22px -10px rgba(0,0,0,.5) !important;
+}
+/* A speciality page shows its icon beside the title */
+.page-hero-head { display: flex; align-items: center; gap: 18px; }
+.page-hero-head .page-hero-title { margin: 0; }
+.page-hero .spec-3d.page-hero-icon {
+  --tile: 68px;
+  background: rgba(255,255,255,.12) !important; color: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.3) !important;
+}
+@media (max-width: 640px) { .page-hero .spec-3d.page-hero-icon { --tile: 52px; } .page-hero-head { gap: 12px; } }

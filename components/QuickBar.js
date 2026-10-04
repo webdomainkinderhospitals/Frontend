@@ -1,15 +1,19 @@
+import { specialityIconUrl } from '@/lib/speciality-icons.mjs';
+
 const WHATSAPP_BOOK = '/book';
 
 const ITEMS = [
   {
     href: '/services',
     title: 'Maternity Care',
+    spec: 'gynaecology', // from the hospital's speciality icon set
     sub: '13,000+ births delivered',
     icon: <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />,
   },
   {
     href: '/services#allied',
     title: 'Surgical Care',
+    spec: 'general-surgery', // from the hospital's speciality icon set
     sub: 'Laparoscopic & general',
     icon: (
       <>
@@ -22,6 +26,7 @@ const ITEMS = [
   {
     href: '/services',
     title: 'Kinder IVF',
+    spec: 'reproductive-medicine', // from the hospital's speciality icon set
     sub: '1,500+ successful IVFs',
     icon: (
       <>
@@ -68,9 +73,13 @@ export default function QuickBar() {
             {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
           >
             <div className="quick-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                {item.icon}
-              </svg>
+              {item.spec ? (
+                <span className="spec-ico" style={{ '--ico': `url(${specialityIconUrl('', item.spec)})` }} aria-hidden="true" />
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  {item.icon}
+                </svg>
+              )}
             </div>
             <div className="quick-text">
               <strong>{item.title}</strong>
