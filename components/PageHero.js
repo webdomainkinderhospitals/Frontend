@@ -10,6 +10,7 @@ export default function PageHero({
   homeHref = '/',
   homeLabel = 'Home',
   trail = [],
+  icon = null, // optional, e.g. a speciality's icon beside the title
 }) {
   return (
     <section className="page-hero">
@@ -26,7 +27,14 @@ export default function PageHero({
           <span>{crumb}</span>
         </nav>
         {eyebrow && <span className="hero-eyebrow">{eyebrow}</span>}
-        <h1 className="page-hero-title" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+        {icon ? (
+          <div className="page-hero-head">
+            {icon}
+            <h1 className="page-hero-title" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+          </div>
+        ) : (
+          <h1 className="page-hero-title" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+        )}
         {intro && <p className="page-hero-intro">{intro}</p>}
       </div>
     </section>

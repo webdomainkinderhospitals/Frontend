@@ -41,6 +41,11 @@
   animation: counter 60s linear infinite;
 }
 .nodeIcon svg { width: 26px; height: 26px; }
+/* The hospital's own speciality icons, drawn in the tile's colour */
+.specIcon {
+  display: block; width: 66%; height: 66%; background: currentColor;
+  -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
+}
 .nodeLabel {
   padding: 4px 10px; border-radius: 999px; white-space: nowrap;
   font-size: 12px; font-weight: 600; letter-spacing: .01em;

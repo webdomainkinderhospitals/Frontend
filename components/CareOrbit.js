@@ -1,15 +1,16 @@
 import styles from './CareOrbit.module.css';
+import { specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // "Care at the heart" — the group's specialities orbiting a beating heart,
 // with a live heartbeat trace underneath. Pure SVG and CSS: no photography to
 // source, crisp at any size, and every colour comes from the brand tokens.
 const I = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.9, strokeLinecap: 'round', strokeLinejoin: 'round' };
 const SERVICES = [
-  { label: 'Maternity', icon: <svg viewBox="0 0 24 24" {...I}><circle cx="9" cy="5.5" r="2.5" /><path d="M5 21v-5a4 4 0 0 1 4-4h1.5" /><circle cx="16" cy="12" r="2" /><path d="M11.5 21v-1.5a4.5 4.5 0 0 1 9 0V21" /></svg> },
-  { label: 'IVF & Fertility', icon: <svg viewBox="0 0 24 24" {...I}><circle cx="10" cy="13.5" r="6.5" /><circle cx="10" cy="13.5" r="2.2" /><circle cx="17" cy="6.5" r="1.6" /><path d="M18.3 5.4c1-.9 1.4-2 2.7-2.4" /></svg> },
-  { label: 'Newborn & NICU', icon: <svg viewBox="0 0 24 24" {...I}><path d="M9.5 2.5h5M10.5 2.5v3L8 8.5V20a1.5 1.5 0 0 0 1.5 1.5h5A1.5 1.5 0 0 0 16 20V8.5l-2.5-3v-3" /><path d="M8 12.5h8M8 16.5h8" /></svg> },
-  { label: 'Paediatrics', icon: <svg viewBox="0 0 24 24" {...I}><circle cx="12" cy="5.5" r="2.5" /><path d="M12 8.5V15M7.5 10.5l4.5 1.8 4.5-1.8M9 21l3-6 3 6" /></svg> },
-  { label: '24/7 Emergency', icon: <svg viewBox="0 0 24 24" {...I}><path d="M2.5 16V8.5A1.5 1.5 0 0 1 4 7h9.5v9M13.5 10H17l4 3.2V16" /><circle cx="7" cy="17.5" r="2" /><circle cx="17" cy="17.5" r="2" /><path d="M7.5 9.5v4M5.5 11.5h4" /></svg> },
+  { label: 'Maternity', spec: 'gynaecology' },
+  { label: 'IVF & Fertility', spec: 'reproductive-medicine' },
+  { label: 'Newborn & NICU', spec: 'neonatology' },
+  { label: 'Paediatrics', spec: 'paediatrics' },
+  { label: '24/7 Emergency', spec: 'emergency-medicine' },
   { label: 'Expert Doctors', icon: <svg viewBox="0 0 24 24" {...I}><path d="M6 3v5a4 4 0 0 0 8 0V3" /><path d="M10 12v3a5 5 0 0 0 10 0v-2" /><circle cx="20" cy="11" r="2" /></svg> },
 ];
 
@@ -32,7 +33,9 @@ export default function CareOrbit({ hospitals = [], since }) {
             {SERVICES.map((s, i) => (
               <div key={s.label} className={styles.slot} style={{ '--a': `${(360 / SERVICES.length) * i - 90}deg` }}>
                 <div className={styles.node}>
-                  <span className={styles.nodeIcon}>{s.icon}</span>
+                  <span className={styles.nodeIcon}>
+                    {s.spec ? <span className={styles.specIcon} style={{ '--ico': `url(${specialityIconUrl('', s.spec)})` }} /> : s.icon}
+                  </span>
                   <span className={styles.nodeLabel}>{s.label}</span>
                 </div>
               </div>
