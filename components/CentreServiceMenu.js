@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import SpecialityIcon from '@/components/SpecialityIcon';
-import { iconsForList } from '@/lib/speciality-icons.mjs';
+import { iconsForList, specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // A centre's departments as its headline menu, right under the banner: one
 // large card per group (Kochi: Multispeciality Services, and the Women &
@@ -29,7 +28,7 @@ const TAGLINES = {
   'women & fertility centre': 'Pregnancy, fertility, newborn and children’s care under one roof',
 };
 
-export default function CentreServiceMenu({ groups = [], centre = '' }) {
+export default function CentreServiceMenu({ groups = [], centre = '', image = '' }) {
   const [open, setOpen] = useState('');
   const panelRef = useRef(null);
 
@@ -88,6 +87,7 @@ export default function CentreServiceMenu({ groups = [], centre = '' }) {
           role="region"
           aria-label={group.title}
           hidden={open !== group.title}
+          style={image ? { '--dept-photo': `url("${image}")` } : undefined}
         >
           <div className="csm-panel-head">
             <div>
@@ -100,7 +100,9 @@ export default function CentreServiceMenu({ groups = [], centre = '' }) {
             {group.items.map((d) => (
               <li key={d.name}>
                 <a href={d.href} className="csm-dept" title={d.description || undefined}>
-                  <SpecialityIcon name={d.name} icon={icons.get(d.name)} />
+                  <span className="csm-badge" aria-hidden="true">
+                    <span className="dept-ico" style={{ '--ico': `url(${specialityIconUrl(d.name, icons.get(d.name))})` }} />
+                  </span>
                   <span>{d.name}</span>
                   <svg className="csm-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
                 </a>
