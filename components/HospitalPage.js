@@ -156,14 +156,13 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       </section>
 
-      {/* Departments menu (or, for other centres, the contact strip) */}
-      <div className="container">
-        {menuGroups.length ? (
+      {/* Departments menu under the banner (Kochi); every centre's address,
+          numbers and map are in the Visit us section near the end */}
+      {menuGroups.length > 0 && (
+        <div className="container">
           <CentreServiceMenu groups={menuGroups} centre={name} />
-        ) : (
-          <ContactDetails loc={loc} phones={phones} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Campaign banner, set per centre in the admin portal */}
       <PromoBanner slides={promoSlides(loc, 'promo')} label={`Kinder ${loc.name} announcements`} />
@@ -398,8 +397,8 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </section>
       )}
 
-      {/* Visit us: where the centre is, for centres whose top slot holds the departments menu */}
-      {menuGroups.length > 0 && (
+      {/* Visit us: where the centre is, with its numbers, email and map */}
+      {(loc.address || loc.phone || loc.email) && (
         <section className="hosp-visit" id="location">
           <div className="container">
             <div className="hosp-visit-card">
@@ -408,8 +407,18 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                 <h2 className="section-title">Find <em>{name}</em></h2>
                 <ContactDetails loc={loc} phones={phones} className="hosp-visit-details" links={false} />
                 <div className="hosp-visit-actions">
-                  {loc.mapUrl && <a className="btn btn-primary" href={loc.mapUrl} target="_blank" rel="noopener">Get directions →</a>}
+                  {(loc.mapUrl || loc.address) && (
+                    <a className="btn btn-primary" target="_blank" rel="noopener"
+                      href={loc.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name}, ${loc.address}`)}`}>
+                      Get directions →
+                    </a>
+                  )}
                   {loc.phone && <a className="btn btn-soft" href={tel(loc.phone)}>Call {loc.phone}</a>}
+                  {loc.website && (
+                    <a className="hosp-visit-web" href={loc.website} target="_blank" rel="noopener">
+                      {loc.websiteLabel || 'Official website →'}
+                    </a>
+                  )}
                 </div>
               </div>
               {loc.address && (
