@@ -56,7 +56,7 @@ export default function KochiCarePage({ page, content, loc, hospitalSlug }) {
       <a className={styles.back} href={home}><span aria-hidden="true">←</span> Back to {centre}</a>
       <nav aria-label="Breadcrumb" className={styles.crumbs}><a href={home}>{centre}</a><span aria-hidden="true"> / </span><a href={`${home}#care`}>Our care</a><span aria-hidden="true"> / </span><span aria-current="page">{page.title}</span></nav>
       <span className="section-eyebrow">KINDER HOSPITAL · {String(name).toUpperCase()}</span><h1>{page.title}</h1><p>{page.excerpt}</p>
-      <div className={styles.actions}><a href={phone ? `tel:${phone}` : '/contact'} className="btn btn-primary">Contact the {name} care team →</a><a href={slug ? `${home}#doctors` : `/doctors?hospital=${encodeURIComponent(name)}`} className={styles.more}>Find a doctor →</a></div>
+      <div className={styles.actions}><a href={phone ? `tel:${phone}` : '/contact'} className="btn btn-primary">Contact the {name} care team →</a><a href={slug ? `${home}#doctors` : `/doctors?hospital=${encodeURIComponent(name)}`} className={styles.more}>Find doctors →</a></div>
     </div></header>
     <div className={`container ${styles.layout}`}>
       <aside className={styles.sidebar}><nav aria-label="On this page"><strong>On this page</strong>{sections.map((s) => <a key={s.id} href={`#${s.id}`}>{s.title}</a>)}</nav>

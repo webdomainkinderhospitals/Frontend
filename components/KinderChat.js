@@ -35,7 +35,7 @@ const SYNONYMS = [
 ];
 
 const CHIPS = [
-  'Find a doctor',
+  'Find doctors',
   'Our services',
   'Our hospitals',
   'Health packages',
@@ -65,7 +65,7 @@ function buildReply(text, content) {
   // 2. Greetings / thanks.
   if (/^(hi|hii+|hello|hey|good (morning|afternoon|evening)|namaste|vanakkam)\b/.test(q)) {
     return reply(
-      `Hello! Welcome to ${settings.siteName || 'Kinder Hospitals'} — kindness at the heart of every tiny heartbeat. I can help you find a doctor, explore our services and hospitals, or book an appointment. What would you like to know?`
+      `Hello! Welcome to ${settings.siteName || 'Kinder Hospitals'} — kindness at the heart of every tiny heartbeat. I can help you find doctors, explore our services and hospitals, or book an appointment. What would you like to know?`
     );
   }
   if (/thank|thanks|thx/.test(q)) {

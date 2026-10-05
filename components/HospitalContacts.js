@@ -67,7 +67,7 @@ function CallbackForm({ contact, onDone }) {
   );
 }
 
-// The header's "Contact a hospital" control: every hospital's number and
+// The header's "Contact our hospitals" control: every hospital's number and
 // email, from Site Settings → Hospital contact numbers, each with a
 // call-back request that goes to the admin portal.
 export default function HospitalContacts({ text = '' }) {
@@ -94,7 +94,7 @@ export default function HospitalContacts({ text = '' }) {
         onClick={() => setOpen((v) => !v)}>
         <span className="helpline-icon"><PhoneIcon /></span>
         <span className="helpline-text">
-          <strong>Contact a hospital <span className="hc-caret" aria-hidden="true">▾</span></strong>
+          <strong>Contact our hospitals <span className="hc-caret" aria-hidden="true">▾</span></strong>
           <span>{contacts.map((c) => c.short.replace(/\s*&.*$/, '')).join(' · ')}</span>
         </span>
       </button>
