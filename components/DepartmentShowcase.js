@@ -66,8 +66,9 @@ export default function DepartmentShowcase({ groups = [], centre = '', image = '
               {g.items.map((d) => (
                 <li key={d.name}>
                   <a className="dept-item" href={d.href} title={d.description || undefined}>
-                    <span className="dept-ico" aria-hidden="true"
-                      style={{ '--ico': `url(${specialityIconUrl(d.name, icons.get(d.name))})` }} />
+                    <span className="dept-badge" aria-hidden="true">
+                      <span className="dept-ico" style={{ '--ico': `url(${specialityIconUrl(d.name, icons.get(d.name))})` }} />
+                    </span>
                     <span className="dept-name">{d.name}</span>
                   </a>
                 </li>
