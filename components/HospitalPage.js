@@ -130,7 +130,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
       {topFirst && (
         <div className="hosp-top">
           <div className="container">
-            <CentreServiceMenu groups={menuGroups} centre={name} />
+            <CentreServiceMenu groups={menuGroups} centre={name} image={hero || ''} />
           </div>
           {campaign}
         </div>
