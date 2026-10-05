@@ -5121,3 +5121,10 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
   .dropdown:not(.mega) > a:hover, .mega-col a.mega-spec:hover, .hospitals-panel .hospital-card:hover,
   .hospitals-panel .hospital-card:hover .hospital-img { transform: none !important; }
 }
+.hosp-visit-actions { align-items: center; }
+.hosp-visit-web {
+  font-weight: 700; color: var(--primary); text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat;
+  background-position: 0 100%; background-size: 0 1px; transition: background-size .28s ease, color .2s ease;
+}
+.hosp-visit-web:hover, .hosp-visit-web:focus-visible { color: var(--primary-dark); background-size: 100% 1px; }
