@@ -4724,7 +4724,7 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 @media (min-width: 1025px) and (max-width: 1599px) {
   .subsite-header-in { gap: 12px; }
   .subsite-nav { gap: 0; }
-  .subsite-nav a, .subsite-nav-btn { padding: 9px 9px; font-size: 13.5px; }
+  .subsite-nav a, .subsite-nav-btn { padding: 9px 8px; font-size: 13.5px; }
 }
 @media (min-width: 1025px) { .subsite-nav .nav-ico { display: none; } .subsite-clinic-ico .nav-ico { display: block !important; } }
 /* The logo already leads home, so small laptops drop the Home link. */
@@ -4780,3 +4780,6 @@ a:hover .spec-3d, a:focus-visible .spec-3d, summary:hover .spec-3d, summary:focu
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.3) !important;
 }
 @media (max-width: 640px) { .page-hero .spec-3d.page-hero-icon { --tile: 52px; } .page-hero-head { gap: 12px; } }
+/* Laptop widths: the accreditation emblem also sits in the banner below, so the header drops its copy to keep the menu on one line */
+@media (min-width: 1025px) and (max-width: 1439px) { .subsite-brand .subsite-emblem { display: none; } }
+@media (min-width: 1025px) and (max-width: 1199px) { .subsite-brand-text strong { font-size: 16px; } .subsite-logo { height: 40px; } }

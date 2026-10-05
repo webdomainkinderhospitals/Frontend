@@ -4,8 +4,8 @@ import { composedProfile, profileText, profileLead, hasMoreProfile } from '../li
 
 test('a doctor without a profile gets one factual sentence', () => {
   assert.equal(
-    composedProfile({ name: 'Dr. Rekha B Nair', designation: 'Consultant', speciality: 'Anaesthesiology & Critical Care', bio: 'MBBS, DA, DNB' }, 'Kinder Hospital Kochi'),
-    'Dr. Rekha B Nair is a Consultant in Anaesthesiology & Critical Care at Kinder Hospital Kochi. Qualifications: MBBS, DA, DNB.'
+    composedProfile({ name: 'Dr. Rekha B Nair', designation: 'Consultant', speciality: 'Anaesthesiology & Critical Care', bio: 'MBBS, DA, DNB' }, 'Kinder Hospitals Kochi'),
+    'Dr. Rekha B Nair is a Consultant in Anaesthesiology & Critical Care at Kinder Hospitals Kochi. Qualifications: MBBS, DA, DNB.'
   );
   assert.equal(
     composedProfile({ name: 'Dr. Bipin Johny', speciality: 'Nephrology', bio: 'MBBS, MD, DM (Nephrology)' }),
