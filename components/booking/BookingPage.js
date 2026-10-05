@@ -3,7 +3,7 @@
 import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { initials } from '@/components/DoctorCard';
-import { TIME_SLOTS, WEEKDAY_INITIALS, bookingMonth, dayInfo, monthShort, normalisePhone, rangeGrid, rangeTitle } from '@/lib/booking.mjs';
+import { TIME_SLOTS, WEEKDAY_INITIALS, bookingMonth, dayInfo, monthGrid, monthShort, monthTitle, normalisePhone } from '@/lib/booking.mjs';
 import { sendEnquiry } from '@/lib/enquiries.mjs';
 import { cardSummary, profileText, tidyQualifications } from '@/lib/doctor-profile.mjs';
 import ContentBody from '@/components/ContentBody';
@@ -29,94 +29,58 @@ const ICONS = {
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
 };
 
-// A styled dropdown for the booking choices (preferred day and time).
-//   options  [{ value, label }]; placeholder is the empty choice
-//   groups   [{ label, options }] shown as titled groups after `options`
-function ChoiceSelect({ id, options = [], groups = [], value, onChange, label, placeholder, icon = 'calendar', invalid = false, describedBy, placeholderSelectable = false }) {
-  return (
-    <span className={`bk-day${invalid ? ' is-invalid' : ''}`}>
-      <select
-        id={id}
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label={label}
-        aria-invalid={invalid || undefined}
-        aria-describedby={describedBy}
-        className={value ? undefined : 'is-empty'}
-      >
-        <option value="" disabled={!placeholderSelectable}>{placeholder}</option>
-        {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        {groups.map((g) => (
-          <optgroup key={g.label} label={g.label}>
-            {g.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </optgroup>
-        ))}
-      </select>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        {ICONS[icon]}
-      </svg>
-    </span>
-  );
-}
-
-// Preferred time: "Any time" (the empty choice) or a half-hour slot, grouped
-// into morning, afternoon and evening.
-const TIME_GROUPS = TIME_SLOTS.map((g) => ({ label: g.part, options: g.slots.map((t) => ({ value: t, label: t })) }));
-
 const isoOf = (d) => dayInfo(d).iso;
+const ymOf = (iso) => ({ y: +iso.slice(0, 4), m: +iso.slice(5, 7) - 1 });
+const ymKey = ({ y, m }) => y * 12 + m;
+const dateOf = (iso) => new Date(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10));
 
-// The preferred day as a calendar of the next 30 days, all on one screen in
-// whole weeks (Sunday first). `dates` are the days that can be asked for
-// (Sundays excepted); the other days are shown but cannot be picked. On a
-// doctor's card the calendar floats over the page (the card clips anything
-// that overflows it); in the booking form it opens in place.
-function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = false, describedBy, inline = false }) {
+// A panel that opens from a field: on a doctor's card it floats over the
+// page (the card clips anything that overflows it), placed below the field
+// or scrolled into view, never under the site's sticky header; in the
+// booking form it opens in place. Escape and a click outside close it.
+function usePopover({ inline = false, width = 340 } = {}) {
   const [open, setOpen] = useState(false);
-  const allowed = useMemo(() => new Map(dates.map((d) => [d.iso, d])), [dates]);
-  const first = dates[0]?.iso;
-  const last = dates[dates.length - 1]?.iso;
-  const weeks = useMemo(() => (first ? rangeGrid(first, last) : []), [first, last]);
-  const todayIso = useMemo(() => isoOf(new Date()), [first]); // eslint-disable-line react-hooks/exhaustive-deps
-  const [focusIso, setFocusIso] = useState(value || first);
   const [pos, setPos] = useState(null);
-  // Opened from the keyboard: focus goes straight to a day. Opened with a
-  // pointer, the calendar takes focus itself, so no day looks selected.
+  // Opened from the keyboard, focus moves into the panel at once.
   const [byKeyboard, setByKeyboard] = useState(false);
   const triggerRef = useRef(null);
   const panelRef = useRef(null);
-  const gridRef = useRef(null);
-  const chosen = value ? allowed.get(value) : null;
+  const scrolled = useRef(false); // scrolled once to make room, this opening
 
   const place = useCallback(() => {
     if (inline || !triggerRef.current) return;
     const r = triggerRef.current.getBoundingClientRect();
-    const width = Math.min(340, window.innerWidth - 16);
-    const height = panelRef.current?.offsetHeight || 380;
-    const left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8));
-    // The bottom of whatever header is pinned to the top of the window.
+    const w = Math.min(width, window.innerWidth - 16);
+    const height = panelRef.current?.offsetHeight || 400;
+    const left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
     const headerBottom = Math.max(64, ...[...document.querySelectorAll('header, .hospitals-strip, .subsite-header')]
       .map((el) => el.getBoundingClientRect())
       .filter((b) => b.top < 10 && b.bottom > 0)
       .map((b) => b.bottom));
     const fitsBelow = window.innerHeight - r.bottom >= height + 16;
     const above = r.top - 8 - height;
-    // Below the field when it fits; otherwise scroll just enough for it to
-    // fit below (the scroll then places it); otherwise above the field if
-    // that stays clear of the header.
-    if (!fitsBelow) {
-      const delta = r.bottom + 16 + height - window.innerHeight;
-      if (r.top - delta >= headerBottom + 8) { window.scrollBy(0, delta); return; }
+    // Not enough room below: scroll once, just enough (with a margin), then
+    // place it on the next frames — a scroll event may never come.
+    if (!fitsBelow && !scrolled.current) {
+      const delta = Math.ceil(r.bottom + 24 + height - window.innerHeight);
+      if (delta > 0 && r.top - delta >= headerBottom + 8) {
+        scrolled.current = true;
+        window.scrollBy({ top: delta, behavior: 'instant' });
+        requestAnimationFrame(() => requestAnimationFrame(() => place()));
+        return;
+      }
     }
-    const top = fitsBelow ? r.bottom + 8 : above >= headerBottom + 8 ? above : r.bottom + 8;
+    const roomBelow = window.innerHeight - r.bottom >= height + 8;
+    const top = fitsBelow || roomBelow ? r.bottom + 8 : above >= headerBottom + 8 ? above : r.bottom + 8;
     // Page coordinates: the page wrapper may be transformed, which would
     // make a fixed position relative to it rather than to the window.
-    setPos({ top: top + window.scrollY, left: left + window.scrollX, width });
-  }, [inline]);
+    setPos({ top: top + window.scrollY, left: left + window.scrollX, width: w });
+  }, [inline, width]);
 
   useLayoutEffect(() => { if (open) place(); }, [open, place]);
 
   const close = useCallback((refocus) => {
-    setOpen(false); setPos(null);
+    setOpen(false); setPos(null); scrolled.current = false;
     if (refocus) triggerRef.current?.focus({ preventScroll: true });
   }, []);
 
@@ -125,7 +89,7 @@ function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = 
     const onPointer = (e) => {
       if (!panelRef.current?.contains(e.target) && !triggerRef.current?.contains(e.target)) close(false);
     };
-    // Escape closes the calendar only, not the booking form around it.
+    // Escape closes this panel only, not the booking form around it.
     const onKey = (e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); } };
     document.addEventListener('pointerdown', onPointer);
     document.addEventListener('keydown', onKey, true);
@@ -139,75 +103,112 @@ function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = 
     };
   }, [open, place, close]);
 
-  // Once drawn and placed, keep the measured height in step and move focus
-  // to the chosen (or first) day — without scrolling the page.
-  useEffect(() => {
-    if (!open || !(inline || pos)) return;
-    const day = panelRef.current?.querySelector(`[data-iso="${focusIso}"]`);
-    if (byKeyboard || panelRef.current?.contains(document.activeElement)) day?.focus({ preventScroll: true });
-    else gridRef.current?.focus({ preventScroll: true });
-  }, [open, focusIso, pos, inline, byKeyboard]);
-
   const toggle = (e) => {
     if (open) { close(false); return; }
     setByKeyboard(e.detail === 0);
-    setFocusIso(value || first);
     setOpen(true);
   };
-  const pick = (iso) => { onChange(allowed.get(iso)); close(true); };
+  const ready = open && (inline || pos);
+  const style = inline || !pos ? undefined : { position: 'absolute', top: pos.top, left: pos.left, width: pos.width };
+  const render = (panel) => (inline ? panel : panel && typeof document !== 'undefined' ? createPortal(panel, document.body) : null);
+  return { open, ready, toggle, close, triggerRef, panelRef, byKeyboard, setByKeyboard, style, render, place };
+}
 
-  // Arrow keys move a day or a week, skipping days that cannot be picked.
+const ChevronIcon = ({ dir }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={dir === 'left' ? 'm15 18-6-6 6-6' : 'm9 18 6-6-6-6'} />
+  </svg>
+);
+
+// The preferred day: a month calendar over the next year (tomorrow to 12
+// months ahead), Sunday first. Arrows step a month; the month's name opens a
+// grid of every month in the window. `dates` are the days that can be asked
+// for (Sundays excepted, the outpatient desks are closed); other days show
+// but cannot be picked.
+function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = false, describedBy, inline = false }) {
+  const pop = usePopover({ inline, width: 340 });
+  const allowed = useMemo(() => new Map(dates.map((d) => [d.iso, d])), [dates]);
+  const first = dates[0]?.iso;
+  const last = dates[dates.length - 1]?.iso;
+  const todayIso = useMemo(() => isoOf(new Date()), [first]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [view, setView] = useState(null); // { y, m } of the month shown
+  const [mode, setMode] = useState('days'); // 'days' | 'months'
+  const [focusIso, setFocusIso] = useState(value || first);
+  const gridRef = useRef(null);
+  const chosen = value ? allowed.get(value) : null;
+
+  const months = useMemo(() => {
+    if (!first) return [];
+    const out = [];
+    for (let k = ymKey(ymOf(first)); k <= ymKey(ymOf(last)); k++) out.push({ y: Math.floor(k / 12), m: k % 12 });
+    return out;
+  }, [first, last]);
+
+  const openPicker = (e) => {
+    const at = value || first;
+    if (at && !pop.open) { setView(ymOf(at)); setFocusIso(at); setMode('days'); }
+    pop.toggle(e);
+  };
+
+  // Focus follows the arrow keys onto the focused day, once drawn.
+  useEffect(() => {
+    if (!pop.ready || mode !== 'days') return;
+    const day = pop.panelRef.current?.querySelector(`[data-iso="${focusIso}"]`);
+    if (pop.byKeyboard || pop.panelRef.current?.contains(document.activeElement)) day?.focus({ preventScroll: true });
+    else gridRef.current?.focus({ preventScroll: true });
+  }, [pop.ready, focusIso, view, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!first) return null;
+  const v = view || ymOf(value || first);
+  const canPrev = ymKey(v) > ymKey(ymOf(first));
+  const canNext = ymKey(v) < ymKey(ymOf(last));
+  const shift = (n) => setView((cur) => { const k = ymKey(cur || v) + n; return { y: Math.floor(k / 12), m: k % 12 }; });
+  const pick = (iso) => { onChange(allowed.get(iso)); pop.close(true); };
+
+  // Arrow keys move a day or a week (into the next month when needed),
+  // skipping days that cannot be picked.
   const onGridKey = (e) => {
     const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
     if (!step) return;
     e.preventDefault();
-    // First arrow press from the calendar itself lands on the current day.
     if (e.target === gridRef.current) {
-      setByKeyboard(true);
-      panelRef.current?.querySelector(`[data-iso="${focusIso}"]`)?.focus({ preventScroll: true });
+      pop.setByKeyboard(true);
+      const start = allowed.has(focusIso) && ymKey(ymOf(focusIso)) === ymKey(v) ? focusIso
+        : dates.find((d) => ymKey(ymOf(d.iso)) === ymKey(v))?.iso || focusIso;
+      setFocusIso(start);
+      pop.panelRef.current?.querySelector(`[data-iso="${start}"]`)?.focus({ preventScroll: true });
       return;
     }
-    const at = new Date(+focusIso.slice(0, 4), +focusIso.slice(5, 7) - 1, +focusIso.slice(8, 10));
+    const at = dateOf(focusIso);
     for (let i = 1; i <= 14; i++) {
       const next = isoOf(new Date(at.getFullYear(), at.getMonth(), at.getDate() + step * i));
       if (next < first || next > last) return;
-      if (allowed.has(next)) { setFocusIso(next); return; }
+      if (allowed.has(next)) { setFocusIso(next); setView(ymOf(next)); return; }
     }
   };
 
-  const panel = open && first && (inline || pos) && (
-    <div
-      ref={panelRef}
-      className={`bk-cal${inline ? ' bk-cal-inline' : ''}`}
-      role="dialog"
-      aria-label={`${label}: choose a date`}
-      style={inline ? undefined : { position: 'absolute', top: pos.top, left: pos.left, width: pos.width }}
-    >
-      <div className="bk-cal-head">
-        <strong>{rangeTitle(first, last)}</strong>
-        <span>Next 30 days</span>
-      </div>
-      <table ref={gridRef} tabIndex={-1} className="bk-cal-grid" role="grid" aria-label={rangeTitle(first, last)} onKeyDown={onGridKey}>
+  const days = (
+    <>
+      <table ref={gridRef} tabIndex={-1} className="bk-cal-grid" role="grid" aria-label={monthTitle(v.y, v.m)} onKeyDown={onGridKey}>
         <thead>
           <tr>{WEEKDAY_INITIALS.map((w) => <th key={w} scope="col" abbr={w}>{w}</th>)}</tr>
         </thead>
         <tbody>
-          {weeks.map((week, i) => (
+          {monthGrid(v.y, v.m).map((week, i) => (
             <tr key={i}>
-              {week.map((d) => {
+              {week.map((d, j) => {
+                if (!d) return <td key={j} />;
                 const iso = isoOf(d);
                 const ok = allowed.has(iso);
                 const on = iso === value;
-                const inWindow = iso >= todayIso && iso <= last;
-                // The month's name sits over its 1st, and over the first day shown.
-                const month = d.getDate() === 1 || (i === 0 && d.getDay() === 0) ? monthShort(d.getMonth()) : '';
-                const why = ok ? '' : iso === todayIso ? ', today' : d.getDay() === 0 && inWindow ? ', closed on Sundays' : ', not available';
+                const sunday = d.getDay() === 0 && iso > todayIso && iso <= last;
+                const why = ok ? '' : iso === todayIso ? ', today' : sunday ? ', closed on Sundays' : ', not available';
                 return (
                   <td key={iso}>
                     <button
                       type="button"
                       data-iso={iso}
-                      className={`bk-cal-day${on ? ' is-on' : ''}${d.getDay() === 0 && inWindow ? ' is-sun' : ''}${iso === todayIso ? ' is-today' : ''}${inWindow ? '' : ' is-out'}`}
+                      className={`bk-cal-day${on ? ' is-on' : ''}${sunday ? ' is-sun' : ''}${iso === todayIso ? ' is-today' : ''}`}
                       disabled={!ok}
                       tabIndex={iso === focusIso ? 0 : -1}
                       aria-pressed={on}
@@ -215,7 +216,6 @@ function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = 
                       onClick={() => pick(iso)}
                       onFocus={() => setFocusIso(iso)}
                     >
-                      {month && <small>{month}</small>}
                       {d.getDate()}
                     </button>
                   </td>
@@ -225,33 +225,132 @@ function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = 
           ))}
         </tbody>
       </table>
-      <p className="bk-cal-note">
-        <span className="bk-cal-key bk-cal-key-on" aria-hidden="true" /> Selected
-        <span className="bk-cal-key bk-cal-key-sun" aria-hidden="true" /> Sundays closed
-      </p>
+      <div className="bk-cal-foot">
+        <span className="bk-cal-legend">
+          <span className="bk-cal-key bk-cal-key-today" aria-hidden="true" /> Today
+          <span className="bk-cal-key bk-cal-key-sun" aria-hidden="true" /> Sunday closed
+        </span>
+        <button type="button" className="bk-cal-quick" onClick={() => pick(first)}>
+          {dateOf(first).getTime() - dateOf(todayIso).getTime() === 86400000 ? 'Tomorrow' : 'Earliest'}
+        </button>
+      </div>
+    </>
+  );
+
+  const monthsGrid = (
+    <div className="bk-cal-months" role="listbox" aria-label="Choose a month">
+      {months.map((mo) => {
+        const on = mo.y === v.y && mo.m === v.m;
+        const chosenHere = value && ymKey(ymOf(value)) === ymKey(mo);
+        return (
+          <button
+            key={ymKey(mo)}
+            type="button"
+            role="option"
+            aria-selected={on}
+            className={`bk-cal-month${on ? ' is-on' : ''}${chosenHere ? ' has-pick' : ''}`}
+            onClick={() => { setView(mo); setMode('days'); }}
+          >
+            <strong>{monthShort(mo.m)}</strong>
+            <small>{mo.y}</small>
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const panel = pop.ready && (
+    <div ref={pop.panelRef} className={`bk-cal${inline ? ' bk-cal-inline' : ''}`} role="dialog" aria-label={`${label}: choose a date`} style={pop.style}>
+      <div className="bk-cal-head">
+        <button type="button" className="bk-cal-nav" onClick={() => (mode === 'days' ? shift(-1) : null)}
+          disabled={mode !== 'days' || !canPrev} aria-label="Previous month"><ChevronIcon dir="left" /></button>
+        <button type="button" className="bk-cal-title" aria-expanded={mode === 'months'}
+          onClick={() => setMode((m) => (m === 'days' ? 'months' : 'days'))}>
+          {mode === 'days' ? monthTitle(v.y, v.m) : 'Choose a month'}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+        </button>
+        <button type="button" className="bk-cal-nav" onClick={() => (mode === 'days' ? shift(1) : null)}
+          disabled={mode !== 'days' || !canNext} aria-label="Next month"><ChevronIcon dir="right" /></button>
+      </div>
+      {mode === 'days' ? days : monthsGrid}
     </div>
   );
 
   return (
-    <span className={`bk-day bk-datefield${invalid ? ' is-invalid' : ''}${open ? ' is-open' : ''}`}>
+    <span className={`bk-day bk-datefield${invalid ? ' is-invalid' : ''}${pop.open ? ' is-open' : ''}`}>
       <button
-        ref={triggerRef}
+        ref={pop.triggerRef}
         id={id}
         type="button"
         className={`bk-date-btn${chosen ? '' : ' is-empty'}`}
         aria-haspopup="dialog"
-        aria-expanded={open}
+        aria-expanded={pop.open}
         aria-label={chosen ? `${label}: ${chosen.long}. Change date` : `${label}: ${placeholder}`}
         aria-invalid={invalid || undefined}
         aria-describedby={describedBy}
-        onClick={toggle}
+        onClick={openPicker}
       >
         {chosen ? chosen.label : placeholder}
       </button>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {ICONS.calendar}
       </svg>
-      {inline ? panel : panel && typeof document !== 'undefined' ? createPortal(panel, document.body) : null}
+      {pop.render(panel)}
+    </span>
+  );
+}
+
+// The preferred time: "Any time", or a half-hour slot, laid out as a grid
+// of times under Morning, Afternoon and Evening.
+function TimePicker({ id, value, onChange, label, inline = false }) {
+  const pop = usePopover({ inline, width: 360 });
+
+  useEffect(() => {
+    if (!pop.ready) return;
+    const el = pop.panelRef.current?.querySelector('[aria-pressed="true"]') || pop.panelRef.current?.querySelector('button');
+    if (pop.byKeyboard) el?.focus({ preventScroll: true });
+  }, [pop.ready]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pick = (t) => { onChange(t); pop.close(true); };
+  const panel = pop.ready && (
+    <div ref={pop.panelRef} className={`bk-cal bk-time${inline ? ' bk-cal-inline' : ''}`} role="dialog" aria-label={`${label}: choose a time`} style={pop.style}>
+      <button type="button" className={`bk-time-any${!value ? ' is-on' : ''}`} aria-pressed={!value} onClick={() => pick('')}>
+        <span>Any time</span>
+        <small>Our coordinator will offer the earliest slot</small>
+      </button>
+      {TIME_SLOTS.map((g) => (
+        <div className="bk-time-group" key={g.part} role="group" aria-label={g.part}>
+          <span className="bk-time-part">{g.part}</span>
+          <div className="bk-time-grid">
+            {g.slots.map((t) => (
+              <button key={t} type="button" className={`bk-time-slot${value === t ? ' is-on' : ''}`} aria-pressed={value === t} onClick={() => pick(t)}>
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <span className={`bk-day bk-datefield${pop.open ? ' is-open' : ''}`}>
+      <button
+        ref={pop.triggerRef}
+        id={id}
+        type="button"
+        className={`bk-date-btn${value ? '' : ' is-empty'}`}
+        aria-haspopup="dialog"
+        aria-expanded={pop.open}
+        aria-label={`${label}: ${value || 'Any time'}. Change time`}
+        onClick={pop.toggle}
+      >
+        {value || 'Any time'}
+      </button>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {ICONS.clock}
+      </svg>
+      {pop.render(panel)}
     </span>
   );
 }
@@ -279,7 +378,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   // Dates are the visitor's own local days, so they are worked out in the
   // browser after hydration rather than on the server's clock.
   useEffect(() => {
-    setDates(bookingMonth(new Date()));
+    setDates(bookingMonth(new Date(), 365));
     const params = new URLSearchParams(window.location.search);
     const c = params.get('centre');
     if (c && centres.some((x) => x.slug === c)) setCentreFilter(c);
@@ -415,15 +514,11 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                     </label>
                     <label className="bk-book-field">
                       <span className="bk-book-label">Preferred time</span>
-                      <ChoiceSelect
+                      <TimePicker
                         id={`bk-time-${doc.id}`}
-                        groups={TIME_GROUPS}
-                        value={chosen[doc.id]?.time}
+                        value={chosen[doc.id]?.time || ''}
                         onChange={(time) => choose(doc.id, { time })}
                         label={`Preferred time with ${doc.name}`}
-                        placeholder="Any time"
-                        placeholderSelectable
-                        icon="clock"
                       />
                     </label>
                   </div>
@@ -613,15 +708,12 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
 
             <div className="bk-set">
               <label className="bk-legend" htmlFor="bk-time">Preferred time <small>(optional)</small></label>
-              <ChoiceSelect
+              <TimePicker
                 id="bk-time"
-                groups={TIME_GROUPS}
                 value={time}
                 onChange={(t) => { setTime(t); onChangeTime?.(t); }}
                 label="Preferred time"
-                placeholder="Any time"
-                placeholderSelectable
-                icon="clock"
+                inline
               />
             </div>
 
