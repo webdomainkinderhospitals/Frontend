@@ -4962,3 +4962,162 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
   .dept-band .dept-ico { width: 44px; height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { .dept-badge { transition: none; } .dept-item:hover .dept-badge { transform: none; } }
+
+/* =====================================================================
+   Menu hover system — one premium, consistent language for every menu
+   ---------------------------------------------------------------------
+   • Top-level items (main menu, hospital sub-site menu): no boxes. A
+     faint brand tint, navy text and a blue→red underline that grows from
+     the centre. The current page keeps its underline.
+   • Dropdown items: a soft tint washing in from the left, a slim brand
+     bar on the left edge, the text easing 4px right and an arrow fading in.
+   • Specialities menu: the same tint; the icon tile fills blue and flips.
+   • Hospital cards: lift, photo zoom, a brand bar along the top.
+   • Footer and top-bar links: brighten with an underline drawn left→right.
+   Colour/opacity/transform only (no layout shift), 180–280ms ease-out,
+   visible keyboard focus, and no motion when reduced motion is asked for.
+   ===================================================================== */
+:root {
+  --menu-ease: cubic-bezier(.2, .7, .2, 1);
+  --menu-tint: rgba(47, 98, 176, .07);
+  --menu-line: linear-gradient(90deg, #2F62B0 0%, #4A7BC8 55%, #E62129 100%);
+}
+
+/* ---- Top-level items (desktop) ---- */
+@media (min-width: 1025px) {
+  .header .nav-list > li:not(.nav-cta-wrap) > a,
+  .subsite-nav > a, .subsite-nav-btn {
+    position: relative;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+    background: transparent !important;
+    transition: color .2s var(--menu-ease), background-color .2s var(--menu-ease) !important;
+  }
+  .header .nav-list > li:not(.nav-cta-wrap) > a::after,
+  .subsite-nav > a::after, .subsite-nav-btn::after {
+    content: ""; position: absolute; left: 14%; right: 14%; bottom: 3px; height: 2px; border-radius: 2px;
+    background: var(--menu-line);
+    transform: scaleX(0); transform-origin: center; opacity: 0;
+    transition: transform .28s var(--menu-ease), opacity .2s ease;
+    pointer-events: none;
+  }
+  .header .nav-list > li:not(.nav-cta-wrap) > a:hover, .header .nav-list > li.is-open:not(.nav-cta-wrap) > a, .header .nav-list > li:not(.nav-cta-wrap) > a:focus-visible,
+  .subsite-nav > a:hover, .subsite-nav > a:focus-visible, .subsite-nav-btn:hover, .subsite-clinics.is-open .subsite-nav-btn {
+    color: var(--primary-dark) !important;
+    background: var(--menu-tint) !important;
+  }
+  .header .nav-list > li:not(.nav-cta-wrap) > a:hover::after, .header .nav-list > li.is-open:not(.nav-cta-wrap) > a::after, .header .nav-list > li:not(.nav-cta-wrap) > a:focus-visible::after,
+  .header .nav-list > li.is-active:not(.nav-cta-wrap) > a::after,
+  .subsite-nav > a:hover::after, .subsite-nav > a:focus-visible::after,
+  .subsite-nav-btn:hover::after, .subsite-clinics.is-open .subsite-nav-btn::after {
+    transform: scaleX(1); opacity: 1;
+  }
+  /* The current page: navy, semibold, its underline always shown */
+  .header .nav-list > li.is-active:not(.nav-cta-wrap) > a { color: var(--primary-dark) !important; font-weight: 700; }
+  /* Celebrate Pregnancy keeps its rose highlight */
+  .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a {
+    background: linear-gradient(180deg, #FFF6F6, #FDECEC) !important;
+    box-shadow: inset 0 0 0 1px rgba(230,33,41,.18) !important;
+  }
+  .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a:hover, .header .nav-list > li.nav-pregnancy.is-open:not(.nav-cta-wrap) > a {
+    background: linear-gradient(180deg, #FDECEC, #FADADB) !important; color: #B3151C !important;
+  }
+  /* Carets turn as their menu opens */
+  .header .nav-list > li:not(.nav-cta-wrap) > a .caret { display: inline-block; transition: transform .25s var(--menu-ease); }
+  .header .nav-list > li.is-open:not(.nav-cta-wrap) > a .caret { transform: rotate(180deg); }
+  .header .nav-list > li:not(.nav-cta-wrap) > a:focus-visible, .subsite-nav > a:focus-visible, .subsite-nav-btn:focus-visible {
+    outline: 2px solid var(--primary); outline-offset: 2px;
+  }
+}
+
+/* ---- Dropdown items ---- */
+.dropdown:not(.mega) > a, .dropdown-feature-list a {
+  position: relative; isolation: isolate;
+  border: 0 !important; box-shadow: none !important;
+  background: transparent !important;
+  transition: color .2s var(--menu-ease), transform .25s var(--menu-ease) !important;
+}
+.dropdown:not(.mega) > a::before {
+  content: ""; position: absolute; inset: 2px 0; z-index: -1; border-radius: 10px;
+  background: linear-gradient(90deg, #EAF1FB 0%, rgba(234,241,251,.55) 60%, rgba(234,241,251,0) 100%);
+  box-shadow: inset 3px 0 0 #2F62B0;
+  opacity: 0; transform: scaleX(.92); transform-origin: left center;
+  transition: opacity .22s var(--menu-ease), transform .28s var(--menu-ease);
+}
+.dropdown:not(.mega) > a::after {
+  content: "→"; position: absolute; right: 14px; top: 50%;
+  color: #E62129; font-weight: 700; font-size: 14px;
+  opacity: 0; transform: translate(-6px, -50%);
+  transition: opacity .2s ease, transform .25s var(--menu-ease);
+}
+.dropdown:not(.mega) > a:hover, .dropdown:not(.mega) > a:focus-visible {
+  color: var(--primary-dark) !important; transform: translateX(4px) !important;
+}
+.dropdown:not(.mega) > a:hover::before, .dropdown:not(.mega) > a:focus-visible::before { opacity: 1; transform: none; }
+.dropdown:not(.mega) > a:hover::after, .dropdown:not(.mega) > a:focus-visible::after { opacity: 1; transform: translate(0, -50%); }
+.dropdown:not(.mega) > a:hover strong { color: var(--primary-dark) !important; }
+.dropdown:not(.mega) > a:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; border-radius: 10px; }
+
+/* ---- Specialities menu items ---- */
+.mega-col a.mega-spec {
+  border: 0 !important; box-shadow: none !important;
+  border-radius: 12px !important;
+  transition: background-color .2s var(--menu-ease), color .2s var(--menu-ease), transform .25s var(--menu-ease) !important;
+}
+.mega-col a.mega-spec:hover, .mega-col a.mega-spec:focus-visible {
+  background: linear-gradient(90deg, #EAF1FB, rgba(234,241,251,.35)) !important;
+  color: var(--primary-dark) !important; transform: translateX(3px) !important;
+}
+.mega-col a.mega-spec:hover span:not(.spec-3d):not(.spec-ico) { color: var(--primary-dark); font-weight: 600; }
+
+/* ---- Our Hospitals cards ---- */
+.hospitals-panel .hospital-card {
+  position: relative; overflow: hidden;
+  transition: transform .28s var(--menu-ease), box-shadow .28s var(--menu-ease), border-color .2s ease !important;
+}
+.hospitals-panel .hospital-card::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; z-index: 2;
+  background: var(--menu-line); transform: scaleX(0); transform-origin: left center;
+  transition: transform .3s var(--menu-ease);
+}
+.hospitals-panel .hospital-card .hospital-img { transition: transform .5s var(--menu-ease); }
+.hospitals-panel .hospital-card .hospital-link { display: inline-block; transition: transform .25s var(--menu-ease), color .2s ease; }
+.hospitals-panel .hospital-card:hover, .hospitals-panel .hospital-card:focus-visible {
+  transform: translateY(-4px) !important;
+  border-color: rgba(47,98,176,.35) !important;
+  box-shadow: 0 22px 40px -22px rgba(19,33,59,.55) !important;
+}
+.hospitals-panel .hospital-card:hover::before, .hospitals-panel .hospital-card:focus-visible::before { transform: scaleX(1); }
+.hospitals-panel .hospital-card:hover .hospital-img { transform: scale(1.06); }
+.hospitals-panel .hospital-card:hover .hospital-link { transform: translateX(4px); color: var(--primary-dark); }
+
+/* ---- Footer and top-bar links ---- */
+.footer ul a, .footer-bottom-links a, .top-bar a {
+  text-decoration: none !important;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat; background-position: 0 100%; background-size: 0 1px;
+  transition: color .2s ease, background-size .28s var(--menu-ease) !important;
+}
+.footer ul a:hover, .footer ul a:focus-visible, .footer-bottom-links a:hover, .footer-bottom-links a:focus-visible,
+.top-bar a:hover, .top-bar a:focus-visible {
+  color: #fff !important; background-size: 100% 1px;
+}
+/* The footer's hover arrow sits outside the text, so nothing shifts */
+.footer ul:not(.footer-locations) a { position: relative; }
+.footer ul:not(.footer-locations) a::before {
+  content: "→" !important; position: absolute; left: -18px; top: 50%; margin: 0 !important;
+  color: #FF7378; opacity: 0; transform: translate(-4px, -50%);
+  transition: opacity .2s ease, transform .25s var(--menu-ease);
+}
+.footer ul:not(.footer-locations) a:hover::before, .footer ul:not(.footer-locations) a:focus-visible::before { opacity: 1; transform: translate(0, -50%); }
+.footer ul:not(.footer-locations) a:hover { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .header .nav-list > li > a::after, .subsite-nav > a::after, .subsite-nav-btn::after,
+  .dropdown:not(.mega) > a, .dropdown:not(.mega) > a::before, .dropdown:not(.mega) > a::after,
+  .mega-col a.mega-spec, .hospitals-panel .hospital-card, .hospitals-panel .hospital-card .hospital-img,
+  .footer ul a, .footer-bottom-links a, .top-bar a { transition: none !important; }
+  .dropdown:not(.mega) > a:hover, .mega-col a.mega-spec:hover, .hospitals-panel .hospital-card:hover,
+  .hospitals-panel .hospital-card:hover .hospital-img { transform: none !important; }
+}
