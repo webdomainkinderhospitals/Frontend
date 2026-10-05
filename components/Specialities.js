@@ -1,6 +1,8 @@
 import SpecialityIcon from '@/components/SpecialityIcon';
+import { iconsForList } from '@/lib/speciality-icons.mjs';
 
 export default function Specialities({ specialities = [] }) {
+  const icons = iconsForList(specialities.map((s) => s.name));
   return (
     <section id="specialities">
       <div className="container">
@@ -20,7 +22,7 @@ export default function Specialities({ specialities = [] }) {
         <div className="spec-grid">
           {specialities.map((spec, i) => (
             <div className="spec-card" key={spec.id ?? i} title={spec.description || undefined}>
-              <SpecialityIcon name={spec.name} className="spec-icon" />
+              <SpecialityIcon name={spec.name} icon={icons.get(spec.name)} className="spec-icon" />
               <h4>{spec.name}</h4>
               <span className="spec-arrow">→</span>
             </div>

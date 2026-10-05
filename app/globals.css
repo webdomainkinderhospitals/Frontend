@@ -4841,3 +4841,84 @@ a:hover .spec-3d, a:focus-visible .spec-3d, summary:hover .spec-3d, summary:focu
 .bk-cal-key-sun { background: #fff; box-shadow: inset 0 0 0 1px #E3B9BB; }
 @media (prefers-reduced-motion: reduce) { .bk-cal { animation: none; } }
 .bk-cal-grid:focus { outline: none; }
+
+/* ============ Hospital departments band (the hospital's icon set) ============
+   Large white line icons with their names beneath, on the brand blue with a
+   faint photo of the hospital; one tab per group of departments. */
+.dept-section { padding: 0 !important; }
+.dept-band {
+  position: relative; isolation: isolate; color: #fff; padding: 72px 0 80px;
+  background: linear-gradient(135deg, #13295A 0%, #1B3A73 45%, #2F62B0 100%);
+}
+.dept-band::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .11;
+  background: var(--dept-photo, none) center / cover no-repeat; mix-blend-mode: luminosity;
+}
+.dept-band::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(60% 50% at 85% 0%, rgba(230,33,41,.18), transparent 70%);
+}
+.dept-head { text-align: center; margin-bottom: 26px; }
+.dept-head .section-eyebrow { color: #FFC9CB; }
+.dept-head .section-title { color: #fff; }
+.dept-head .section-title em { color: #BFD4F5 !important; }
+.dept-tabs {
+  display: flex; justify-content: safe center; gap: 4px; margin: 0 auto 44px;
+  border-bottom: 1px solid rgba(255,255,255,.28); max-width: 1100px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.dept-tabs::-webkit-scrollbar { display: none; }
+.dept-tab {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  flex: none; white-space: nowrap;
+  padding: 13px 16px; border: 0; border-radius: 10px 10px 0 0; background: transparent; cursor: pointer;
+  font: 700 13.5px var(--body); letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,.86);
+  transition: background-color .2s ease, color .2s ease;
+}
+.dept-tab small { font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,.16); letter-spacing: 0; }
+.dept-tab:hover { color: #fff; background: rgba(255,255,255,.08); }
+.dept-tab.is-on { background: #fff; color: var(--primary-dark); }
+.dept-tab.is-on small { background: #FDE8E9; color: #C81E26; }
+.dept-tab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.dept-group-title { text-align: center; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #FFC9CB; margin: 0 0 18px; }
+.dept-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 26px 18px;
+}
+.dept-item {
+  display: grid; justify-items: center; gap: 14px; padding: 18px 8px 16px; border-radius: 18px;
+  color: #fff; text-decoration: none; text-align: center;
+  transition: background-color .25s ease, transform .25s ease;
+}
+.dept-ico {
+  display: block; width: 76px; height: 76px; background: currentColor;
+  -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
+}
+.dept-name { font-size: 13.5px; font-weight: 600; line-height: 1.35; letter-spacing: .05em; text-transform: uppercase; max-width: 17ch; }
+.dept-item:hover, .dept-item:focus-visible { background: rgba(255,255,255,.08); }
+.dept-item:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (max-width: 760px) {
+  .dept-band { padding: 52px 0 56px; }
+  .dept-tabs { justify-content: flex-start; overflow-x: auto; scrollbar-width: none; margin-bottom: 28px; }
+  .dept-tab { flex: none; padding: 11px 14px; font-size: 12.5px; }
+  .dept-grid { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 4px 8px; }
+  .dept-item { gap: 10px; padding: 14px 4px 12px; }
+  .dept-ico { width: 50px; height: 50px; }
+  .dept-name { font-size: 11.5px; letter-spacing: .04em; }
+}
+
+/* ---- Icons turn when touched: one smooth flip on hover, focus or tap ---- */
+.spec-ico, .dept-ico {
+  transform: perspective(500px) rotateY(0deg);
+  transition: transform .7s cubic-bezier(.2,.75,.25,1);
+}
+a:hover .spec-ico, a:focus-visible .spec-ico, a:active .spec-ico,
+summary:hover .spec-ico, .quick-item:hover .spec-ico,
+.dept-item:hover .dept-ico, .dept-item:focus-visible .dept-ico, .dept-item:active .dept-ico {
+  transform: perspective(500px) rotateY(360deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spec-ico, .dept-ico { transition: none; }
+  a:hover .spec-ico, a:focus-visible .spec-ico, a:active .spec-ico, summary:hover .spec-ico, .quick-item:hover .spec-ico,
+  .dept-item:hover .dept-ico, .dept-item:focus-visible .dept-ico, .dept-item:active .dept-ico { transform: none; }
+}

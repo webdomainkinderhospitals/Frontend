@@ -1,12 +1,11 @@
 import { KochiCareCards } from '@/components/KochiCare';
-import ContentBody from '@/components/ContentBody';
 import DoctorCard from '@/components/DoctorCard';
 import PromoBanner from '@/components/PromoBanner';
 import { promoSlides } from '@/lib/promo';
 import { isOwnImageOf } from '@/lib/hospital';
 import { centreName } from '@/lib/locations';
 import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
-import SpecialityIcon from '@/components/SpecialityIcon';
+import DepartmentShowcase from '@/components/DepartmentShowcase';
 import CentreServiceMenu from '@/components/CentreServiceMenu';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -117,17 +116,6 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
       items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
     }))
     : [];
-
-  const renderSpeciality = (spec, i) => {
-    const slug = specSlug(spec.name);
-    if (spec.fullDescription) return <details className="editorial-speciality" key={spec.id ?? i}><summary><SpecialityIcon name={spec.name} /><span>{spec.name}</span></summary><ContentBody text={spec.fullDescription} /></details>;
-    return (
-      <a className="svc-card" key={spec.id ?? i} title={spec.description || undefined} href={`${base}/services/${slug}`}>
-        <SpecialityIcon name={spec.name} />
-        <span>{spec.name}</span>
-      </a>
-    );
-  };
 
   return (
     <main>
@@ -255,35 +243,25 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         }]}
       />
 
-      {/* Specialities at this centre */}
+      {/* Departments at this centre: the hospital's icon band, one tab per group */}
       {specialities.length > 0 && (
-        <section id="specialities">
-          <div className="container">
-            <div className="section-head">
-              <div>
+        <section id="specialities" className="dept-section">
+          <DepartmentShowcase
+            centre={name}
+            image={hero || ''}
+            groups={(specialityGroups.length ? specialityGroups : [{ title: '', items: specialities }]).map((g) => ({
+              title: g.title,
+              items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
+            }))}
+            heading={(
+              <div className="dept-head">
                 <span className="section-eyebrow">Departments at {name}</span>
                 <h2 className="section-title">
-                  {centreSpecific ? (
-                    <>Our <em>departments</em></>
-                  ) : (
-                    <>Specialities <em>across our group</em></>
-                  )}
+                  {centreSpecific ? <>Our <em>departments</em></> : <>Specialities <em>across our group</em></>}
                 </h2>
               </div>
-            </div>
-            {specialityGroups.length > 0 ? (
-              <div className="hosp-spec-groups">
-                {specialityGroups.map((group, gi) => (
-                  <div className="hosp-spec-group" key={group.title || gi}>
-                    {group.title && <h3>{group.title}</h3>}
-                    <div className="svc-grid">{group.items.map(renderSpeciality)}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="svc-grid">{specialities.map(renderSpeciality)}</div>
             )}
-          </div>
+          />
         </section>
       )}
 
@@ -419,7 +397,6 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           </div>
         </section>
       )}
-
 
       {/* Visit us: where the centre is, for centres whose top slot holds the departments menu */}
       {menuGroups.length > 0 && (
