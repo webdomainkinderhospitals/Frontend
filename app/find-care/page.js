@@ -5,6 +5,7 @@ import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import { HubCta, whatsapp } from '@/components/Hub';
 import SpecialityIcon from '@/components/SpecialityIcon';
+import { iconsForList } from '@/lib/speciality-icons.mjs';
 
 export const revalidate = 60;
 
@@ -16,6 +17,8 @@ export const metadata = {
 export default async function FindCarePage() {
   const content = await getContent();
   const groups = groupServices(content.specialities);
+  // One page, one set of pictures: no icon repeats across the groups.
+  const icons = iconsForList(groups.flatMap((g) => g.items.map((item) => item.name)));
   const locations = hospitalsOnly(content.locations || []);
   const total = allServices(content.specialities).length;
 
@@ -68,7 +71,7 @@ export default async function FindCarePage() {
                   <div className="svc-grid">
                     {group.items.map((item) => (
                       <a className="svc-card" key={item.name} href={`/services/${slugify(item.name)}`} title={item.description || undefined}>
-                        <SpecialityIcon name={item.name} />
+                        <SpecialityIcon name={item.name} icon={icons.get(item.name)} />
                         <span>{item.name}</span>
                       </a>
                     ))}

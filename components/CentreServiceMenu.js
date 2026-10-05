@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import SpecialityIcon from '@/components/SpecialityIcon';
+import { iconsForList } from '@/lib/speciality-icons.mjs';
 
 // A centre's departments as its headline menu, right under the banner: one
 // large card per group (Kochi: Multispeciality Services, and the Women &
@@ -45,6 +46,8 @@ export default function CentreServiceMenu({ groups = [], centre = '' }) {
   }, [open]);
 
   if (!groups.length) return null;
+  // Both panels belong to one hospital: no icon repeats across them.
+  const icons = iconsForList(groups.flatMap((g) => g.items.map((d) => d.name)));
 
   return (
     <div className="csm" aria-label={`Departments at ${centre}`}>
@@ -97,7 +100,7 @@ export default function CentreServiceMenu({ groups = [], centre = '' }) {
             {group.items.map((d) => (
               <li key={d.name}>
                 <a href={d.href} className="csm-dept" title={d.description || undefined}>
-                  <SpecialityIcon name={d.name} />
+                  <SpecialityIcon name={d.name} icon={icons.get(d.name)} />
                   <span>{d.name}</span>
                   <svg className="csm-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
                 </a>

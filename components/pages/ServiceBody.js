@@ -4,6 +4,7 @@ import DoctorCard from '@/components/DoctorCard';
 import { doctorsForService, slugify } from '@/lib/services';
 import { atLocation, locationsOf } from '@/lib/locations';
 import SpecialityIcon from '@/components/SpecialityIcon';
+import { iconsForList } from '@/lib/speciality-icons.mjs';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -19,6 +20,8 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
   const all = doctorsForService(svc.name, content.doctors);
   const team = loc ? all.filter((d) => atLocation(d, loc.name)) : all;
   const related = svc.group.items.filter((i) => i.name !== svc.name);
+  // The page's own icon comes first; its related specialities each get another.
+  const icons = iconsForList([svc.name, ...related.map((i) => i.name)]);
   const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
 
   return (
@@ -27,7 +30,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         crumb={svc.name}
         eyebrow={loc ? `${svc.group.title} · Kinder ${here}` : svc.group.title}
         titleHtml={esc(svc.name)}
-        icon={<SpecialityIcon name={svc.name} className="page-hero-icon" />}
+        icon={<SpecialityIcon name={svc.name} icon={icons.get(svc.name)} className="page-hero-icon" />}
         homeHref={base || '/'}
         homeLabel={loc ? `Kinder ${here}` : 'Home'}
         trail={[{ label: 'Specialities', href: loc ? `${base}#specialities` : '/services' }]}
@@ -108,7 +111,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
                   href={`${base}/services/${slugify(item.name)}`}
                   title={item.description || undefined}
                 >
-                  <SpecialityIcon name={item.name} />
+                  <SpecialityIcon name={item.name} icon={icons.get(item.name)} />
                   <span>{item.name}</span>
                 </a>
               ))}

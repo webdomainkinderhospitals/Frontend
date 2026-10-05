@@ -7,6 +7,7 @@ import { siteTree } from '@/lib/site-tree';
 import { centreName, hospitalsOnly, slugOfLocation } from '@/lib/locations';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
+import { iconsForList } from '@/lib/speciality-icons.mjs';
 import NavIcon from '@/components/NavIcon';
 import HospitalContacts from '@/components/HospitalContacts';
 import { parseContacts } from '@/lib/enquiries.mjs';
@@ -40,6 +41,11 @@ export default function Header({ settings, locations: allLocations = [], special
   const features = kochiFeaturePages(pages, 'Kochi');
   const premium = features.find((f) => f.group === 'Premium Birthing Centre');
   const serviceGroups = groupServices(specialities);
+  // The Specialities menu shows its columns side by side, so no icon repeats across them.
+  const megaIcons = iconsForList([
+    ...serviceGroups.slice(0, 3).flatMap((g) => g.items.slice(0, 8)),
+    ...(serviceGroups[3]?.items.slice(0, 9) || []),
+  ].map((item) => item.name));
   // Menus are built from the agreed site tree, so the navigation cannot drift
   // away from the architecture.
   const tree = siteTree(locations);
@@ -212,14 +218,14 @@ export default function Header({ settings, locations: allLocations = [], special
                     <div className="mega-col" key={group.id}>
                       <h6>{group.title}</h6>
                       {group.items.slice(0, 8).map((item) => (
-                        <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} /><span>{item.name}</span></a>
+                        <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} icon={megaIcons.get(item.name)} /><span>{item.name}</span></a>
                       ))}
                     </div>
                   ))}
                   <div className="mega-col mega-feature">
                     <h6>{serviceGroups[3].title}</h6>
                     {serviceGroups[3].items.slice(0, 9).map((item) => (
-                      <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} /><span>{item.name}</span></a>
+                      <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} icon={megaIcons.get(item.name)} /><span>{item.name}</span></a>
                     ))}
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
