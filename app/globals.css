@@ -5128,3 +5128,20 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
   background-position: 0 100%; background-size: 0 1px; transition: background-size .28s ease, color .2s ease;
 }
 .hosp-visit-web:hover, .hosp-visit-web:focus-visible { color: var(--primary-dark); background-size: 100% 1px; }
+
+/* Kinder Maa on the chat launcher: a soft float, and every few seconds a
+   friendly tilt, as if she is waving hello. Still for reduced motion. */
+@keyframes kcMaaHello {
+  0%, 62%, 100% { transform: translateY(0) rotate(0deg); }
+  8%  { transform: translateY(-3px) rotate(-6deg); }
+  16% { transform: translateY(-3px) rotate(5deg); }
+  24% { transform: translateY(-2px) rotate(-4deg); }
+  32% { transform: translateY(0) rotate(0deg); }
+  46% { transform: translateY(-3px) rotate(0deg); }
+}
+.kc-launcher .kc-bot-icon {
+  transform-origin: 50% 88%;
+  animation: kcMaaHello 5.5s ease-in-out 1.2s infinite;
+}
+.kc-launcher:hover .kc-bot-icon { animation-duration: 2.2s; }
+@media (prefers-reduced-motion: reduce) { .kc-launcher .kc-bot-icon { animation: none !important; } }
