@@ -1,46 +1,51 @@
-import SpecialityIcon from '@/components/SpecialityIcon';
+import { specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
-// [title, text, page it opens, icon from the hospital's icon set]
+// The homepage's signature services, in the same deep-blue band as a
+// hospital's departments: each icon in a glass badge with the logo's red dot,
+// turning white with the brand colours when hovered or tapped.
+//
+// [title, one line about it, page it opens, icon from the hospital's icon set]
 const SERVICES = [
-  ['Obstetrics', 'From your first scan to delivery — expert obstetric care backed by fetal medicine and high-risk pregnancy management.', '/services/obstetrics', 'gynaecology'],
-  ['Maternity', 'Birth-friendly labour suites, painless delivery options, and a Kinder Jananimitra package designed for joyful motherhood.', '/services/maternity', 'paediatrics'],
-  ['Infertility & IVF', 'ART-certified IVF lab offering the full spectrum — IVF, IUI, ICSI — with affordable packages and high success rates.', '/services/ivf', 'reproductive-medicine'],
-  ['Neonatology', 'Level III NICU with neonatal transport — gentle, expert care for premature and critically ill newborns.', '/services/neonatology', 'neonatology'],
-  ['Paediatrics', 'From routine vaccinations to PICU care, paediatric surgery, and specialist referrals — your child in safe hands.', '/services/paediatrics', 'paediatric-surgery'],
-  ['Gynaecology & Laparoscopy', "Minimally invasive gynaecological surgery, women's health screening, and post-menopausal care.", '/services/gynecology-and-laparoscopic-surgery', 'gynaecological-oncology'],
-  ['Fetal Medicine', 'Advanced foetal scanning, anomaly detection, and counselling — peace of mind through every trimester.', '/services/fetal-medicine', 'fetomaternal-medicine'],
-  ['Plastic & Cosmetic Surgery', 'Reconstructive and cosmetic procedures — from post-natal recovery to aesthetic enhancements.', '/services/plastic-and-cosmetic-surgery', 'plastic-surgery'],
-  ['24/7 Emergency & Diagnostics', 'Round-the-clock emergency, ambulance services, and advanced diagnostics — accessible whenever you need them.', '/contact', 'emergency-medicine'],
+  ['Obstetrics', 'First scan to delivery, with fetal medicine and high-risk pregnancy care', '/services/obstetrics', 'gynaecology'],
+  ['Maternity', 'Birth-friendly labour suites and painless delivery options', '/services/maternity', 'mother-child'],
+  ['Infertility & IVF', 'ART-certified IVF lab — IVF, IUI and ICSI', '/services/ivf', 'reproductive-medicine'],
+  ['Neonatology', 'Level III NICU with neonatal transport', '/services/neonatology', 'neonatology'],
+  ['Paediatrics', 'From vaccinations to PICU care and paediatric surgery', '/services/paediatrics', 'paediatrics'],
+  ['Gynaecology & Laparoscopy', "Minimally invasive surgery and women's health", '/services/gynecology-and-laparoscopic-surgery', 'womens-health'],
+  ['Fetal Medicine', 'Advanced fetal scans, anomaly detection and counselling', '/services/fetal-medicine', 'fetomaternal-medicine'],
+  ['Plastic & Cosmetic Surgery', 'Reconstructive and aesthetic procedures', '/services/plastic-and-cosmetic-surgery', 'plastic-surgery'],
+  ['24/7 Emergency & Diagnostics', 'Round-the-clock emergency, ambulance and diagnostics', '/contact', 'emergency-medicine'],
 ];
 
 export default function CoeGrid() {
   return (
-    <section id="services">
-      <div className="container">
-        <div className="section-head">
-          <div>
-            <span className="section-eyebrow">Our Services</span>
-            <h2 className="section-title">
-              Comprehensive care, <em>delivered with kindness</em>
-            </h2>
-            <p className="section-intro">
-              Nine signature services where Kinder has built deep expertise — from your first ANC
+    <section id="services" className="dept-section coe-section">
+      <div className="dept-band coe-band">
+        <div className="container dept-band-in">
+          <div className="dept-head">
+            <span className="section-eyebrow">Our Specialities</span>
+            <h2 className="section-title">Comprehensive care, <em>delivered with kindness</em></h2>
+            <p className="coe-lead">
+              Nine signature services where Kinder has built deep expertise — from your first antenatal
               visit to your child&apos;s first steps, and everything in between.
             </p>
           </div>
-          <a href="/services" className="view-all">View All Services →</a>
-        </div>
-        <div className="coe-grid">
-          {SERVICES.map(([title, text, href, icon]) => (
-            <a className="coe-card" href={href} key={title} aria-label={`${title} — know more`}>
-              <div className="coe-content">
-                <SpecialityIcon icon={icon} name={title} className="coe-icon" />
-                <h3>{title}</h3>
-                <p>{text}</p>
-                <span className="coe-more">Know More →</span>
-              </div>
-            </a>
-          ))}
+          <ul className="coe-badges">
+            {SERVICES.map(([title, text, href, icon]) => (
+              <li key={title}>
+                <a className="dept-item coe-item" href={href}>
+                  <span className="dept-badge" aria-hidden="true">
+                    <span className="dept-ico" style={{ '--ico': `url(${specialityIconUrl(title, icon)})` }} />
+                  </span>
+                  <span className="dept-name">{title}</span>
+                  <span className="coe-text">{text}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="coe-actions">
+            <a href="/services" className="coe-all">View all specialities <span aria-hidden="true">→</span></a>
+          </div>
         </div>
       </div>
     </section>
