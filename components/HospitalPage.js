@@ -1,3 +1,5 @@
+import CelebratePregnancy from './CelebratePregnancy';
+import PremiumBirthingCentre from './PremiumBirthingCentre';
 import { KochiCareCards } from '@/components/KochiCare';
 import DoctorCard from '@/components/DoctorCard';
 import PromoBanner from '@/components/PromoBanner';
@@ -88,7 +90,7 @@ function ContactDetails({ loc, phones, className = 'hosp-contact-bar', links = t
   );
 }
 
-export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings, pregnancyClubHref = '' }) {
+export default function HospitalPage({ loc, hospitalSlug, carePages = [], specialities = [], centreSpecific = true, servicePages = [], doctors = [], procedures = [], testimonials = [], news = [], settings, pregnancyClubHref = '', featurePages = [] }) {
   const highlights = lines(loc.highlights).map(splitHighlight);
   const about = lines(loc.description);
   const hero = loc.heroImageUrl || loc.imageUrl;
@@ -175,6 +177,13 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
           Kochi); every centre's address, numbers and map are in the Visit us
           section near the end */}
       {!topFirst && campaign}
+
+      {/* Kochi's Celebrate Pregnancy and Premium Birthing Centre, set in the
+          admin portal */}
+      {isKochi && <>
+        <CelebratePregnancy pages={featurePages} settings={settings} scope="kochi" />
+        <PremiumBirthingCentre pages={featurePages} settings={settings} scope="kochi" />
+      </>}
 
       {/* About + highlights */}
       <section id="about">
