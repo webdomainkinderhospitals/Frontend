@@ -11,6 +11,7 @@ import PromoBanner from '@/components/PromoBanner';
 import { promoSlides } from '@/lib/promo';
 import Stats from '@/components/Stats';
 import CelebratePregnancy from '@/components/CelebratePregnancy';
+import PremiumBirthingCentre from '@/components/PremiumBirthingCentre';
 import CoeGrid from '@/components/CoeGrid';
 import Doctors from '@/components/Doctors';
 import Procedures from '@/components/Procedures';
@@ -47,7 +48,8 @@ export default async function HomePage() {
         settings={settings}
         hospitals={hospitals.map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
       />
-      <CelebratePregnancy pages={content.pages} />
+      <CelebratePregnancy pages={content.pages} settings={settings} />
+      <PremiumBirthingCentre pages={content.pages} settings={settings} />
       <CoeGrid />
       <Doctors doctors={doctors} locations={hospitals} />
       <Procedures procedures={procedures} />
