@@ -3719,15 +3719,15 @@ body{ overflow-x: clip; }
 
 /* ---- Quick bar: brand icon tiles (same family as the speciality tiles) ---- */
 .quick-icon {
-  position: relative; display: grid; place-items: center;
-  background: #EEF3FB !important; color: #1B3A73 !important;
+  position: relative; display: grid; place-items: center; --paint: var(--icon-paint);
+  background: var(--icon-tile) !important; color: #1B3A73 !important;
   border-radius: 14px !important;
-  box-shadow: inset 0 0 0 1px #D6E1F2 !important;
+  box-shadow: inset 0 0 0 1px #D9E3F2, inset 0 1px 0 #fff, 0 6px 14px -9px rgba(27,58,115,.45) !important;
   transition: background-color .2s ease, color .2s ease, box-shadow .2s ease !important;
 }
 .quick-icon .spec-ico { width: 72%; height: 72%; }
 .quick-item:hover .quick-icon, .quick-item:focus-visible .quick-icon {
-  background: #2F62B0 !important; color: #fff !important;
+  --paint: #fff; background: var(--icon-tile-on) !important; color: #fff !important;
   box-shadow: inset 0 0 0 1px #2F62B0, 0 8px 18px -10px rgba(27,58,115,.7) !important;
 }
 .quick-item { transition: background .25s ease, box-shadow .25s ease, transform .25s ease !important; }
@@ -4731,51 +4731,59 @@ h1 em, h2 em, h3 em, h4 em, .hero-title em, .section-title em, .page-hero-title 
 @media (min-width: 1025px) and (max-width: 1199px) { .subsite-nav > a.subsite-nav-home { display: none; } }
 
 /* ============ Speciality icons — the hospital's own icon set ============
-   One calm tile everywhere: a light brand-blue surface with a navy icon,
-   turning solid brand blue when its link is hovered or focused. The icon
-   is the client's artwork (public/icons/specialities), drawn as a mask in
-   currentColor so it takes the tile's colour. */
+   The icon is painted in the logo's colours: deep blue into logo blue into
+   the logo's red (the blue child and red mother of the brand mark), on a
+   soft raised tile. When its link is hovered or focused the tile fills with
+   brand blue and the icon turns white. The icon is the client's artwork
+   (public/icons/specialities), drawn as a mask so any paint fills it. */
+:root {
+  --icon-paint: linear-gradient(140deg, #1B3A73 0%, #2F62B0 52%, #E62129 100%);
+  --icon-tile: linear-gradient(160deg, #FFFFFF 0%, #EEF3FB 100%);
+  --icon-tile-on: linear-gradient(150deg, #2F62B0 0%, #1B3A73 100%);
+}
 .spec-3d {
   --tile: 44px;
+  --paint: var(--icon-paint);
   position: relative; display: inline-grid; place-items: center; flex: none;
   width: var(--tile) !important; height: var(--tile) !important;
-  border-radius: calc(var(--tile) * .28) !important;
-  background: #EEF3FB !important; color: #1B3A73 !important;
-  box-shadow: inset 0 0 0 1px #D6E1F2 !important;
+  border-radius: calc(var(--tile) * .3) !important;
+  background: var(--icon-tile) !important; color: #1B3A73 !important;
+  box-shadow: inset 0 0 0 1px #D9E3F2, inset 0 1px 0 #fff, 0 6px 14px -9px rgba(27,58,115,.45) !important;
   transform: none !important;
-  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease !important;
+  transition: box-shadow .25s ease, background-color .25s ease !important;
 }
 .spec-ico {
-  display: block; width: 68%; height: 68%; background: currentColor;
+  display: block; width: 68%; height: 68%; background: var(--paint, currentColor);
   -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
 }
 a:hover .spec-3d, a:focus-visible .spec-3d, summary:hover .spec-3d, summary:focus-visible .spec-3d {
-  background: #2F62B0 !important; color: #fff !important;
-  box-shadow: inset 0 0 0 1px #2F62B0, 0 8px 18px -10px rgba(27,58,115,.7) !important;
+  --paint: #fff;
+  background: var(--icon-tile-on) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 10px 22px -10px rgba(27,58,115,.75), 0 0 0 3px rgba(230,33,41,.12) !important;
 }
 /* Sizes: compact in the menu, roomier on cards */
-.mega-col a.mega-spec .spec-3d { --tile: 32px; }
-.svc-card .spec-3d, .editorial-speciality summary .spec-3d, .csm-dept .spec-3d { --tile: 44px; }
+.mega-col a.mega-spec .spec-3d { --tile: 34px; }
+.svc-card .spec-3d, .editorial-speciality summary .spec-3d, .csm-dept .spec-3d { --tile: 46px; }
 .spec-card .spec-3d { --tile: 60px; }
-/* The homepage card turns blue on hover, so its tile turns white */
-.spec-card:hover .spec-3d { background: #fff !important; color: #1B3A73 !important; box-shadow: none !important; }
+/* The homepage card turns blue on hover, so its tile stays white */
+.spec-card:hover .spec-3d { --paint: var(--icon-paint); background: #fff !important; box-shadow: none !important; }
 @media (prefers-reduced-motion: reduce) { .spec-3d { transition: none !important; } }
 
 /* Home "Our services" cards: the speciality icon sits on the photo in a glass tile */
 .coe-card .spec-3d.coe-icon {
-  --tile: 52px; margin-bottom: 14px;
+  --tile: 52px; margin-bottom: 14px; --paint: #fff;
   background: rgba(255,255,255,.14) !important; color: #fff !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.32) !important;
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .coe-card:hover .spec-3d.coe-icon, .coe-card:focus-visible .spec-3d.coe-icon {
-  background: #fff !important; color: #1B3A73 !important; box-shadow: 0 10px 22px -10px rgba(0,0,0,.5) !important;
+  --paint: var(--icon-paint); background: #fff !important; box-shadow: 0 10px 22px -10px rgba(0,0,0,.5) !important;
 }
 /* A speciality page shows its icon beside the title */
 .page-hero-head { display: flex; align-items: center; gap: 18px; }
 .page-hero-head .page-hero-title { margin: 0; }
 .page-hero .spec-3d.page-hero-icon {
-  --tile: 68px;
+  --tile: 68px; --paint: #fff;
   background: rgba(255,255,255,.12) !important; color: #fff !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.3) !important;
 }
@@ -4922,3 +4930,35 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
   a:hover .spec-ico, a:focus-visible .spec-ico, a:active .spec-ico, summary:hover .spec-ico, .quick-item:hover .spec-ico,
   .dept-item:hover .dept-ico, .dept-item:focus-visible .dept-ico, .dept-item:active .dept-ico { transform: none; }
 }
+
+/* ---- Departments band: each icon in a glowing badge ----
+   A glass circle with a fine ring and the logo's red dot; on hover or focus
+   the badge turns white, lifts, and the icon takes the logo's colours. */
+.dept-badge {
+  position: relative; display: grid; place-items: center;
+  width: 104px; height: 104px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, rgba(255,255,255,.24), rgba(255,255,255,.06) 62%, rgba(255,255,255,.02));
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3), inset 0 10px 18px -12px rgba(255,255,255,.6), 0 16px 30px -18px rgba(5,14,36,.8);
+  transition: background-color .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.2,.75,.25,1);
+}
+.dept-badge::after {
+  content: ""; position: absolute; top: 9px; right: 11px; width: 11px; height: 11px; border-radius: 50%;
+  background: #E62129; box-shadow: 0 0 0 2.5px rgba(255,255,255,.9), 0 4px 10px rgba(230,33,41,.55);
+  transform: scale(.85); transition: transform .3s ease;
+}
+.dept-band .dept-ico { width: 58px; height: 58px; background: #fff; }
+.dept-item:hover .dept-badge, .dept-item:focus-visible .dept-badge {
+  background: #fff;
+  box-shadow: 0 0 0 6px rgba(255,255,255,.14), 0 22px 36px -16px rgba(5,14,36,.85);
+  transform: translateY(-4px);
+}
+.dept-item:hover .dept-badge::after, .dept-item:focus-visible .dept-badge::after { transform: scale(1); }
+.dept-item:hover .dept-ico, .dept-item:focus-visible .dept-ico { background: var(--icon-paint); }
+.dept-item:hover, .dept-item:focus-visible { background: transparent; }
+.dept-item:hover .dept-name { color: #fff; text-shadow: 0 1px 12px rgba(255,255,255,.35); }
+@media (max-width: 760px) {
+  .dept-badge { width: 80px; height: 80px; }
+  .dept-badge::after { top: 6px; right: 8px; width: 9px; height: 9px; }
+  .dept-band .dept-ico { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .dept-badge { transition: none; } .dept-item:hover .dept-badge { transform: none; } }

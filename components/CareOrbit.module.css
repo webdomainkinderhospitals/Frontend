@@ -43,7 +43,7 @@
 .nodeIcon svg { width: 26px; height: 26px; }
 /* The hospital's own speciality icons, drawn in the tile's colour */
 .specIcon {
-  display: block; width: 66%; height: 66%; background: currentColor;
+  display: block; width: 66%; height: 66%; background: var(--icon-paint, currentColor);
   -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
 }
 .nodeLabel {
