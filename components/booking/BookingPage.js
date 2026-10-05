@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { initials } from '@/components/DoctorCard';
-import { TIMES, bookingDates, normalisePhone } from '@/lib/booking.mjs';
+import { TIME_SLOTS, WEEKDAY_INITIALS, bookingMonth, dayInfo, monthShort, normalisePhone, rangeGrid, rangeTitle } from '@/lib/booking.mjs';
 import { sendEnquiry } from '@/lib/enquiries.mjs';
 import { cardSummary, profileText, tidyQualifications } from '@/lib/doctor-profile.mjs';
 import ContentBody from '@/components/ContentBody';
@@ -30,7 +31,8 @@ const ICONS = {
 
 // A styled dropdown for the booking choices (preferred day and time).
 //   options  [{ value, label }]; placeholder is the empty choice
-function ChoiceSelect({ id, options, value, onChange, label, placeholder, icon = 'calendar', invalid = false, describedBy, placeholderSelectable = false }) {
+//   groups   [{ label, options }] shown as titled groups after `options`
+function ChoiceSelect({ id, options = [], groups = [], value, onChange, label, placeholder, icon = 'calendar', invalid = false, describedBy, placeholderSelectable = false }) {
   return (
     <span className={`bk-day${invalid ? ' is-invalid' : ''}`}>
       <select
@@ -44,6 +46,11 @@ function ChoiceSelect({ id, options, value, onChange, label, placeholder, icon =
       >
         <option value="" disabled={!placeholderSelectable}>{placeholder}</option>
         {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        {groups.map((g) => (
+          <optgroup key={g.label} label={g.label}>
+            {g.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </optgroup>
+        ))}
       </select>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {ICONS[icon]}
@@ -52,8 +59,202 @@ function ChoiceSelect({ id, options, value, onChange, label, placeholder, icon =
   );
 }
 
-const dayOptions = (dates) => dates.map((d) => ({ value: d.iso, label: d.long }));
-const TIME_OPTIONS = TIMES.map((t) => ({ value: t, label: t }));
+// Preferred time: "Any time" (the empty choice) or a half-hour slot, grouped
+// into morning, afternoon and evening.
+const TIME_GROUPS = TIME_SLOTS.map((g) => ({ label: g.part, options: g.slots.map((t) => ({ value: t, label: t })) }));
+
+const isoOf = (d) => dayInfo(d).iso;
+
+// The preferred day as a calendar of the next 30 days, all on one screen in
+// whole weeks (Sunday first). `dates` are the days that can be asked for
+// (Sundays excepted); the other days are shown but cannot be picked. On a
+// doctor's card the calendar floats over the page (the card clips anything
+// that overflows it); in the booking form it opens in place.
+function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = false, describedBy, inline = false }) {
+  const [open, setOpen] = useState(false);
+  const allowed = useMemo(() => new Map(dates.map((d) => [d.iso, d])), [dates]);
+  const first = dates[0]?.iso;
+  const last = dates[dates.length - 1]?.iso;
+  const weeks = useMemo(() => (first ? rangeGrid(first, last) : []), [first, last]);
+  const todayIso = useMemo(() => isoOf(new Date()), [first]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [focusIso, setFocusIso] = useState(value || first);
+  const [pos, setPos] = useState(null);
+  // Opened from the keyboard: focus goes straight to a day. Opened with a
+  // pointer, the calendar takes focus itself, so no day looks selected.
+  const [byKeyboard, setByKeyboard] = useState(false);
+  const triggerRef = useRef(null);
+  const panelRef = useRef(null);
+  const gridRef = useRef(null);
+  const chosen = value ? allowed.get(value) : null;
+
+  const place = useCallback(() => {
+    if (inline || !triggerRef.current) return;
+    const r = triggerRef.current.getBoundingClientRect();
+    const width = Math.min(340, window.innerWidth - 16);
+    const height = panelRef.current?.offsetHeight || 380;
+    const left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8));
+    // The bottom of whatever header is pinned to the top of the window.
+    const headerBottom = Math.max(64, ...[...document.querySelectorAll('header, .hospitals-strip, .subsite-header')]
+      .map((el) => el.getBoundingClientRect())
+      .filter((b) => b.top < 10 && b.bottom > 0)
+      .map((b) => b.bottom));
+    const fitsBelow = window.innerHeight - r.bottom >= height + 16;
+    const above = r.top - 8 - height;
+    // Below the field when it fits; otherwise scroll just enough for it to
+    // fit below (the scroll then places it); otherwise above the field if
+    // that stays clear of the header.
+    if (!fitsBelow) {
+      const delta = r.bottom + 16 + height - window.innerHeight;
+      if (r.top - delta >= headerBottom + 8) { window.scrollBy(0, delta); return; }
+    }
+    const top = fitsBelow ? r.bottom + 8 : above >= headerBottom + 8 ? above : r.bottom + 8;
+    // Page coordinates: the page wrapper may be transformed, which would
+    // make a fixed position relative to it rather than to the window.
+    setPos({ top: top + window.scrollY, left: left + window.scrollX, width });
+  }, [inline]);
+
+  useLayoutEffect(() => { if (open) place(); }, [open, place]);
+
+  const close = useCallback((refocus) => {
+    setOpen(false); setPos(null);
+    if (refocus) triggerRef.current?.focus({ preventScroll: true });
+  }, []);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onPointer = (e) => {
+      if (!panelRef.current?.contains(e.target) && !triggerRef.current?.contains(e.target)) close(false);
+    };
+    // Escape closes the calendar only, not the booking form around it.
+    const onKey = (e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); } };
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey, true);
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('keydown', onKey, true);
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+    };
+  }, [open, place, close]);
+
+  // Once drawn and placed, keep the measured height in step and move focus
+  // to the chosen (or first) day — without scrolling the page.
+  useEffect(() => {
+    if (!open || !(inline || pos)) return;
+    const day = panelRef.current?.querySelector(`[data-iso="${focusIso}"]`);
+    if (byKeyboard || panelRef.current?.contains(document.activeElement)) day?.focus({ preventScroll: true });
+    else gridRef.current?.focus({ preventScroll: true });
+  }, [open, focusIso, pos, inline, byKeyboard]);
+
+  const toggle = (e) => {
+    if (open) { close(false); return; }
+    setByKeyboard(e.detail === 0);
+    setFocusIso(value || first);
+    setOpen(true);
+  };
+  const pick = (iso) => { onChange(allowed.get(iso)); close(true); };
+
+  // Arrow keys move a day or a week, skipping days that cannot be picked.
+  const onGridKey = (e) => {
+    const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    // First arrow press from the calendar itself lands on the current day.
+    if (e.target === gridRef.current) {
+      setByKeyboard(true);
+      panelRef.current?.querySelector(`[data-iso="${focusIso}"]`)?.focus({ preventScroll: true });
+      return;
+    }
+    const at = new Date(+focusIso.slice(0, 4), +focusIso.slice(5, 7) - 1, +focusIso.slice(8, 10));
+    for (let i = 1; i <= 14; i++) {
+      const next = isoOf(new Date(at.getFullYear(), at.getMonth(), at.getDate() + step * i));
+      if (next < first || next > last) return;
+      if (allowed.has(next)) { setFocusIso(next); return; }
+    }
+  };
+
+  const panel = open && first && (inline || pos) && (
+    <div
+      ref={panelRef}
+      className={`bk-cal${inline ? ' bk-cal-inline' : ''}`}
+      role="dialog"
+      aria-label={`${label}: choose a date`}
+      style={inline ? undefined : { position: 'absolute', top: pos.top, left: pos.left, width: pos.width }}
+    >
+      <div className="bk-cal-head">
+        <strong>{rangeTitle(first, last)}</strong>
+        <span>Next 30 days</span>
+      </div>
+      <table ref={gridRef} tabIndex={-1} className="bk-cal-grid" role="grid" aria-label={rangeTitle(first, last)} onKeyDown={onGridKey}>
+        <thead>
+          <tr>{WEEKDAY_INITIALS.map((w) => <th key={w} scope="col" abbr={w}>{w}</th>)}</tr>
+        </thead>
+        <tbody>
+          {weeks.map((week, i) => (
+            <tr key={i}>
+              {week.map((d) => {
+                const iso = isoOf(d);
+                const ok = allowed.has(iso);
+                const on = iso === value;
+                const inWindow = iso >= todayIso && iso <= last;
+                // The month's name sits over its 1st, and over the first day shown.
+                const month = d.getDate() === 1 || (i === 0 && d.getDay() === 0) ? monthShort(d.getMonth()) : '';
+                const why = ok ? '' : iso === todayIso ? ', today' : d.getDay() === 0 && inWindow ? ', closed on Sundays' : ', not available';
+                return (
+                  <td key={iso}>
+                    <button
+                      type="button"
+                      data-iso={iso}
+                      className={`bk-cal-day${on ? ' is-on' : ''}${d.getDay() === 0 && inWindow ? ' is-sun' : ''}${iso === todayIso ? ' is-today' : ''}${inWindow ? '' : ' is-out'}`}
+                      disabled={!ok}
+                      tabIndex={iso === focusIso ? 0 : -1}
+                      aria-pressed={on}
+                      aria-label={`${dayInfo(d).long}${why}`}
+                      onClick={() => pick(iso)}
+                      onFocus={() => setFocusIso(iso)}
+                    >
+                      {month && <small>{month}</small>}
+                      {d.getDate()}
+                    </button>
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="bk-cal-note">
+        <span className="bk-cal-key bk-cal-key-on" aria-hidden="true" /> Selected
+        <span className="bk-cal-key bk-cal-key-sun" aria-hidden="true" /> Sundays closed
+      </p>
+    </div>
+  );
+
+  return (
+    <span className={`bk-day bk-datefield${invalid ? ' is-invalid' : ''}${open ? ' is-open' : ''}`}>
+      <button
+        ref={triggerRef}
+        id={id}
+        type="button"
+        className={`bk-date-btn${chosen ? '' : ' is-empty'}`}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-label={chosen ? `${label}: ${chosen.long}. Change date` : `${label}: ${placeholder}`}
+        aria-invalid={invalid || undefined}
+        aria-describedby={describedBy}
+        onClick={toggle}
+      >
+        {chosen ? chosen.label : placeholder}
+      </button>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {ICONS.calendar}
+      </svg>
+      {inline ? panel : panel && typeof document !== 'undefined' ? createPortal(panel, document.body) : null}
+    </span>
+  );
+}
 
 // The appointment request flow shared by /book (every doctor) and a centre's
 // own /hospitals/<slug>/book (that centre's doctors only, in its own chrome).
@@ -78,7 +279,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   // Dates are the visitor's own local days, so they are worked out in the
   // browser after hydration rather than on the server's clock.
   useEffect(() => {
-    setDates(bookingDates(new Date()));
+    setDates(bookingMonth(new Date()));
     const params = new URLSearchParams(window.location.search);
     const c = params.get('centre');
     if (c && centres.some((x) => x.slug === c)) setCentreFilter(c);
@@ -185,7 +386,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                   {!fixedCentre && doc.centres.length > 0 && (
                     <span className="bk-media-centre">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-                      {doc.centres.map((c) => c.title.replace(/^Kinder (Hospital )?/, '')).join(' · ')}
+                      {doc.centres.map((c) => c.title.replace(/^Kinder (Hospitals? )?/, '')).join(' · ')}
                     </span>
                   )}
                 </div>
@@ -203,11 +404,11 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                   <div className="bk-book-row">
                     <label className="bk-book-field">
                       <span className="bk-book-label">Preferred day</span>
-                      <ChoiceSelect
+                      <DatePicker
                         id={`bk-day-${doc.id}`}
-                        options={dayOptions(dates)}
+                        dates={dates}
                         value={chosen[doc.id]?.date?.iso}
-                        onChange={(iso) => choose(doc.id, { date: dates.find((d) => d.iso === iso) || null })}
+                        onChange={(date) => choose(doc.id, { date: date || null })}
                         label={`Preferred day with ${doc.name}`}
                         placeholder="Select day"
                       />
@@ -216,7 +417,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                       <span className="bk-book-label">Preferred time</span>
                       <ChoiceSelect
                         id={`bk-time-${doc.id}`}
-                        options={TIME_OPTIONS}
+                        groups={TIME_GROUPS}
                         value={chosen[doc.id]?.time}
                         onChange={(time) => choose(doc.id, { time })}
                         label={`Preferred time with ${doc.name}`}
@@ -369,7 +570,7 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
             <h3>Request received — thank you, {name.trim().split(' ')[0]}</h3>
             <p>
               Our care team has your request for <strong>{doctor.name}</strong> on <strong>{pick.date.long}</strong>
-              {time ? <> ({time.toLowerCase()})</> : null}. A coordinator will call you on <strong>{normalisePhone(phone)}</strong> to
+              {time ? <> at <strong>{time}</strong></> : null}. A coordinator will call you on <strong>{normalisePhone(phone)}</strong> to
               confirm the appointment time.
             </p>
             <div className="bk-actions">
@@ -396,15 +597,16 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
 
             <div className="bk-set">
               <label className="bk-legend" htmlFor="bk-day">Preferred day <b aria-hidden="true">*</b></label>
-              <ChoiceSelect
+              <DatePicker
                 id="bk-day"
-                options={dayOptions(dates)}
+                dates={dates}
                 value={pick.date?.iso}
-                onChange={(iso) => { onChangeDate(dates.find((d) => d.iso === iso) || null); if (errors.day) setErrors((x) => ({ ...x, day: undefined })); }}
+                onChange={(date) => { onChangeDate(date || null); if (errors.day) setErrors((x) => ({ ...x, day: undefined })); }}
                 label="Preferred day"
                 placeholder="Select a preferred day"
                 invalid={!!errors.day}
                 describedBy={errors.day ? 'bk-day-err' : undefined}
+                inline
               />
               {errors.day && <p id="bk-day-err" className="bk-error" role="alert">{errors.day}</p>}
             </div>
@@ -413,7 +615,7 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
               <label className="bk-legend" htmlFor="bk-time">Preferred time <small>(optional)</small></label>
               <ChoiceSelect
                 id="bk-time"
-                options={TIME_OPTIONS}
+                groups={TIME_GROUPS}
                 value={time}
                 onChange={(t) => { setTime(t); onChangeTime?.(t); }}
                 label="Preferred time"
