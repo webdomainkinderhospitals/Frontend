@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { parseContacts, sendEnquiry } from '../lib/enquiries.mjs';
 
 test('the header contact list reads "Name | Phone | Email" lines', () => {
-  const list = parseContacts('Kinder Hospital Cherthala & Alappuzha | +91 94466 54500 | marketing@kinderhospital.in\\nKinder Hospitals Kollam | +91 79944 45542 | contactus@kinderkollam.com\nBroken line\n | 123 |');
+  const list = parseContacts('Kinder Hospitals Cherthala & Alappuzha | +91 94466 54500 | marketing@kinderhospital.in\\nKinder Hospitals Kollam | +91 79944 45542 | contactus@kinderkollam.com\nBroken line\n | 123 |');
   assert.equal(list.length, 2);
   assert.equal(list[0].tel, 'tel:+919446654500');
   assert.equal(list[0].short, 'Cherthala & Alappuzha');

@@ -16,7 +16,7 @@ export const metadata = {
 const MILESTONES = [
   ['2000', 'Kinder Clinic founded in Singapore — grows into one of its largest paediatric group practices.'],
   ['2011', 'Kinder Cherthala opens: the first NABH-accredited women & children hospital in Alappuzha.'],
-  ['2018', 'Kinder Hospital Kochi opens — a 125-bed multispeciality hospital, now with 35 specialities.'],
+  ['2018', 'Kinder Hospitals Kochi opens — a 125-bed multispeciality hospital, now with 35 specialities.'],
   ['2022', "Kinder Bengaluru opens in Whitefield — now among Bangalore's best-known IVF centres."],
   ['2023', "Kinder Cherthala opens its women's & children's clinic in Alappuzha town."],
   ['Today', '5 centres · 6,00,000+ women treated · 18,000+ births · 1,500+ IVF successes.'],

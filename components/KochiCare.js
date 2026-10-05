@@ -43,7 +43,7 @@ export default function KochiCarePage({ page, content, loc, hospitalSlug }) {
   const slug = hospitalSlug || (location ? slugOfLocation(location) : '');
   const home = slug ? `/hospitals/${slug}` : '/#hospitals';
   const name = location?.name || 'Kochi';
-  const centre = location ? centreName(location) : `Kinder Hospital ${name}`;
+  const centre = location ? centreName(location) : `Kinder Hospitals ${name}`;
   const phone = String(location?.phone || '').replace(/[^+\d]/g, '');
   const sections = careSections(page.body);
   const related = (content.pages || []).filter((p) => isCarePage(p) && p.id !== page.id && p.published !== false && (!location || atLocation(p, location.name)));

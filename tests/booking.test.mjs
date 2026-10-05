@@ -43,12 +43,12 @@ test("requests go to the centre's own WhatsApp, else the group's", () => {
 
 test('the message carries every detail the coordinator needs', () => {
   const msg = bookingMessage({
-    centreName: 'Kinder Hospital Kochi',
+    centreName: 'Kinder Hospitals Kochi',
     doctor: { name: 'Dr. Reshmy R Pillai', speciality: 'Paediatrics' },
     date: { long: 'Tuesday, 29 September 2026' },
     time: 'Morning', patient: '  Anu Joseph ', phone: '+91 98765 43210', type: 'New patient', note: '',
   });
-  assert.match(msg, /^Hello Kinder Hospital Kochi, I would like to book an appointment\./);
+  assert.match(msg, /^Hello Kinder Hospitals Kochi, I would like to book an appointment\./);
   for (const part of ['Doctor: Dr. Reshmy R Pillai — Paediatrics', 'Preferred date: Tuesday, 29 September 2026',
     'Preferred time: Morning', 'Patient name: Anu Joseph', 'Mobile: +91 98765 43210', 'Patient type: New patient'])
     assert.ok(msg.includes(part), part);

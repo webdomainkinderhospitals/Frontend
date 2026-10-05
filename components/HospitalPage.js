@@ -98,7 +98,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   const base = `/hospitals/${hospitalSlug}`;
   const book = `${base}/book`;
   const specialityGroups = groupSpecialities(specialities);
-  // "Kinder Hospital Kochi": the name is set in the display face with the
+  // "Kinder Hospitals Kochi": the name is set in the display face with the
   // place picked out, so split it into its lead-in and the place itself.
   const name = centreName(loc);
   const lead = name.endsWith(loc.name) ? name.slice(0, -loc.name.length).trim() : 'Kinder';
