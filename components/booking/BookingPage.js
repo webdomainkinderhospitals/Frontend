@@ -426,7 +426,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   return (
     <section className="bk">
       <div className="container">
-        <div className="bk-bar" role="search" aria-label="Find a doctor">
+        <div className="bk-bar" role="search" aria-label="Find doctors">
           {!fixedCentre && centres.length > 1 && (
             <label className="bk-field">
               <span>Hospital</span>
@@ -449,7 +449,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Doctor’s name or speciality"
+              placeholder="Search doctors by name or speciality"
               autoComplete="off"
             />
           </label>
