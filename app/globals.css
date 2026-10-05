@@ -5218,10 +5218,45 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
 .bk-dialog .bk-time.bk-cal-inline { max-width: 420px; }
 
 /* Kochi: department menu and campaign banner open the page, above the hospital banner */
-.hosp-top { padding-top: 28px; background: linear-gradient(180deg, #F4F7FD 0%, #fff 100%); }
+/* One spacing step (--top-gap) separates the two cards, the cards from the
+   banner and the banner from the hospital banner below; the cards and the
+   banner share the same edges, corner radius and depth. */
+.hosp-top {
+  --top-gap: clamp(16px, 1.6vw, 24px);
+  --top-radius: 20px;
+  padding: clamp(20px, 2.4vw, 36px) 0 clamp(28px, 3vw, 44px);
+  background:
+    radial-gradient(60% 80% at 0% 0%, rgba(59,111,192,.08), transparent 70%),
+    radial-gradient(50% 70% at 100% 0%, rgba(224,57,63,.06), transparent 70%),
+    linear-gradient(180deg, #F4F7FD 0%, #fff 100%);
+  border-bottom: 1px solid rgba(27,58,115,.06);
+}
 .hosp-top .csm { margin-top: 0; }
-.hosp-top + .hosp-hero { margin-top: 8px; }
-@media (max-width: 900px) { .hosp-top { padding-top: 18px; } .hosp-top .csm { margin-top: 0; } }
+.hosp-top .csm-cards { gap: var(--top-gap); }
+.hosp-top .csm-card {
+  min-height: 116px; padding: 20px 22px 20px 20px; gap: 18px; border-radius: var(--top-radius);
+}
+.hosp-top .csm-icon { width: 58px; height: 58px; border-radius: 16px; }
+.hosp-top .csm-icon svg { width: 28px; height: 28px; }
+.hosp-top .csm-body { gap: 5px; }
+.hosp-top .csm-kicker { font-size: 11px; letter-spacing: .16em; }
+.hosp-top .csm-title { font-size: clamp(19px, 1vw + 12px, 24px); }
+.hosp-top .csm-tag { font-size: 13.5px; text-wrap: balance; }
+.hosp-top .csm-go { width: 40px; height: 40px; }
+.hosp-top .csm-panel { margin-top: var(--top-gap); border-radius: var(--top-radius); }
+.hosp-top > [class*="PromoBanner_promo"] { padding: var(--top-gap) 0 0; }
+.hosp-top [class*="PromoBanner_frame"] {
+  border-radius: var(--top-radius);
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 24px 48px -28px rgba(27,58,115,.45), 0 6px 16px -10px rgba(27,58,115,.25);
+}
+.hosp-top + .hosp-hero { margin-top: 0; }
+@media (max-width: 900px) { .hosp-top .csm { margin-top: 0; } }
+@media (max-width: 560px) {
+  .hosp-top { --top-gap: 12px; --top-radius: 16px; }
+  .hosp-top .csm-card { padding: 16px; gap: 14px; }
+  .hosp-top .csm-icon { width: 48px; height: 48px; border-radius: 14px; }
+  .hosp-top .csm-icon svg { width: 24px; height: 24px; }
+}
 
 /* Main menu: Premium Birthing Centre, a quiet gold accent */
 @media (min-width: 1025px) {
@@ -5230,7 +5265,6 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
   .header .nav-list > li.nav-premium.is-active:not(.nav-cta-wrap) > a { color: #5E430A !important; background: rgba(201,150,40,.10) !important; }
 }
 .nav-premium-mark { color: #C99628; margin-right: 2px; }
-.hosp-top > [class*="PromoBanner_promo"] { padding: 22px 0 30px; }
 .nav-label-short { display: none; }
 @media (min-width: 1025px) and (max-width: 1279px) {
   .nav-premium .nav-label-full { display: none; }
