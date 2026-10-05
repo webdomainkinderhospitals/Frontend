@@ -2,6 +2,7 @@ import { getContent } from '@/lib/api';
 import { groupServices, slugify } from '@/lib/services';
 import { carePageHref, isCarePage } from '@/lib/care-content.mjs';
 import { hospitalSlugForPage } from '@/lib/locations';
+import { KOCHI_FEATURES, kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import { HubTiles, HubProse, HubCta, whatsapp } from '@/components/Hub';
@@ -23,9 +24,19 @@ const JOURNEY = [
 export default async function CelebratePregnancyPage() {
   const content = await getContent();
   const pages = (content.pages || []).filter((p) => p.published !== false);
+  // Kinder Kochi's pregnancy experiences and birthing centre, opened here on the main site.
+  const experiences = kochiFeaturePages(content.pages, 'Kochi', { site: 'main' }).map((f) => ({
+    title: f.label,
+    text: f.page.excerpt,
+    href: f.href,
+    cta: f.group === 'Premium Birthing Centre' ? 'Discover the suites' : 'Explore',
+  }));
 
   // Birthing and maternity content published for any centre.
+  // (The water birth suite and birthing centre are in the experiences above.)
+  const featured = new Set(KOCHI_FEATURES.map((f) => f.slug));
   const birthing = pages
+    .filter((p) => !featured.has(p.slug))
     .filter((p) => isCarePage(p) && /birth|labour|labor|maternity|obstetric|pregnan/i.test(`${p.title} ${p.excerpt}`))
     .map((p) => ({
       title: p.title,
@@ -52,7 +63,13 @@ export default async function CelebratePregnancyPage() {
           intro="From your first scan to your baby's first vaccines — the care, the classes and the people around you at every step."
         />
 
-        <HubTiles id="journey" eyebrow="Your journey" title={<>Care at <em>every stage</em></>} items={JOURNEY} />
+        {experiences.length > 0 && (
+          <HubTiles id="experiences" eyebrow="Kinder experiences" title={<>Celebrations, community &amp; <em>birth choices</em></>}
+            intro="Tharattazhaku, WOW MOM, water birth and our Premium Birthing Centre — at Kinder Hospitals Kochi."
+            items={experiences} />
+        )}
+
+        <HubTiles id="journey" eyebrow="Your journey" title={<>Care at <em>every stage</em></>} items={JOURNEY} soft={experiences.length > 0} />
 
         {birthing.length > 0 && (
           <HubTiles id="birthing" eyebrow="Birthing options" title={<>Where and how <em>you give birth</em></>} soft

@@ -3,7 +3,12 @@ import { careSections, careFaqs } from '@/lib/care-content.mjs';
 import { featureImages } from '@/lib/kochi-features.mjs';
 import styles from './KochiFeaturePage.module.css';
 
-export default function KochiFeaturePage({ page, loc, links = [] }) {
+// One of Kinder Kochi's pregnancy experiences or its birthing centre. On
+// Kochi's own site it links back into that site; on the main site (`main`)
+// it stays on the main site, under Celebrate Pregnancy.
+export default function KochiFeaturePage({ page, loc, links = [], main = false }) {
+  const back = main ? { href: '/celebrate-pregnancy', label: '← Celebrate Pregnancy' } : { href: '/hospitals/kochi', label: '← Kinder Kochi' };
+  const hub = main ? '/celebrate-pregnancy' : '/hospitals/kochi/celebrate-pregnancy';
   const sections = careSections(page.body);
   const images = featureImages(page);
   const cover = page.imageUrl || images[0];
@@ -15,13 +20,13 @@ export default function KochiFeaturePage({ page, loc, links = [] }) {
       <div className={styles.glow} aria-hidden="true" />
       <div className={`container ${styles.heroInner}`}>
         <div className={styles.heroCopy}>
-          <a className={styles.back} href="/hospitals/kochi">← Kinder Kochi</a>
-          <span className={styles.kicker}>{isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : 'Kinder Kochi · Maternity Care'}</span>
+          <a className={styles.back} href={back.href}>{back.label}</a>
+          <span className={styles.kicker}>{isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : 'Kinder Kochi · Maternity Care'}{main ? ' · at Kinder Hospitals Kochi' : ''}</span>
           <h1>{page.title}</h1>
           <p>{page.excerpt}</p>
           <div className={styles.actions}>
             <a className={styles.primary} href={book} {...(book.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>Enquire with Kinder Kochi →</a>
-            <a className={styles.secondary} href="/hospitals/kochi/celebrate-pregnancy">Explore pregnancy care</a>
+            <a className={styles.secondary} href={hub}>Explore pregnancy care</a>
           </div>
         </div>
         {cover && <div className={styles.heroMedia}><img src={cover} alt={page.title} /></div>}
@@ -49,7 +54,7 @@ export default function KochiFeaturePage({ page, loc, links = [] }) {
     </div></section>}
 
     {links.length > 0 && <section className={`container ${styles.explore}`}>
-      <span className={styles.kicker}>Explore more</span><h2>More from Kinder Kochi</h2>
+      <span className={styles.kicker}>Explore more</span><h2>{main ? 'More to celebrate' : 'More from Kinder Kochi'}</h2>
       <div className={styles.exploreGrid}>{links.filter((link) => link.slug !== page.slug).map((link) =>
         <a href={link.href} key={link.slug}><span>{link.group}</span><strong>{link.label}</strong><small>Explore →</small></a>)}</div>
     </section>}

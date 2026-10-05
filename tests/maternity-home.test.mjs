@@ -8,7 +8,11 @@ test('pregnancy and premium sections contain separate published programmes', () 
   const premium = maternityHome(pages, {}, 'birthing');
   assert.equal(premium.links.length, 1);
   assert.equal(premium.description, 'Editor summary 3');
-  assert.equal(premium.href, '/hospitals/kochi/care/kochi-premium-birthing-centre');
+  assert.equal(premium.href, '/premium-birthing-centre');
+  assert.equal(maternityHome(pages, {}, 'birthing', 'kochi').href, '/hospitals/kochi/care/kochi-premium-birthing-centre');
+  assert.equal(maternityHome(pages).href, '/celebrate-pregnancy');
+  assert(maternityHome(pages).links.every((l) => !l.href.startsWith('/hospitals/kochi')));
+  assert(maternityHome(pages, {}, 'pregnancy', 'kochi').links.every((l) => l.href.startsWith('/hospitals/kochi')));
   assert.equal(maternityHome(pages).links[0].page.title, 'Editor title 0');
 });
 test('unpublished and other-centre pages never appear or supply imagery', () => {
