@@ -22,7 +22,8 @@ const imageOf = (link) => {
 const bg = (url) => ({ backgroundImage: `url("${String(url).replace(/"/g, '%22')}")` });
 
 export default function CelebratePregnancy({ pages = [] }) {
-  const links = kochiFeaturePages(pages, 'Kochi');
+  // These open on the main site, not on Kinder Kochi's own site.
+  const links = kochiFeaturePages(pages, 'Kochi', { site: 'main' });
   if (!links.length) return null;
   const premium = links.find((l) => l.group === 'Premium Birthing Centre');
   const cards = links.filter((l) => l !== premium);
@@ -43,8 +44,8 @@ export default function CelebratePregnancy({ pages = [] }) {
               birth choices designed around you.
             </p>
             <div className={styles.actions}>
-              <a className={styles.primary} href="/hospitals/kochi/celebrate-pregnancy">Explore Celebrate Pregnancy <span aria-hidden="true">→</span></a>
-              <a className={styles.ghost} href="/hospitals/kochi#contact">Talk to our maternity team</a>
+              <a className={styles.primary} href="/celebrate-pregnancy">Explore Celebrate Pregnancy <span aria-hidden="true">→</span></a>
+              <a className={styles.ghost} href="/contact">Talk to our maternity team</a>
             </div>
           </div>
 

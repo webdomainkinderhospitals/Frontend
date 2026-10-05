@@ -38,8 +38,10 @@ export default function Header({ settings, locations: allLocations = [], special
   // sub-site of the hospital they belong to.
   const hospitals = hospitalsOnly(allLocations);
   const locations = hospitals;
-  const features = kochiFeaturePages(pages, 'Kochi');
-  const premium = features.find((f) => f.group === 'Premium Birthing Centre');
+  // They open on the main site, not on Kinder Kochi's own site.
+  const allFeatures = kochiFeaturePages(pages, 'Kochi', { site: 'main' });
+  const premium = allFeatures.find((f) => f.group === 'Premium Birthing Centre');
+  const features = allFeatures.filter((f) => f !== premium);
   const serviceGroups = groupServices(specialities);
   // The Specialities menu shows its columns side by side, so no icon repeats across them.
   const megaIcons = iconsForList([
@@ -64,6 +66,7 @@ export default function Header({ settings, locations: allLocations = [], special
   const sectionOf = (p) => {
     if (p.startsWith('/about') || p.startsWith('/careers') || p.startsWith('/media') || p.startsWith('/international-patients')) return 'about';
     if (p.startsWith('/celebrate-pregnancy')) return 'pregnancy';
+    if (p.startsWith('/premium-birthing-centre')) return 'premium';
     if (p.startsWith('/hospitals')) return 'locations';
     if (p.startsWith('/services')) return 'services';
     if (p.startsWith('/doctors')) return 'doctors';
@@ -196,10 +199,9 @@ export default function Header({ settings, locations: allLocations = [], special
                   </a>
                   <div className="dropdown dropdown-pregnancy">
                     <a href="/celebrate-pregnancy" onClick={onLeafClick}><strong>Your pregnancy journey</strong><small>Antenatal care to going home</small></a>
-                    <a href="/hospitals/kochi/celebrate-pregnancy" onClick={onLeafClick}><strong>Celebrate Pregnancy at Kinder Kochi</strong><small>All experiences in one place</small></a>
                     {features.map((f) => (
-                      <a key={f.slug} href={f.href} onClick={onLeafClick} className={f === premium ? 'is-premium' : undefined}>
-                        <strong>{f === premium ? '✦ ' : ''}{f.label}</strong>
+                      <a key={f.slug} href={f.href} onClick={onLeafClick}>
+                        <strong>{f.label}</strong>
                         <small>{FEATURE_NOTES[f.slug] || f.group}</small>
                       </a>
                     ))}
@@ -207,6 +209,16 @@ export default function Header({ settings, locations: allLocations = [], special
                 </li>
               ) : (
                 <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
+              )}
+
+              {premium && (
+                <li className={'nav-premium' + act('premium')}>
+                  <a href={premium.href} onClick={onLeafClick} aria-label="Premium Birthing Centre">
+                    <span className="nav-premium-mark" aria-hidden="true">✦</span>
+                    <span className="nav-label-full" aria-hidden="true"> Premium Birthing Centre</span>
+                    <span className="nav-label-short" aria-hidden="true"> Birthing Centre</span>
+                  </a>
+                </li>
               )}
 
               <li className={`${dd('services')} has-mega` + act('services')}>
