@@ -1,3 +1,4 @@
+import CelebratePregnancy from '@/components/CelebratePregnancy';
 import { getContent } from '@/lib/api';
 import { groupServices, slugify } from '@/lib/services';
 import { carePageHref, isCarePage } from '@/lib/care-content.mjs';
@@ -63,11 +64,7 @@ export default async function CelebratePregnancyPage() {
           intro="From your first scan to your baby's first vaccines — the care, the classes and the people around you at every step."
         />
 
-        {experiences.length > 0 && (
-          <HubTiles id="experiences" eyebrow="Kinder experiences" title={<>Celebrations, community &amp; <em>birth choices</em></>}
-            intro="Tharattazhaku, WOW MOM, water birth and our Premium Birthing Centre — at Kinder Hospitals Kochi."
-            items={experiences} />
-        )}
+        <CelebratePregnancy pages={content.pages} settings={content.settings} />
 
         <HubTiles id="journey" eyebrow="Your journey" title={<>Care at <em>every stage</em></>} items={JOURNEY} soft={experiences.length > 0} />
 
