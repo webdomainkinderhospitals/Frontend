@@ -146,6 +146,64 @@ export default function Header({ settings, locations: allLocations = [], special
                 height="276"
               />
             </a>
+            {/* The hospitals menu sits in the logo row on larger screens and as a
+                slim band under it on phones and tablets. */}
+            <nav className="hospitals-strip" aria-label="Kinder hospitals">
+              <div className="hospitals-strip-in">
+                <span className="hospitals-strip-note">
+                  <span className="hospitals-strip-pulse" aria-hidden="true" />
+                  One standard of care, across all Kinder Hospitals
+                </span>
+                <div
+                  ref={hospitalsRef}
+                  className={`hospitals-menu${hospitalsOpen ? ' is-open' : ''}${active === 'locations' ? ' is-active' : ''}`}
+                >
+                  <button
+                    type="button"
+                    className="hospitals-trigger"
+                    aria-expanded={hospitalsOpen}
+                    aria-controls="hospitals-panel"
+                    onClick={() => setHospitalsOpen((v) => !v)}
+                  >
+                    <NavIcon name="pin" />
+                    Our Hospitals
+                    <span className="caret" aria-hidden="true">▾</span>
+                  </button>
+                  <div className="hospitals-panel" id="hospitals-panel">
+                    <div className="hospitals-panel-grid">
+                      {hospitals.map((loc) => (
+                        <a
+                          key={loc.id ?? loc.name}
+                          href={`/hospitals/${slugOfLocation(loc)}`}
+                          className={`hospital-card${loc.international ? ' hospital-international' : ''}`}
+                          onClick={() => setHospitalsOpen(false)}
+                        >
+                          <div
+                            className="hospital-img"
+                            style={{
+                              backgroundImage: loc.imageUrl
+                                ? `url('${loc.imageUrl}'), var(--mesh-card)`
+                                : 'var(--mesh-card)',
+                            }}
+                          ></div>
+                          <div className="hospital-meta">
+                            <span className={`hospital-since${loc.international ? ' hospital-since-intl' : ''}`}>
+                              {loc.since || HOSPITAL_TAGS[loc.name] || `${loc.city} · ${loc.country}`}
+                            </span>
+                            <h6>{centreName(loc)}</h6>
+                            <p>{loc.address}</p>
+                            <span className="hospital-link">{`Explore ${centreName(loc)} →`}</span>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                    <a className="hospitals-panel-all" href="/hospitals" onClick={() => setHospitalsOpen(false)}>
+                      View all hospitals →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </nav>
             <div className="header-actions">
               <button
                 className="mobile-toggle"
@@ -280,62 +338,6 @@ export default function Header({ settings, locations: allLocations = [], special
                 <a href={BOOK} className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>
               </li>
             </ul>
-          </div>
-        </nav>
-        <nav className="hospitals-strip" aria-label="Kinder hospitals">
-          <div className="container hospitals-strip-in">
-            <span className="hospitals-strip-note">
-              <span className="hospitals-strip-pulse" aria-hidden="true" />
-              One standard of care, across all Kinder Hospitals
-            </span>
-            <div
-              ref={hospitalsRef}
-              className={`hospitals-menu${hospitalsOpen ? ' is-open' : ''}${active === 'locations' ? ' is-active' : ''}`}
-            >
-              <button
-                type="button"
-                className="hospitals-trigger"
-                aria-expanded={hospitalsOpen}
-                aria-controls="hospitals-panel"
-                onClick={() => setHospitalsOpen((v) => !v)}
-              >
-                <NavIcon name="pin" />
-                Our Hospitals
-                <span className="caret" aria-hidden="true">▾</span>
-              </button>
-              <div className="hospitals-panel" id="hospitals-panel">
-                <div className="hospitals-panel-grid">
-                  {hospitals.map((loc) => (
-                    <a
-                      key={loc.id ?? loc.name}
-                      href={`/hospitals/${slugOfLocation(loc)}`}
-                      className={`hospital-card${loc.international ? ' hospital-international' : ''}`}
-                      onClick={() => setHospitalsOpen(false)}
-                    >
-                      <div
-                        className="hospital-img"
-                        style={{
-                          backgroundImage: loc.imageUrl
-                            ? `url('${loc.imageUrl}'), var(--mesh-card)`
-                            : 'var(--mesh-card)',
-                        }}
-                      ></div>
-                      <div className="hospital-meta">
-                        <span className={`hospital-since${loc.international ? ' hospital-since-intl' : ''}`}>
-                          {loc.since || HOSPITAL_TAGS[loc.name] || `${loc.city} · ${loc.country}`}
-                        </span>
-                        <h6>{centreName(loc)}</h6>
-                        <p>{loc.address}</p>
-                        <span className="hospital-link">{`Explore ${centreName(loc)} →`}</span>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-                <a className="hospitals-panel-all" href="/hospitals" onClick={() => setHospitalsOpen(false)}>
-                  View all hospitals →
-                </a>
-              </div>
-            </div>
           </div>
         </nav>
       </header>
