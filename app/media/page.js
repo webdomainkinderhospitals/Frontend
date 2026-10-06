@@ -2,6 +2,8 @@ import { getContent } from '@/lib/api';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import { HubTiles, HubProse, HubCta } from '@/components/Hub';
+import GalleryGrid from '@/components/gallery/GalleryGrid';
+import { galleryItems } from '@/lib/gallery.mjs';
 
 export const revalidate = 60;
 
@@ -24,6 +26,7 @@ export default async function MediaPage() {
     ...news.filter((n) => n.imageUrl).map((n) => ({ src: n.imageUrl, caption: n.title })),
     ...(content.locations || []).filter((l) => l.imageUrl).map((l) => ({ src: l.imageUrl, caption: `Kinder ${l.name}` })),
   ];
+  const managed = galleryItems(content.gallery);
   const email = content.settings.email || '';
 
   return (
@@ -66,7 +69,12 @@ export default async function MediaPage() {
                 <h2 className="section-title">Inside <em>our hospitals</em></h2>
               </div>
             </div>
-            {gallery.length === 0 ? (
+            {managed.length > 0 ? (
+              <>
+                <GalleryGrid items={managed.slice(0, 8)} />
+                <p style={{ marginTop: 24 }}><a className="view-all" href="/gallery">See the full gallery →</a></p>
+              </>
+            ) : gallery.length === 0 ? (
               <p className="muted">Photos and videos are being added. Follow us on social media in the meantime — the links are in the footer.</p>
             ) : (
               <div className="gallery-grid">
