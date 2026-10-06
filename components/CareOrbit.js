@@ -8,8 +8,8 @@ const I = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.9, strokeLineca
 const SERVICES = [
   { label: 'Maternity', spec: 'gynaecology' },
   { label: 'IVF & Fertility', spec: 'reproductive-medicine' },
-  { label: 'Newborn & NICU', spec: 'neonatology' },
-  { label: 'Paediatrics', spec: 'paediatrics' },
+  { label: 'Paediatric & Level 3 NICU', spec: 'neonatology' },
+  { label: 'Surgical Care', spec: 'general-surgery' },
   { label: '24/7 Emergency', spec: 'emergency-medicine' },
   { label: 'Expert Doctors', icon: <svg viewBox="0 0 24 24" {...I}><path d="M6 3v5a4 4 0 0 0 8 0V3" /><path d="M10 12v3a5 5 0 0 0 10 0v-2" /><circle cx="20" cy="11" r="2" /></svg> },
 ];
