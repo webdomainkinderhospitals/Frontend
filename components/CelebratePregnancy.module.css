@@ -35,7 +35,7 @@
 .card:focus-visible, .primary:focus-visible, .ghost:focus-visible { outline: 3px solid #e0393f; outline-offset: 4px; }
 
 /* Tharattazhaku · WOW MOM · Water Birth */
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: clamp(28px, 4vw, 48px); }
+.grid { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 20px; margin-top: 22px; }
 .card {
   display: flex; flex-direction: column; overflow: hidden; text-decoration: none; color: inherit;
   border-radius: 24px; background: #fff; border: 1px solid #F0E2E2;
@@ -69,18 +69,62 @@
   .card, .card:hover, .premiumImg, .photo, .primary { transition: none; transform: none !important; }
 }
 
-.location { color: #8a5364; font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-.media { aspect-ratio: 16 / 11; padding: 10px; background: #f7f2f1 !important; }
-.cardPhoto { object-fit: contain; border-radius: 14px; }
-.waterFeature { display: grid; grid-template-columns: 1.3fr 1fr; margin-top: 28px; border: 1px solid #c8dfe7; border-radius: 28px; overflow: hidden; background: #fff; }
-.waterIntro { padding: clamp(24px, 4vw, 44px); }
-.waterLabel { color: #276478; font-size: 11px; letter-spacing: .12em; font-weight: 800; text-transform: uppercase; }
-.waterIntro h3, .welcome h3 { color: #193b64; font-family: var(--display); font-size: clamp(27px, 3vw, 38px); line-height: 1.15; margin: 16px 0; }
-.waterIntro p, .welcome p { color: #4f6171; line-height: 1.8; margin-bottom: 24px; }
-.waterAside { padding: 32px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(145deg, #eaf7f7, #e6effc); color: #244c65; }
-.waterAside strong { font-family: var(--display); font-size: 25px; line-height: 1.35; }
-.waterAside p { font-size: 14px; line-height: 1.7; margin: 12px 0 0; }
-.waterAside img { width: 100%; height: auto; max-height: 300px; object-fit: contain; border-radius: 16px; }
-.waterMark { font-size: 74px; font-weight: 300; line-height: .8; margin-bottom: 20px; color: #428295; }
-.welcome { margin-top: 32px; border-top: 1px solid #e2d9df; padding: 36px 0 0; max-width: 820px; }
-@media (max-width: 620px) { .waterFeature { grid-template-columns: 1fr; } .waterAside { padding: 24px; } }
+
+/* Intro: the three signature experiences as a short list */
+.points { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 10px; max-width: 460px; }
+.points li {
+  display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 14px;
+  background: rgba(255,255,255,.7); border: 1px solid #F0DFE0;
+  font-weight: 700; font-size: 15px; color: var(--primary-dark, #1B3A73);
+}
+.points li > span { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #E0393F; box-shadow: 0 0 0 4px rgba(224,57,63,.15); }
+.points small { margin-left: auto; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #A6595D; }
+
+/* More to celebrate */
+.subhead { margin-top: clamp(48px, 6vw, 76px); display: grid; gap: 6px; }
+.subhead span { font-size: 11.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #C3383D; }
+.subhead h3 { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(24px, 2.4vw, 32px); letter-spacing: -.02em; color: var(--primary-dark, #1B3A73); }
+.media { aspect-ratio: 4 / 3; }
+.cardPhoto { position: absolute; inset: 0; transition: transform .8s ease; object-position: center 35%; }
+.card:hover .cardPhoto { transform: scale(1.06); }
+.cardBody strong { font-size: 21px; }
+.cardBody > span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* A Welcome to Remember */
+.welcome {
+  position: relative; overflow: hidden; margin-top: clamp(36px, 5vw, 56px);
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(18px, 3vw, 32px);
+  padding: clamp(22px, 3vw, 32px) clamp(22px, 3.5vw, 40px); border-radius: 26px; color: #fff;
+  background: linear-gradient(120deg, #1B3A73 0%, #24478A 55%, #8E2F4F 100%);
+  box-shadow: 0 30px 60px -34px rgba(27,58,115,.7);
+}
+.welcome::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(40% 90% at 100% 0%, rgba(255,201,203,.25), transparent 70%), radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1.4px) 0 0 / 20px 20px;
+}
+.welcomeMark { position: relative; z-index: 1; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,.14); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3); }
+.welcomeMark svg { width: 28px; height: 28px; fill: #FFC9CB; }
+.welcomeText { position: relative; z-index: 1; }
+.welcomeKicker { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #FFC9CB; }
+.welcome h3 { margin: 6px 0 6px; font-family: var(--display); font-weight: 600; font-size: clamp(22px, 2.2vw, 28px); letter-spacing: -.02em; color: #fff; }
+.welcome p { margin: 0; max-width: 62ch; font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,.85); }
+.welcomeLink {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  padding: 13px 22px; border-radius: 999px; background: #fff; color: var(--primary-dark, #1B3A73);
+  font-size: 14px; font-weight: 700; text-decoration: none; transition: transform .25s ease, box-shadow .25s ease;
+}
+.welcomeLink span { color: #E0393F; transition: transform .25s ease; }
+.welcomeLink:hover { transform: translateY(-2px); box-shadow: 0 0 0 5px rgba(255,255,255,.15); }
+.welcomeLink:hover span { transform: translateX(4px); }
+.welcomeLink:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(min(var(--cols, 3), 2), minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .welcome { grid-template-columns: 1fr; justify-items: start; }
+  .welcomeMark { width: 52px; height: 52px; }
+}
+@media (max-width: 620px) {
+  .grid { grid-template-columns: 1fr; }
+  .points { display: none; } /* the slider's tabs name them just below */
+}
+@media (prefers-reduced-motion: reduce) { .cardPhoto, .welcomeLink, .welcomeLink span { transition: none; } }
