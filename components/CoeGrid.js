@@ -11,7 +11,7 @@ const SERVICES = [
   ['Infertility & IVF', 'ART-certified IVF lab — IVF, IUI and ICSI', '/services/ivf', 'reproductive-medicine'],
   ['Neonatology', 'Level III NICU with neonatal transport', '/services/neonatology', 'neonatology'],
   ['Paediatrics', 'From vaccinations to PICU care and paediatric surgery', '/services/paediatrics', 'paediatrics'],
-  ['Gynaecology & Laparoscopy', "Minimally invasive surgery and women's health", '/services/gynecology-and-laparoscopic-surgery', 'womens-health'],
+  ['Gynaecology & Laparoscopic Surgery', "Minimally invasive gynaecological surgery and women's health", '/services/gynecology-and-laparoscopic-surgery', 'womens-health'],
   ['Fetal Medicine', 'Advanced fetal scans, anomaly detection and counselling', '/services/fetal-medicine', 'fetomaternal-medicine'],
   ['Plastic & Cosmetic Surgery', 'Reconstructive and aesthetic procedures', '/services/plastic-and-cosmetic-surgery', 'plastic-surgery'],
   ['24/7 Emergency & Diagnostics', 'Round-the-clock emergency, ambulance and diagnostics', '/contact', 'emergency-medicine'],
