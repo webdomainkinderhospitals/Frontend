@@ -1,0 +1,107 @@
+.slider { position: relative; }
+
+.frame {
+  position: relative; overflow: hidden; isolation: isolate;
+  aspect-ratio: 5 / 4; border-radius: 30px;
+  background: #1B3A73;
+  box-shadow: 0 0 0 10px #fff, 0 0 0 11px #F0DFE0, 0 40px 80px -40px rgba(27,58,115,.65);
+}
+
+.slide {
+  position: absolute; inset: 0; display: block; color: #fff; text-decoration: none;
+  opacity: 0; visibility: hidden;
+  transition: opacity .9s ease, visibility 0s linear .9s;
+}
+.active { opacity: 1; visibility: visible; z-index: 1; transition: opacity .9s ease, visibility 0s; }
+.slide:focus-visible { outline: 3px solid #fff; outline-offset: -8px; border-radius: 30px; }
+
+.image {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%;
+  transform: scale(1.04);
+}
+.active .image { animation: drift 7s ease-out forwards; }
+@keyframes drift { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+
+/* Water Birth, until a photo is added: deep water tones and slow waves */
+.water { background: linear-gradient(160deg, #0F6A86 0%, #155E8E 40%, #1B3A73 100%); }
+.waterArt { position: absolute; inset: 0; }
+.waterArt svg { width: 100%; height: 100%; display: block; }
+.wave { fill: rgba(255,255,255,.09); animation: sway 9s ease-in-out infinite alternate; animation-delay: calc(var(--n) * -2s); }
+.wave:nth-of-type(2) { fill: rgba(255,255,255,.07); }
+.wave:nth-of-type(4) { fill: rgba(9,30,66,.25); }
+@keyframes sway { from { transform: translateX(-18px); } to { transform: translateX(18px); } }
+.drop { animation: float 6s ease-in-out infinite; transform-box: fill-box; }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+
+.shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(10,22,48,0) 38%, rgba(10,22,48,.35) 62%, rgba(10,22,48,.86) 100%);
+}
+.water .shade { background: linear-gradient(180deg, rgba(10,22,48,0) 50%, rgba(10,22,48,.55) 100%); }
+
+.caption {
+  position: absolute; left: clamp(18px, 3vw, 30px); right: clamp(18px, 3vw, 30px); bottom: clamp(18px, 3vw, 28px);
+  display: grid; gap: 6px; justify-items: start;
+  transform: translateY(14px); opacity: 0; transition: transform .7s cubic-bezier(.2,.75,.25,1) .25s, opacity .6s ease .25s;
+}
+.active .caption { transform: none; opacity: 1; }
+.caption small {
+  padding: 5px 11px; border-radius: 999px; font-size: 10.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.32);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.caption strong { font-family: var(--display); font-weight: 600; font-size: clamp(22px, 2.3vw, 32px); line-height: 1.12; letter-spacing: -.02em; text-shadow: 0 2px 18px rgba(0,0,0,.35); }
+.excerpt { max-width: 46ch; font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.88); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.caption em { margin-top: 4px; font-style: normal; font-size: 13.5px; font-weight: 700; color: #FFD0D2; }
+.caption em span { display: inline-block; transition: transform .25s ease; }
+.slide:hover .caption em span { transform: translateX(4px); }
+
+.counter {
+  position: absolute; z-index: 2; top: 18px; right: 18px; padding: 6px 12px; border-radius: 999px;
+  font-size: 12px; letter-spacing: .08em; color: rgba(255,255,255,.8);
+  background: rgba(10,22,48,.35); border: 1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.counter b { color: #fff; }
+
+.arrow {
+  position: absolute; z-index: 2; top: 50%; width: 44px; height: 44px; margin-top: -22px;
+  display: grid; place-items: center; border: 1px solid rgba(255,255,255,.4); border-radius: 50%; cursor: pointer;
+  color: #fff; background: rgba(10,22,48,.3); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  opacity: 0; transition: opacity .25s ease, background-color .2s ease, color .2s ease, transform .2s ease;
+}
+.arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.prev { left: 16px; }
+.next { right: 16px; }
+.frame:hover .arrow, .arrow:focus-visible { opacity: 1; }
+.arrow:hover { background: #fff; color: var(--primary-dark, #1B3A73); transform: scale(1.06); }
+.arrow:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (hover: none) { .arrow { opacity: 1; } }
+
+/* Named tabs under the frame, each with its own progress line */
+.tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; margin-top: 22px; }
+.tab {
+  display: grid; gap: 8px; padding: 0; border: 0; background: none; cursor: pointer; text-align: left;
+  font: inherit; color: var(--ink-soft, #515A68);
+}
+.tabLabel { font-size: 13px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .2s ease; }
+.tab:hover .tabLabel, .tabOn .tabLabel { color: var(--primary-dark, #1B3A73); }
+.bar { position: relative; height: 3px; border-radius: 3px; overflow: hidden; background: #E6D9DC; }
+.tabOn .bar { background: #F1C9CB; }
+.fill { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, #E0393F, #24478A); transform-origin: left; animation: fill linear forwards; }
+.tabOn:not(:has(.fill)) .bar { background: linear-gradient(90deg, #E0393F, #24478A); }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.tab:focus-visible { outline: 2px solid var(--primary, #2F62B0); outline-offset: 4px; border-radius: 4px; }
+
+@media (max-width: 620px) {
+  .frame { aspect-ratio: 4 / 4.2; border-radius: 22px; box-shadow: 0 0 0 6px #fff, 0 0 0 7px #F0DFE0, 0 30px 60px -36px rgba(27,58,115,.65); }
+  .slide:focus-visible { border-radius: 22px; }
+  .arrow { width: 38px; height: 38px; margin-top: -19px; }
+  .prev { left: 10px; } .next { right: 10px; }
+  .tabs { gap: 8px; margin-top: 18px; }
+  .tabLabel { font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide, .active, .caption { transition: none; }
+  .active .image, .wave, .drop { animation: none; }
+}
