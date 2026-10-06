@@ -39,3 +39,21 @@ test('admin values override defaults, preserve explicit empty buttons and use sa
   assert.equal(section.buttonLabel, '');
   assert.equal(section.contactHref, 'tel:+917306701372');
 });
+
+test('source highlights respect publication, centre scope and existing editorial controls', () => {
+  const additions = [
+    { slug: 'celebrate-spandanam', location: 'Cherthala', published: true, title: 'Music', imageUrl: '/music.webp' },
+    { slug: 'celebrate-water-birth', location: 'Kochi', published: true, title: 'Water Birth' },
+    { slug: 'celebrate-mom-mix', location: 'Kochi', published: false },
+  ];
+  const group = maternityHome([...pages, ...additions]);
+  assert(group.links.some((l) => l.short === 'spandanam'));
+  assert(!group.links.some((l) => l.short === 'mom-mix'));
+  assert.equal(group.links.filter((l) => /water/.test(l.short)).length, 1);
+  assert(group.links.every((l) => l.href.startsWith('/celebrate-pregnancy/')));
+  const kochi = maternityHome([...pages, ...additions], {}, 'pregnancy', 'kochi');
+  assert(!kochi.links.some((l) => l.page.location === 'Cherthala'));
+  assert(kochi.links.every((l) => l.href.startsWith('/hospitals/kochi/')));
+  assert.equal(maternityHome(additions, { maternityPregnancyShowOnGroup: false }), null);
+  assert.equal(maternityHome(additions, { maternityPregnancyTitle: 'Edited heading' }).title, 'Edited heading');
+});

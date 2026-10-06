@@ -7,6 +7,7 @@ import styles from './KochiFeaturePage.module.css';
 // Kochi's own site it links back into that site; on the main site (`main`)
 // it stays on the main site, under Celebrate Pregnancy.
 export default function KochiFeaturePage({ page, loc, links = [], main = false }) {
+  const centre = loc.name || 'Kochi';
   const back = main ? { href: '/celebrate-pregnancy', label: '← Celebrate Pregnancy' } : { href: '/hospitals/kochi', label: '← Kinder Kochi' };
   const hub = main ? '/celebrate-pregnancy' : '/hospitals/kochi/celebrate-pregnancy';
   const sections = careSections(page.body);
@@ -21,11 +22,11 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false }
       <div className={`container ${styles.heroInner}`}>
         <div className={styles.heroCopy}>
           <a className={styles.back} href={back.href}>{back.label}</a>
-          <span className={styles.kicker}>{isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : 'Kinder Kochi · Maternity Care'}{main ? ' · at Kinder Hospitals Kochi' : ''}</span>
+          <span className={styles.kicker}>{isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : `Kinder ${centre} · Maternity Care`}{main ? ` · at Kinder Hospitals ${centre}` : ''}</span>
           <h1>{page.title}</h1>
           <p>{page.excerpt}</p>
           <div className={styles.actions}>
-            <a className={styles.primary} href={book} {...(book.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>Enquire with Kinder Kochi →</a>
+            <a className={styles.primary} href={book} {...(book.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>Enquire with Kinder {centre} →</a>
             <a className={styles.secondary} href={hub}>Explore pregnancy care</a>
           </div>
         </div>
@@ -49,7 +50,7 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false }
     </div>
 
     {images.length > 0 && <section className={styles.gallery}><div className="container">
-      <span className={styles.kicker}>Kinder Kochi</span><h2>Moments &amp; spaces</h2>
+      <span className={styles.kicker}>Kinder {centre}</span><h2>Moments &amp; spaces</h2>
       <div className={styles.galleryGrid}>{images.map((src, i) => <figure key={src}><img src={src} alt={`${page.title} — image ${i + 1}`} loading="lazy" /></figure>)}</div>
     </div></section>}
 

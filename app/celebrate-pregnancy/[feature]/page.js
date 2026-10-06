@@ -1,3 +1,4 @@
+import { pregnancyHighlights } from '@/lib/pregnancy-highlights.mjs';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
@@ -6,16 +7,18 @@ import KochiFeaturePage from '@/components/KochiFeaturePage';
 
 export const revalidate = 60;
 
-// Kinder Kochi's pregnancy experiences (Tharattazhaku, WOW MOM, Water Birth)
-// opened on the main site, from the same pages Kochi's own site shows.
+// Source highlights and existing Kochi programmes stay on the main site.
+// Keep the original programme URLs and full CMS stories available.
 async function resolve(params) {
   const { feature } = await params;
   const content = await getContent();
-  const loc = (content.locations || []).find((l) => /^(kochi|cochin)$/i.test(String(l.name).trim()));
-  if (!loc) return null;
-  const links = kochiFeaturePages(content.pages, loc.name, { site: 'main' });
+  const links = [...pregnancyHighlights(content.pages), ...kochiFeaturePages(content.pages, 'Kochi', { site: 'main' })];
   const selected = links.find((link) => link.short === feature && link.group === 'Celebrate Pregnancy');
-  return selected ? { content, loc, links, selected } : null;
+  if (!selected) return null;
+  const name = String(selected.page.location || 'Kochi').split(',')[0].trim();
+  const normalise = (value) => String(value).trim().toLowerCase().replace(/^cochin$/, 'kochi');
+  const loc = (content.locations || []).find((location) => normalise(location.name) === normalise(name));
+  return loc ? { content, loc, links, selected } : null;
 }
 
 export async function generateMetadata({ params }) {
