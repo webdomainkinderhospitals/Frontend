@@ -5440,3 +5440,69 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
   .csm-close, .csm-dept > span.csm-badge, .csm-badge::after { transition: none; }
   .csm-dept:hover .csm-badge .dept-ico, .csm-close:hover { transform: none; }
 }
+
+/* ---- Compact header ----
+   Laptops and desktops: one logo row with the hospitals menu in its centre
+   ("One standard of care…" beside the Our Hospitals button) above the menu
+   row; the logo row tightens further once the page scrolls. Phones and
+   tablets: a slim logo bar with the hospitals menu as a thin band under it. */
+.header-main { position: relative; gap: 20px; transition: padding .3s var(--ease-out, ease); }
+.header .brand-logo { transition: height .3s var(--ease-out, ease); }
+.header-main .hospitals-strip { z-index: 45; }
+.header-main .hospitals-strip-in { padding: 0; }
+
+@media (min-width: 1025px) {
+  .header-main { padding: 9px 0 !important; }
+  .header .brand-logo { height: 48px; }
+  .header.is-stuck .header-main { padding: 5px 0 !important; }
+  .header.is-stuck .brand-logo { height: 40px; }
+  .header-main .hospitals-strip { flex: 1; min-width: 0; background: none; border: 0; box-shadow: none; }
+  .header-main .hospitals-strip-in { justify-content: center; gap: 14px; }
+  .header-main .hospitals-strip-note { color: var(--ink-soft, #515A68); font-size: 12.5px; font-weight: 600; letter-spacing: .02em; white-space: nowrap; }
+  .header-main .hospitals-trigger {
+    min-height: 40px; padding: 5px 16px 5px 6px; gap: 9px; font-size: 14.5px;
+    background: linear-gradient(135deg, #1B3A73 0%, #2F62B0 100%); color: #fff;
+    box-shadow: 0 2px 0 #13295A, 0 10px 20px -12px rgba(19,41,90,.8);
+  }
+  .header-main .hospitals-trigger > svg:first-child, .header-main .hospitals-trigger .nav-ico { display: block; background: rgba(255,255,255,.16); color: #fff; padding: 6px; }
+  .header-main .hospitals-trigger .caret { color: #FFC9CB; }
+  .header-main .hospitals-trigger:hover, .header-main .hospitals-menu:focus-within .hospitals-trigger {
+    background: linear-gradient(135deg, #24478A 0%, #3B70C2 100%);
+    box-shadow: 0 3px 0 #13295A, 0 14px 24px -12px rgba(19,41,90,.85);
+  }
+  .header-main .hospitals-menu.is-active .hospitals-trigger { box-shadow: 0 2px 0 #13295A, 0 0 0 3px rgba(47,98,176,.25); }
+  .header-main .hospitals-trigger:focus-visible { outline-color: #E62129; }
+  /* the panel centres on the whole logo row, not on the button */
+  .header-main .hospitals-strip, .header-main .hospitals-strip-in { position: static; }
+  .header-main .hospitals-panel { top: calc(100% + 4px); z-index: 60; }
+  /* the note gives way before anything else does */
+  @media (max-width: 1240px) { .header-main .hospitals-strip-note { display: none; } }
+
+  .header .nav-list > li:not(.nav-cta-wrap) > a { padding-top: 9px !important; padding-bottom: 9px !important; margin-top: 5px !important; margin-bottom: 5px !important; }
+  .header .nav-cta { padding: 10px 20px !important; }
+  .header .nav-cta-wrap { margin-top: 5px; margin-bottom: 5px; }
+  /* the contact pill, slimmed to the logo's height */
+  .header-main .helpline { padding-top: 5px !important; padding-bottom: 5px !important; }
+  .header-main .helpline-icon { width: 38px !important; height: 38px !important; }
+  .header-main .helpline-text span { margin-top: 1px; }
+}
+
+@media (max-width: 1024px) {
+  .header-main { flex-wrap: wrap; row-gap: 0; padding: 8px 0 0 !important; }
+  .header .brand-logo { height: 40px; }
+  .header-main .header-actions { margin-left: auto; }
+  .header-main .hospitals-strip {
+    order: 3; flex: 0 0 auto; width: 100vw; margin: 8px 0 0 calc(50% - 50vw);
+  }
+  .header-main .hospitals-strip-in { padding: 6px 16px; max-width: 1240px; margin: 0 auto; }
+  .header-main .hospitals-trigger { min-height: 36px; padding: 4px 16px 4px 5px; font-size: 14px; }
+  .header-main .hospitals-trigger > svg:first-child, .header-main .hospitals-trigger .nav-ico { padding: 5px; }
+}
+@media (max-width: 560px) {
+  .header .brand-logo { height: 36px; }
+  .header-main .hospitals-strip-in { padding: 6px 12px; }
+}
+/* in-page links land just below the sticky header */
+html { scroll-padding-top: 140px; }
+@media (max-width: 1024px) { html { scroll-padding-top: 124px; } }
+@media (prefers-reduced-motion: reduce) { .header-main, .header .brand-logo { transition: none; } }
