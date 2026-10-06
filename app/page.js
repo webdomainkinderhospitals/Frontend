@@ -13,6 +13,7 @@ import Stats from '@/components/Stats';
 import CelebratePregnancy from '@/components/CelebratePregnancy';
 import PremiumBirthingCentre from '@/components/PremiumBirthingCentre';
 import CoeGrid from '@/components/CoeGrid';
+import MomentsAtKinder from '@/components/gallery/MomentsAtKinder';
 import Doctors from '@/components/Doctors';
 import Procedures from '@/components/Procedures';
 import Care from '@/components/Care';
@@ -50,6 +51,7 @@ export default async function HomePage() {
       />
       <CelebratePregnancy pages={content.pages} settings={settings} />
       <PremiumBirthingCentre pages={content.pages} settings={settings} />
+      <MomentsAtKinder gallery={content.gallery} />
       <CoeGrid />
       <Doctors doctors={doctors} locations={hospitals} />
       <Procedures procedures={procedures} />
