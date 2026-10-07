@@ -2,17 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { menuHighlights, featureMenuPages, pregnancyPhoto } from '../lib/kochi-features.mjs';
 
-test('Celebrate Pregnancy menu lists Spandanam and Cake Mixing when their pages are published', () => {
+test('Celebrate Pregnancy menu lists Spandanam, Mom-to-be and Cake Mixing when their pages are published', () => {
   const pages = [
     { slug: 'celebrate-spandanam', published: true, location: 'Cherthala', body: 'long' },
     { slug: 'celebrate-mom-mix', published: true, location: 'Kochi' },
     { slug: 'celebrate-mom-to-be', published: true, location: 'Cherthala' },
   ];
   const menu = featureMenuPages(pages);
-  assert.deepEqual(menu.map((p) => p.slug), ['celebrate-spandanam', 'celebrate-mom-mix']);
+  assert.deepEqual(menu.map((p) => p.slug), ['celebrate-spandanam', 'celebrate-mom-mix', 'celebrate-mom-to-be']);
   assert.equal(menu[0].body, undefined);
   assert.deepEqual(menuHighlights(menu).map((h) => [h.label, h.href, h.photo]), [
     ['Spandanam', '/celebrate-pregnancy/spandanam', '/celebrate-pregnancy/spandanam.webp'],
+    ['Mom-to-be', '/celebrate-pregnancy/mom-to-be', '/celebrate-pregnancy/mom-to-be.webp'],
     ['Cake Mixing', '/celebrate-pregnancy/mom-mix', '/celebrate-pregnancy/cake-mixing.webp'],
   ]);
   assert.deepEqual(menuHighlights([{ slug: 'celebrate-mom-mix', published: false }]), []);

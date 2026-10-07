@@ -4,9 +4,11 @@ import { maternityHome } from '../lib/maternity-home.mjs';
 import { maternityKey } from '../lib/maternity-settings.mjs';
 const pages = ['kochi-tharattazhaku', 'kochi-wow-mom', 'kochi-water-birthing-suite', 'kochi-premium-birthing-centre'].map((slug, id) => ({ id, slug, location: 'Kochi', published: true, title: `Editor title ${id}`, excerpt: `Editor summary ${id}`, imageUrl: `/photo-${id}.jpg` }));
 test('pregnancy and premium sections contain separate published programmes', () => {
-  assert.equal(maternityHome(pages).links.length, 3);
+  // Water Birth sits with the Premium Birthing Centre, which leads.
+  assert.deepEqual(maternityHome(pages).links.map((l) => l.slug), ['kochi-tharattazhaku', 'kochi-wow-mom']);
   const premium = maternityHome(pages, {}, 'birthing');
-  assert.equal(premium.links.length, 1);
+  assert.deepEqual(premium.links.map((l) => l.slug), ['kochi-premium-birthing-centre', 'kochi-water-birthing-suite']);
+  assert.equal(premium.links[1].href, '/premium-birthing-centre/water-birth');
   assert.equal(premium.description, 'Editor summary 3');
   assert.equal(premium.href, '/premium-birthing-centre');
   assert.equal(maternityHome(pages, {}, 'birthing', 'kochi').href, '/hospitals/kochi/care/kochi-premium-birthing-centre');

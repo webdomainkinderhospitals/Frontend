@@ -1,14 +1,19 @@
 import ContentBody from './ContentBody';
 import { careSections, careFaqs } from '@/lib/care-content.mjs';
-import { featureImages, pregnancyPhoto } from '@/lib/kochi-features.mjs';
+import { featureImages, pregnancyPhoto, PREMIUM_SLUG, BIRTHING_STILL } from '@/lib/kochi-features.mjs';
 import styles from './KochiFeaturePage.module.css';
 
 // One of Kinder Kochi's pregnancy experiences or its birthing centre. On
 // Kochi's own site it links back into that site; on the main site (`main`)
 // it stays on the main site, under Celebrate Pregnancy.
-export default function KochiFeaturePage({ page, loc, links = [], main = false }) {
+// `spotlight` is a related page presented as a feature band: Water Birth on
+// the Premium Birthing Centre's page, and the centre on Water Birth's.
+export default function KochiFeaturePage({ page, loc, links = [], main = false, spotlight = null }) {
   const centre = loc.name || 'Kochi';
-  const back = main ? { href: '/celebrate-pregnancy', label: '← Celebrate Pregnancy' } : { href: '/hospitals/kochi', label: '← Kinder Kochi' };
+  const birthing = links.find((link) => link.slug === page.slug)?.group === 'Premium Birthing Centre';
+  const back = !main ? { href: '/hospitals/kochi', label: '← Kinder Kochi' }
+    : birthing && page.slug !== PREMIUM_SLUG ? { href: '/premium-birthing-centre', label: '← Premium Birthing Centre' }
+      : { href: '/celebrate-pregnancy', label: '← Celebrate Pregnancy' };
   const hub = main ? '/celebrate-pregnancy' : '/hospitals/kochi/celebrate-pregnancy';
   const sections = careSections(page.body);
   const images = featureImages(page);
@@ -19,7 +24,8 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false }
   // The other experiences, once each: Water Birth has a page of its own and
   // the Kochi suite's page, so cards are matched by name.
   const nameOf = (title) => String(title || '').split(' · ')[0].trim().toLowerCase();
-  const seen = new Set([nameOf(page.title), nameOf(links.find((link) => link.slug === page.slug)?.label)]);
+  const seen = new Set([nameOf(page.title), nameOf(links.find((link) => link.slug === page.slug)?.label), nameOf(spotlight?.label)]);
+  const spotPhoto = spotlight && (spotlight.slug === PREMIUM_SLUG ? BIRTHING_STILL : pregnancyPhoto(spotlight.page));
   const more = links.filter((link) => {
     const name = nameOf(link.label);
     if (link.slug === page.slug || seen.has(name)) return false;
@@ -32,7 +38,7 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false }
       <div className={`container ${styles.heroInner}`}>
         <div className={styles.heroCopy}>
           <a className={styles.back} href={back.href}>{back.label}</a>
-          <span className={styles.kicker}>{isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : `Kinder ${centre} · Maternity Care`}{main ? ` · at Kinder Hospitals ${centre}` : ''}</span>
+          <span className={styles.kicker}>{birthing ? 'Premium Birthing Centre' : isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : `Kinder ${centre} · Maternity Care`}{main ? ` · at Kinder Hospitals ${centre}` : ''}</span>
           <h1>{page.title}</h1>
           <p>{page.excerpt}</p>
           <div className={styles.actions}>
@@ -58,6 +64,16 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false }
         })}
       </article>
     </div>
+
+    {spotlight && <section className={styles.spotlight} aria-labelledby="spotlight-title"><div className={`container ${styles.spotInner}`}>
+      {spotPhoto && <figure className={styles.spotPhoto}><img src={spotPhoto} alt={spotlight.page.title || spotlight.label} loading="lazy" /></figure>}
+      <div className={styles.spotCopy}>
+        <span className={styles.kicker}>{spotlight.slug === PREMIUM_SLUG ? 'Part of the Premium Birthing Centre' : 'Inside the Premium Birthing Centre'}</span>
+        <h2 id="spotlight-title">{spotlight.slug === PREMIUM_SLUG ? 'The Premium Birthing Centre' : String(spotlight.label).split(' · ')[0]}</h2>
+        <p>{spotlight.page.excerpt}</p>
+        <a className={styles.primary} href={spotlight.href}>{spotlight.slug === PREMIUM_SLUG ? 'Discover the suites' : 'Explore water birth'} <span aria-hidden="true">→</span></a>
+      </div>
+    </div></section>}
 
     {images.length > 0 && <section className={styles.gallery}><div className="container">
       <span className={styles.kicker}>Kinder {centre}</span><h2>Moments &amp; spaces</h2>
