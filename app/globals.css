@@ -5565,3 +5565,20 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   body:not(:has(.whatsapp-float)) .kc-launcher,
   body:not(:has(.whatsapp-float)) .kc-panel { bottom: 16px; }
 }
+
+/* ---- Kinder Maa launcher: the animated portrait, with a two-line label ---- */
+.kc-launcher { gap: 12px; padding: 6px 22px 6px 8px; min-height: 66px; animation: none; box-shadow: 0 0 0 1px rgba(27,58,115,.10), 0 18px 40px -14px rgba(27,58,115,.45); }
+.kc-launcher:hover { box-shadow: 0 0 0 1px rgba(27,58,115,.16), 0 22px 46px -14px rgba(27,58,115,.55); }
+.kc-bot-wrap { width: 60px; height: 60px; }
+/* The animation is the portrait's own movement; no extra wobble on top. */
+.kc-launcher .kc-bot-icon.is-animated { animation: none; }
+.kc-launcher-label { display: grid; gap: 2px; text-align: left; line-height: 1.2; }
+.kc-launcher-label strong { font-size: 15px; font-weight: 700; color: var(--primary-dark, #1B3A73); }
+.kc-launcher-label small { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted, #6B7587); }
+.kc-launcher-label .kc-dot { width: 7px; height: 7px; box-shadow: 0 0 0 3px rgba(74,222,128,.22); }
+.kc-avatar { width: 50px; height: 50px; }
+@media (max-width: 640px) {
+  .kc-launcher { min-height: 0; width: 64px; height: 64px; padding: 0; }
+  .kc-launcher-label { display: none; }
+  .kc-bot-wrap { width: 60px; height: 60px; }
+}
