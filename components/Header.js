@@ -30,6 +30,10 @@ const FEATURE_NOTES = {
   'kochi-water-birthing-suite': 'Kerala’s first water birthing suite',
   'kochi-premium-birthing-centre': 'LDRP suites & painless labour',
 };
+// The Celebrate Pregnancy menu's order, as the hospital asked; anything not
+// listed (a new experience) goes before the closing "Your pregnancy journey".
+const MENU_ORDER = ['kochi-tharattazhaku', 'celebrate-spandanam', 'celebrate-mom-mix', 'celebrate-mom-to-be', 'kochi-wow-mom'];
+const menuRank = (key) => (key === 'journey' ? 99 : MENU_ORDER.includes(key) ? MENU_ORDER.indexOf(key) : 50);
 // The Premium Birthing Centre menu: a still from the hospital's own film for
 // the centre, and a fuller line under each.
 const BIRTHING_PHOTOS = { [PREMIUM_SLUG]: BIRTHING_STILL };
@@ -271,7 +275,7 @@ export default function Header({ settings, locations: allLocations = [], special
                       { key: 'journey', href: '/celebrate-pregnancy', label: 'Your pregnancy journey', note: 'Antenatal care to going home', photo: JOURNEY_PHOTO },
                       ...features.map((f) => ({ key: f.slug, href: f.href, label: f.label, note: FEATURE_NOTES[f.slug] || f.group, photo: f.page.photo || pregnancyPhoto(f.page) })),
                       ...highlights.map((h) => ({ key: h.slug, ...h })),
-                    ].map((item) => (
+                    ].sort((a, b) => menuRank(a.key) - menuRank(b.key)).map((item) => (
                       <a key={item.key} href={item.href} onClick={onLeafClick} className="preg-item">
                         <span className="preg-thumb" aria-hidden="true">{item.photo && <img src={item.photo} alt="" loading="lazy" />}</span>
                         <span className="preg-text"><strong>{item.label}</strong><small>{item.note}</small></span>
