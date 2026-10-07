@@ -1,5 +1,5 @@
 import { pregnancyHighlights } from '@/lib/pregnancy-highlights.mjs';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
 import SiteChrome from '@/components/SiteChrome';
@@ -11,6 +11,8 @@ export const revalidate = 60;
 // Keep the original programme URLs and full CMS stories available.
 async function resolve(params) {
   const { feature } = await params;
+  // Water Birth moved under the Premium Birthing Centre.
+  if (feature === 'water-birthing-suite') permanentRedirect('/premium-birthing-centre/water-birth');
   const content = await getContent();
   const links = [...pregnancyHighlights(content.pages), ...kochiFeaturePages(content.pages, 'Kochi', { site: 'main' })];
   const selected = links.find((link) => link.short === feature && link.group === 'Celebrate Pregnancy');

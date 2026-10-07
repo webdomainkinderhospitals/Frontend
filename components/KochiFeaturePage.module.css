@@ -32,7 +32,30 @@
 .exploreGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
 .exploreGrid a { display: grid; gap: 10px; padding: 25px; border: 1px solid #DCE1E9; border-radius: 18px; text-decoration: none; background: #fff; transition: transform .2s, box-shadow .2s; }
 .exploreGrid a:hover { transform: translateY(-4px); box-shadow: 0 12px 24px #2939511c; }
-.exploreGrid span { color: #BC363B; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.exploreBody > span { color: #BC363B; font-size: 12px; font-weight: 700; text-transform: uppercase; }
 .exploreGrid strong { color: var(--primary-dark); font-family: var(--display); font-size: 23px; }
 .exploreGrid small { color: var(--primary-dark); font-weight: 700; }
 @media (max-width: 800px) { .heroInner, .content { grid-template-columns: 1fr; } .heroMedia { height: 350px; min-height: 0; border-radius: 28px 90px 28px 28px; } .index { position: static; } .content { padding-top: 50px; } }
+
+/* Explore more: photo cards */
+.exploreGrid a { padding: 0; gap: 0; overflow: hidden; grid-template-rows: auto 1fr; }
+.exploreMedia { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: linear-gradient(135deg, #FDE8E9, #E7EEF9); }
+.exploreMedia img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.75,.25,1); }
+.exploreGrid a:hover .exploreMedia img { transform: scale(1.05); }
+.exploreBody { display: grid; gap: 8px; padding: 18px 20px 20px; align-content: start; }
+.exploreGrid .exploreBody strong { font-size: 21px; line-height: 1.2; }
+.exploreMedia { display: grid; place-items: center; }
+.exploreMedia svg { width: 44px; height: 44px; fill: #E0393F; opacity: .55; }
+
+/* Spotlight: Water Birth inside the Premium Birthing Centre, and back */
+.spotlight { padding: clamp(56px, 7vw, 96px) 0; background: linear-gradient(120deg, #13254A 0%, #1B3A73 55%, #24478A 100%); color: #fff; position: relative; overflow: hidden; }
+.spotlight::before { content: ""; position: absolute; width: 520px; height: 520px; right: -160px; top: -220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,150,40,.28), transparent 65%); pointer-events: none; }
+.spotInner { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.spotPhoto { margin: 0; aspect-ratio: 16 / 10; border-radius: 28px; overflow: hidden; box-shadow: 0 0 0 8px rgba(255,255,255,.08), 0 40px 80px -40px rgba(0,0,0,.7); }
+.spotPhoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.spotCopy .kicker { color: #E9C46A; }
+.spotCopy h2 { font-family: var(--display); font-size: clamp(30px, 3.4vw, 48px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 16px; color: #fff; }
+.spotCopy p { font-size: 17px; line-height: 1.75; color: rgba(255,255,255,.85); margin: 0 0 28px; max-width: 52ch; }
+.spotCopy .primary { display: inline-flex; gap: 10px; padding: 14px 24px; border-radius: 999px; font-weight: 700; text-decoration: none; background: #fff; color: var(--primary-dark, #1B3A73); box-shadow: 0 16px 34px -14px rgba(0,0,0,.6); transition: transform .2s ease; }
+.spotCopy .primary:hover { transform: translateY(-2px); }
+@media (max-width: 800px) { .spotInner { grid-template-columns: 1fr; } .spotPhoto { border-radius: 20px; } }

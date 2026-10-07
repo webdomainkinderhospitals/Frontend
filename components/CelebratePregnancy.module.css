@@ -128,3 +128,25 @@
   .points { display: none; } /* the slider's tabs name them just below */
 }
 @media (prefers-reduced-motion: reduce) { .cardPhoto, .welcomeLink, .welcomeLink span { transition: none; } }
+
+/* Premium Birthing Centre: Water Birth, inside the centre */
+.insideCard {
+  margin-top: 26px; display: grid; grid-template-columns: 104px minmax(0, 1fr) auto; gap: 18px; align-items: center;
+  padding: 12px 18px 12px 12px; border-radius: 20px; text-decoration: none; color: inherit;
+  background: #fff; border: 1px solid rgba(201,150,40,.28);
+  box-shadow: 0 18px 40px -28px rgba(19,33,59,.55); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.insideCard img { width: 104px; height: 78px; object-fit: cover; border-radius: 14px; display: block; }
+.insideCard span { display: grid; gap: 3px; min-width: 0; }
+.insideCard small { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #9C7416; }
+.insideCard strong { font-family: var(--display); font-size: 20px; line-height: 1.2; color: var(--primary-dark, #1B3A73); }
+.insideCard em { font-style: normal; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft, #515A68); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.insideCard i { font-style: normal; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #1B3A73; color: #fff; transition: transform .25s ease; }
+.insideCard:hover { transform: translateY(-3px); border-color: rgba(201,150,40,.55); box-shadow: 0 24px 48px -28px rgba(19,33,59,.6); }
+.insideCard:hover i { transform: translateX(3px); }
+.insideCard:focus-visible { outline: 3px solid #C99628; outline-offset: 3px; }
+@media (max-width: 560px) {
+  .insideCard { grid-template-columns: 84px minmax(0, 1fr); }
+  .insideCard img { width: 84px; height: 70px; }
+  .insideCard i { display: none; }
+}

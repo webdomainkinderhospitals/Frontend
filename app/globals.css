@@ -5508,3 +5508,52 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
 html { scroll-padding-top: 140px; }
 @media (max-width: 1024px) { html { scroll-padding-top: 124px; } }
 @media (prefers-reduced-motion: reduce) { .header-main, .header .brand-logo { transition: none; } }
+
+/* ---- Celebrate Pregnancy menu: each experience with its photo ---- */
+.dropdown-pregnancy a.preg-item { display: flex; align-items: center; gap: 14px; padding: 10px 12px; }
+.preg-thumb {
+  flex: 0 0 auto; width: 58px; height: 58px; overflow: hidden; border-radius: 14px;
+  background: linear-gradient(135deg, #FDE8E9, #E7EEF9);
+  box-shadow: inset 0 0 0 1px rgba(27,58,115,.08), 0 8px 16px -10px rgba(19,33,59,.45);
+}
+.preg-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.75,.25,1); }
+.preg-item:hover .preg-thumb img, .preg-item:focus-visible .preg-thumb img { transform: scale(1.08); }
+.preg-text { min-width: 0; }
+.dropdown-pregnancy a.preg-item strong { margin: 0; font-size: 14.5px; font-weight: 700; color: var(--primary-dark, #1B3A73); }
+.dropdown-pregnancy a.preg-item small { margin-top: 3px; line-height: 1.35; }
+@media (min-width: 1025px) {
+  .dropdown.dropdown-pregnancy {
+    width: 620px; min-width: 0; padding: 12px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px;
+  }
+  .dropdown-pregnancy a.preg-item:hover { transform: none; }
+}
+@media (max-width: 1024px) {
+  .preg-thumb { width: 46px; height: 46px; border-radius: 12px; }
+}
+
+/* ---- Premium Birthing Centre menu: the centre and Water Birth, as photo cards ---- */
+.birthing-head { display: none; }
+.dropdown-birthing .preg-text em { display: none; }
+@media (min-width: 1025px) {
+  .dropdown.dropdown-birthing { width: 580px; gap: 10px; padding: 14px; }
+  .dropdown-birthing .birthing-head {
+    display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; padding: 2px 4px 4px;
+    font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #9C7416;
+  }
+  .dropdown-birthing .birthing-head::before { content: "✦"; color: #C99628; letter-spacing: 0; }
+  .dropdown-birthing a.birthing-card {
+    flex-direction: column; align-items: stretch; gap: 12px; padding: 10px 10px 14px;
+    border: 1px solid #EFE6D2; border-radius: 16px; background: #fff;
+  }
+  .dropdown-birthing a.birthing-card:hover { border-color: rgba(201,150,40,.55); background: linear-gradient(180deg, #fff, #FFFAEF); box-shadow: 0 18px 36px -24px rgba(19,33,59,.5); }
+  .dropdown-birthing .birthing-card .preg-thumb { width: 100%; height: 150px; border-radius: 12px; }
+  .dropdown-birthing .birthing-card .preg-text { padding: 0 6px; }
+  .dropdown-birthing .birthing-card strong { font-size: 16px; }
+  .dropdown-birthing .birthing-card small { font-size: 12.5px; line-height: 1.5; }
+  .dropdown-birthing .preg-text em {
+    display: inline-flex; gap: 6px; margin-top: 10px; font-style: normal; font-size: 13px; font-weight: 700; color: #9C7416;
+  }
+  .dropdown-birthing .preg-text em span { transition: transform .2s ease; }
+  .dropdown-birthing a.birthing-card:hover .preg-text em span { transform: translateX(3px); }
+}

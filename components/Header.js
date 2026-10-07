@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
 import { centreName, hospitalsOnly, slugOfLocation } from '@/lib/locations';
-import { kochiFeaturePages, menuHighlights } from '@/lib/kochi-features.mjs';
+import { kochiFeaturePages, menuHighlights, pregnancyPhoto, JOURNEY_PHOTO, PREMIUM_SLUG, BIRTHING_STILL } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
 import NavIcon from '@/components/NavIcon';
@@ -30,6 +30,13 @@ const FEATURE_NOTES = {
   'kochi-water-birthing-suite': 'Kerala’s first water birthing suite',
   'kochi-premium-birthing-centre': 'LDRP suites & painless labour',
 };
+// The Premium Birthing Centre menu: a still from the hospital's own film for
+// the centre, and a fuller line under each.
+const BIRTHING_PHOTOS = { [PREMIUM_SLUG]: BIRTHING_STILL };
+const BIRTHING_NOTES = {
+  'kochi-premium-birthing-centre': 'Private LDRP suites, painless labour and a dedicated birthing team',
+  'kochi-water-birthing-suite': 'Kerala’s first water birthing suite — calm, warm-water labour',
+};
 
 export default function Header({ settings, locations: allLocations = [], specialities = [], pages = [] }) {
   // Kinder Kochi's pregnancy experiences, from the same published pages as the
@@ -40,8 +47,10 @@ export default function Header({ settings, locations: allLocations = [], special
   const locations = hospitals;
   // They open on the main site, not on Kinder Kochi's own site.
   const allFeatures = kochiFeaturePages(pages, 'Kochi', { site: 'main' });
-  const premium = allFeatures.find((f) => f.group === 'Premium Birthing Centre');
-  const features = allFeatures.filter((f) => f !== premium);
+  // The Premium Birthing Centre leads its own menu, with Water Birth inside it.
+  const premium = allFeatures.find((f) => f.slug === PREMIUM_SLUG);
+  const birthing = allFeatures.filter((f) => f.group === 'Premium Birthing Centre');
+  const features = allFeatures.filter((f) => f.group === 'Celebrate Pregnancy');
   // Spandanam and Cake Mixing (Mom Mix), from their Content Library pages.
   const highlights = menuHighlights(pages);
   const serviceGroups = groupServices(specialities);
@@ -258,17 +267,14 @@ export default function Header({ settings, locations: allLocations = [], special
                     <span className="nav-spark" aria-hidden="true">✦</span> Celebrate Pregnancy <span className="caret">▾</span>
                   </a>
                   <div className="dropdown dropdown-pregnancy">
-                    <a href="/celebrate-pregnancy" onClick={onLeafClick}><strong>Your pregnancy journey</strong><small>Antenatal care to going home</small></a>
-                    {features.map((f) => (
-                      <a key={f.slug} href={f.href} onClick={onLeafClick}>
-                        <strong>{f.label}</strong>
-                        <small>{FEATURE_NOTES[f.slug] || f.group}</small>
-                      </a>
-                    ))}
-                    {highlights.map((h) => (
-                      <a key={h.slug} href={h.href} onClick={onLeafClick}>
-                        <strong>{h.label}</strong>
-                        <small>{h.note}</small>
+                    {[
+                      { key: 'journey', href: '/celebrate-pregnancy', label: 'Your pregnancy journey', note: 'Antenatal care to going home', photo: JOURNEY_PHOTO },
+                      ...features.map((f) => ({ key: f.slug, href: f.href, label: f.label, note: FEATURE_NOTES[f.slug] || f.group, photo: f.page.photo || pregnancyPhoto(f.page) })),
+                      ...highlights.map((h) => ({ key: h.slug, ...h })),
+                    ].map((item) => (
+                      <a key={item.key} href={item.href} onClick={onLeafClick} className="preg-item">
+                        <span className="preg-thumb" aria-hidden="true">{item.photo && <img src={item.photo} alt="" loading="lazy" />}</span>
+                        <span className="preg-text"><strong>{item.label}</strong><small>{item.note}</small></span>
                       </a>
                     ))}
                   </div>
@@ -277,7 +283,29 @@ export default function Header({ settings, locations: allLocations = [], special
                 <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
               )}
 
-              {premium && (
+              {premium && (birthing.length > 1 ? (
+                <li className={dd('premium') + ' nav-premium' + act('premium')}>
+                  <a href={premium.href} onClick={(e) => toggleDropdown(e, 'premium')} aria-label="Premium Birthing Centre">
+                    <span className="nav-premium-mark" aria-hidden="true">✦</span>
+                    <span className="nav-label-full" aria-hidden="true"> Premium Birthing Centre</span>
+                    <span className="nav-label-short" aria-hidden="true"> Birthing Centre</span>
+                    <span className="caret" aria-hidden="true">▾</span>
+                  </a>
+                  <div className="dropdown dropdown-pregnancy dropdown-birthing">
+                    <span className="birthing-head" aria-hidden="true">Premium Birthing Centre · Kinder Kochi</span>
+                    {birthing.map((f) => (
+                      <a key={f.slug} href={f.href} onClick={onLeafClick} className="preg-item birthing-card">
+                        <span className="preg-thumb" aria-hidden="true"><img src={BIRTHING_PHOTOS[f.slug] || f.page.photo || pregnancyPhoto(f.page)} alt="" loading="lazy" /></span>
+                        <span className="preg-text">
+                          <strong>{f.slug === PREMIUM_SLUG ? 'The Birthing Centre' : f.label}</strong>
+                          <small>{BIRTHING_NOTES[f.slug] || FEATURE_NOTES[f.slug] || f.group}</small>
+                          <em>{f.slug === PREMIUM_SLUG ? 'Discover the suites' : 'Explore water birth'} <span aria-hidden="true">→</span></em>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              ) : (
                 <li className={'nav-premium' + act('premium')}>
                   <a href={premium.href} onClick={onLeafClick} aria-label="Premium Birthing Centre">
                     <span className="nav-premium-mark" aria-hidden="true">✦</span>
@@ -285,7 +313,7 @@ export default function Header({ settings, locations: allLocations = [], special
                     <span className="nav-label-short" aria-hidden="true"> Birthing Centre</span>
                   </a>
                 </li>
-              )}
+              ))}
 
               <li className={`${dd('services')} has-mega` + act('services')}>
                 <a href="/services" onClick={(e) => toggleDropdown(e, 'services')}>
