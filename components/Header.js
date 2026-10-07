@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
 import { centreName, hospitalsOnly, slugOfLocation } from '@/lib/locations';
-import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
+import { kochiFeaturePages, menuHighlights } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
 import NavIcon from '@/components/NavIcon';
@@ -42,6 +42,8 @@ export default function Header({ settings, locations: allLocations = [], special
   const allFeatures = kochiFeaturePages(pages, 'Kochi', { site: 'main' });
   const premium = allFeatures.find((f) => f.group === 'Premium Birthing Centre');
   const features = allFeatures.filter((f) => f !== premium);
+  // Spandanam and Cake Mixing (Mom Mix), from their Content Library pages.
+  const highlights = menuHighlights(pages);
   const serviceGroups = groupServices(specialities);
   // The Specialities menu shows its columns side by side, so no icon repeats across them.
   const megaIcons = iconsForList([
@@ -250,7 +252,7 @@ export default function Header({ settings, locations: allLocations = [], special
                 </div>
               </li>
 
-              {features.length ? (
+              {features.length || highlights.length ? (
                 <li className={dd('pregnancy') + ' nav-pregnancy' + act('pregnancy')}>
                   <a href="/celebrate-pregnancy" onClick={(e) => toggleDropdown(e, 'pregnancy')}>
                     <span className="nav-spark" aria-hidden="true">✦</span> Celebrate Pregnancy <span className="caret">▾</span>
@@ -261,6 +263,12 @@ export default function Header({ settings, locations: allLocations = [], special
                       <a key={f.slug} href={f.href} onClick={onLeafClick}>
                         <strong>{f.label}</strong>
                         <small>{FEATURE_NOTES[f.slug] || f.group}</small>
+                      </a>
+                    ))}
+                    {highlights.map((h) => (
+                      <a key={h.slug} href={h.href} onClick={onLeafClick}>
+                        <strong>{h.label}</strong>
+                        <small>{h.note}</small>
                       </a>
                     ))}
                   </div>
