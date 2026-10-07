@@ -1,5 +1,5 @@
 import { maternityHome } from '@/lib/maternity-home.mjs';
-import { featureImages } from '@/lib/kochi-features.mjs';
+import { pregnancyPhoto } from '@/lib/kochi-features.mjs';
 import PregnancySlider from '@/components/PregnancySlider';
 import styles from './CelebratePregnancy.module.css';
 
@@ -10,18 +10,7 @@ import styles from './CelebratePregnancy.module.css';
 // Library pages, so the admin controls what appears.
 const SHOWCASE = [['water-birth', 'water-birthing-suite'], ['spandanam'], ['mom-mix']];
 
-// Tharattazhaku's first import used kinderkochi.com's page banner; the
-// hospital has since supplied a photo of the event itself.
-const IMPORTED_BANNER = /kinderkochi\.com\/images\/tharatt_left_banner/;
-// Water Birth, until a photo is added to its page: the birthing suite, from
-// the hospital's Water Birthing film.
-const WATER_SUITE = '/celebrate-pregnancy/water-birth.webp';
-const imageOf = (link) => {
-  const own = String(link.page.imageUrl || '').trim();
-  if (!own && ['water-birth', 'water-birthing-suite'].includes(link.short)) return WATER_SUITE;
-  if (link.slug === 'kochi-tharattazhaku' && (!own || IMPORTED_BANNER.test(own))) return '/celebrate-pregnancy/tharatazhakku.webp';
-  return own || featureImages(link.page)[0] || '';
-};
+const imageOf = (link) => pregnancyPhoto(link.page);
 const placeOf = (link) => String(link.page.location || 'Kochi').split(',')[0].trim();
 
 export default function CelebratePregnancy({ pages = [], settings = {}, scope = 'group' }) {

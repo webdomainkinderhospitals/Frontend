@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { groupServices, slugify } from '@/lib/services';
 import { siteTree } from '@/lib/site-tree';
 import { centreName, hospitalsOnly, slugOfLocation } from '@/lib/locations';
-import { kochiFeaturePages, menuHighlights } from '@/lib/kochi-features.mjs';
+import { kochiFeaturePages, menuHighlights, pregnancyPhoto, JOURNEY_PHOTO } from '@/lib/kochi-features.mjs';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
 import NavIcon from '@/components/NavIcon';
@@ -258,17 +258,14 @@ export default function Header({ settings, locations: allLocations = [], special
                     <span className="nav-spark" aria-hidden="true">✦</span> Celebrate Pregnancy <span className="caret">▾</span>
                   </a>
                   <div className="dropdown dropdown-pregnancy">
-                    <a href="/celebrate-pregnancy" onClick={onLeafClick}><strong>Your pregnancy journey</strong><small>Antenatal care to going home</small></a>
-                    {features.map((f) => (
-                      <a key={f.slug} href={f.href} onClick={onLeafClick}>
-                        <strong>{f.label}</strong>
-                        <small>{FEATURE_NOTES[f.slug] || f.group}</small>
-                      </a>
-                    ))}
-                    {highlights.map((h) => (
-                      <a key={h.slug} href={h.href} onClick={onLeafClick}>
-                        <strong>{h.label}</strong>
-                        <small>{h.note}</small>
+                    {[
+                      { key: 'journey', href: '/celebrate-pregnancy', label: 'Your pregnancy journey', note: 'Antenatal care to going home', photo: JOURNEY_PHOTO },
+                      ...features.map((f) => ({ key: f.slug, href: f.href, label: f.label, note: FEATURE_NOTES[f.slug] || f.group, photo: f.page.photo || pregnancyPhoto(f.page) })),
+                      ...highlights.map((h) => ({ key: h.slug, ...h })),
+                    ].map((item) => (
+                      <a key={item.key} href={item.href} onClick={onLeafClick} className="preg-item">
+                        <span className="preg-thumb" aria-hidden="true">{item.photo && <img src={item.photo} alt="" loading="lazy" />}</span>
+                        <span className="preg-text"><strong>{item.label}</strong><small>{item.note}</small></span>
                       </a>
                     ))}
                   </div>

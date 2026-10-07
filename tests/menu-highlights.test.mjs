@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { menuHighlights, featureMenuPages } from '../lib/kochi-features.mjs';
+import { menuHighlights, featureMenuPages, pregnancyPhoto } from '../lib/kochi-features.mjs';
 
 test('Celebrate Pregnancy menu lists Spandanam and Cake Mixing when their pages are published', () => {
   const pages = [
@@ -11,9 +11,17 @@ test('Celebrate Pregnancy menu lists Spandanam and Cake Mixing when their pages 
   const menu = featureMenuPages(pages);
   assert.deepEqual(menu.map((p) => p.slug), ['celebrate-spandanam', 'celebrate-mom-mix']);
   assert.equal(menu[0].body, undefined);
-  assert.deepEqual(menuHighlights(menu).map((h) => [h.label, h.href]), [
-    ['Spandanam', '/celebrate-pregnancy/spandanam'],
-    ['Cake Mixing', '/celebrate-pregnancy/mom-mix'],
+  assert.deepEqual(menuHighlights(menu).map((h) => [h.label, h.href, h.photo]), [
+    ['Spandanam', '/celebrate-pregnancy/spandanam', '/celebrate-pregnancy/spandanam.webp'],
+    ['Cake Mixing', '/celebrate-pregnancy/mom-mix', '/celebrate-pregnancy/cake-mixing.webp'],
   ]);
   assert.deepEqual(menuHighlights([{ slug: 'celebrate-mom-mix', published: false }]), []);
+});
+
+test('pregnancy photos: an admin photo wins, imported generic banners give way to the hospital photo', () => {
+  assert.equal(pregnancyPhoto({ slug: 'celebrate-spandanam', imageUrl: 'https://cdn/x.webp' }), 'https://cdn/x.webp');
+  assert.equal(pregnancyPhoto({ slug: 'kochi-tharattazhaku', imageUrl: 'https://www.kinderkochi.com/images/tharatt_left_banner.jpg' }), '/celebrate-pregnancy/tharatazhakku.webp');
+  assert.equal(pregnancyPhoto({ slug: 'kochi-wow-mom', imageUrl: 'https://www.kinderkochi.com/images/appointment.jpg' }), '/kochi/tharattazhaku/mother-to-be.webp');
+  assert.equal(pregnancyPhoto({ slug: 'kochi-water-birthing-suite', imageUrl: '' }), '/celebrate-pregnancy/water-birth.webp');
+  assert.equal(pregnancyPhoto({ slug: 'kochi-premium-birthing-centre', imageUrl: 'https://www.kinderkochi.com/images/birth1.jpg' }), 'https://www.kinderkochi.com/images/birth1.jpg');
 });

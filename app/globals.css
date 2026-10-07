@@ -5508,3 +5508,26 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
 html { scroll-padding-top: 140px; }
 @media (max-width: 1024px) { html { scroll-padding-top: 124px; } }
 @media (prefers-reduced-motion: reduce) { .header-main, .header .brand-logo { transition: none; } }
+
+/* ---- Celebrate Pregnancy menu: each experience with its photo ---- */
+.dropdown-pregnancy a.preg-item { display: flex; align-items: center; gap: 14px; padding: 10px 12px; }
+.preg-thumb {
+  flex: 0 0 auto; width: 58px; height: 58px; overflow: hidden; border-radius: 14px;
+  background: linear-gradient(135deg, #FDE8E9, #E7EEF9);
+  box-shadow: inset 0 0 0 1px rgba(27,58,115,.08), 0 8px 16px -10px rgba(19,33,59,.45);
+}
+.preg-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.75,.25,1); }
+.preg-item:hover .preg-thumb img, .preg-item:focus-visible .preg-thumb img { transform: scale(1.08); }
+.preg-text { min-width: 0; }
+.dropdown-pregnancy a.preg-item strong { margin: 0; font-size: 14.5px; font-weight: 700; color: var(--primary-dark, #1B3A73); }
+.dropdown-pregnancy a.preg-item small { margin-top: 3px; line-height: 1.35; }
+@media (min-width: 1025px) {
+  .dropdown.dropdown-pregnancy {
+    width: 620px; min-width: 0; padding: 12px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px;
+  }
+  .dropdown-pregnancy a.preg-item:hover { transform: none; }
+}
+@media (max-width: 1024px) {
+  .preg-thumb { width: 46px; height: 46px; border-radius: 12px; }
+}

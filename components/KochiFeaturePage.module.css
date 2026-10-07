@@ -32,7 +32,17 @@
 .exploreGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
 .exploreGrid a { display: grid; gap: 10px; padding: 25px; border: 1px solid #DCE1E9; border-radius: 18px; text-decoration: none; background: #fff; transition: transform .2s, box-shadow .2s; }
 .exploreGrid a:hover { transform: translateY(-4px); box-shadow: 0 12px 24px #2939511c; }
-.exploreGrid span { color: #BC363B; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.exploreBody > span { color: #BC363B; font-size: 12px; font-weight: 700; text-transform: uppercase; }
 .exploreGrid strong { color: var(--primary-dark); font-family: var(--display); font-size: 23px; }
 .exploreGrid small { color: var(--primary-dark); font-weight: 700; }
 @media (max-width: 800px) { .heroInner, .content { grid-template-columns: 1fr; } .heroMedia { height: 350px; min-height: 0; border-radius: 28px 90px 28px 28px; } .index { position: static; } .content { padding-top: 50px; } }
+
+/* Explore more: photo cards */
+.exploreGrid a { padding: 0; gap: 0; overflow: hidden; grid-template-rows: auto 1fr; }
+.exploreMedia { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: linear-gradient(135deg, #FDE8E9, #E7EEF9); }
+.exploreMedia img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.75,.25,1); }
+.exploreGrid a:hover .exploreMedia img { transform: scale(1.05); }
+.exploreBody { display: grid; gap: 8px; padding: 18px 20px 20px; align-content: start; }
+.exploreGrid .exploreBody strong { font-size: 21px; line-height: 1.2; }
+.exploreMedia { display: grid; place-items: center; }
+.exploreMedia svg { width: 44px; height: 44px; fill: #E0393F; opacity: .55; }
