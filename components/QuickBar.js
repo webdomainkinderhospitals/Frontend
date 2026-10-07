@@ -7,14 +7,12 @@ const ITEMS = [
     href: '/services',
     title: 'Maternity Care',
     spec: 'gynaecology', // from the hospital's speciality icon set
-    sub: '13,000+ births delivered',
     icon: <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />,
   },
   {
     href: '/services#allied',
     title: 'Surgical Care',
     spec: 'general-surgery', // from the hospital's speciality icon set
-    sub: 'Laparoscopic & general',
     icon: (
       <>
         <path d="M20.5 3.5c-3.2.2-7 2.6-10.4 6.1l3.8 3.8c3.5-3.4 5.9-7.2 6.6-9.9z" />
@@ -27,7 +25,6 @@ const ITEMS = [
     href: '/services',
     title: 'Kinder IVF',
     spec: 'reproductive-medicine', // from the hospital's speciality icon set
-    sub: '1,500+ successful IVFs',
     icon: (
       <>
         <circle cx="12" cy="12" r="3" />
@@ -38,7 +35,6 @@ const ITEMS = [
   {
     href: WHATSAPP_BOOK,
     title: 'Book Appointment',
-    sub: 'OPD & online consult',
     icon: (
       <>
         <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -51,7 +47,6 @@ const ITEMS = [
   {
     href: '#packages',
     title: 'Health Packages',
-    sub: 'From ₹1,550 onwards',
     icon: (
       <>
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -83,7 +78,6 @@ export default function QuickBar() {
             </div>
             <div className="quick-text">
               <strong>{item.title}</strong>
-              <span>{item.sub}</span>
             </div>
           </a>
         ))}
