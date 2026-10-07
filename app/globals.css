@@ -5557,3 +5557,11 @@ html { scroll-padding-top: 140px; }
   .dropdown-birthing .preg-text em span { transition: transform .2s ease; }
   .dropdown-birthing a.birthing-card:hover .preg-text em span { transform: translateX(3px); }
 }
+
+/* Pages without the WhatsApp button (the main site): Kinder Maa takes its corner. */
+body:not(:has(.whatsapp-float)) .kc-launcher,
+body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
+@media (max-width: 640px) {
+  body:not(:has(.whatsapp-float)) .kc-launcher,
+  body:not(:has(.whatsapp-float)) .kc-panel { bottom: 16px; }
+}
