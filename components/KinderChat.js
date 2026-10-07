@@ -215,14 +215,40 @@ function buildReply(text, content) {
 // launcher and in the chat header, shown whole rather than cropped to a circle
 // so the bubble keeps its shape. She is a website guide, not a clinician, so
 // she carries no "Dr." title.
-function MaaAvatar({ className }) {
+//
+// She waves and smiles (an animated WebP made from the hospital's own clip).
+// The still portrait shows first; the animation is fetched once the page has
+// finished loading, so it never slows the page down, and it is skipped
+// entirely for visitors who ask their device for less motion.
+const MAA_STILL = '/kinder-maa.webp';
+const MAA_ANIMATED = '/kinder-maa-animated.webp';
+
+function useAnimatedMaa() {
+  const [src, setSrc] = useState(MAA_STILL);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    let cancelled = false;
+    const load = () => {
+      const img = new Image();
+      img.onload = () => { if (!cancelled) setSrc(MAA_ANIMATED); };
+      img.src = MAA_ANIMATED;
+    };
+    if (document.readyState === 'complete') load();
+    else window.addEventListener('load', load, { once: true });
+    return () => { cancelled = true; window.removeEventListener('load', load); };
+  }, []);
+  return src;
+}
+
+function MaaAvatar({ className, src = MAA_STILL }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={className} src="/kinder-maa.webp" alt="" width={192} height={192} aria-hidden="true" />
+    <img className={`${className || ''}${src === MAA_ANIMATED ? ' is-animated' : ''}`} src={src} alt="" width={192} height={192} aria-hidden="true" />
   );
 }
 
 export default function KinderChat({ content }) {
+  const maa = useAnimatedMaa();
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState([]);
   const [input, setInput] = useState('');
@@ -270,15 +296,18 @@ export default function KinderChat({ content }) {
         aria-label="Chat with Kinder Maa"
         onClick={() => setOpen(true)}
       >
-        <span className="kc-bot-wrap"><MaaAvatar className="kc-bot-icon" /></span>
-        <span className="kc-launcher-label">Chat with Kinder&nbsp;Maa</span>
+        <span className="kc-bot-wrap"><MaaAvatar className="kc-bot-icon" src={maa} /></span>
+        <span className="kc-launcher-label">
+          <strong>Chat with Kinder&nbsp;Maa</strong>
+          <small><i className="kc-dot" aria-hidden="true"></i> Online · here to help</small>
+        </span>
       </button>
 
       {open && (
         <section className="kc-panel" role="dialog" aria-label="Chat with Kinder Maa">
           <header className="kc-head">
             <span className="kc-avatar" aria-hidden="true">
-              <MaaAvatar />
+              <MaaAvatar src={maa} />
             </span>
             <div className="kc-head-text">
               <strong>Kinder Maa · Assistant</strong>

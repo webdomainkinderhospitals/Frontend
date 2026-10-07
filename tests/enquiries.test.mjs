@@ -9,6 +9,8 @@ test('the header contact list reads "Name | Phone | Email" lines', () => {
   assert.equal(list[0].short, 'Cherthala & Alappuzha');
   assert.equal(list[1].short, 'Kollam');
   assert.equal(list[1].email, 'contactus@kinderkollam.com');
+  // A landline written locally dials with the country code.
+  assert.equal(parseContacts('Kinder Hospitals Kochi | 0484 666 0000')[0].tel, 'tel:+914846660000');
 });
 
 test('a request is posted to the admin API and errors come back readable', async () => {

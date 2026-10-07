@@ -3,11 +3,11 @@ import { hospitalsOnly } from '@/lib/locations';
 import TopBar from '@/components/TopBar';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import WhatsAppFloat from '@/components/WhatsAppFloat';
 import ScrollEffects from '@/components/ScrollEffects';
 import KinderChat from '@/components/KinderChat';
 
-// Standard corporate-site chrome wrapped around every inner page.
+// Standard corporate-site chrome wrapped around every inner page. (The
+// WhatsApp button is on the hospital sites only.)
 export default function SiteChrome({ content, children }) {
   return (
     <>
@@ -15,7 +15,6 @@ export default function SiteChrome({ content, children }) {
       <Header settings={content.settings} locations={content.locations} specialities={content.specialities} pages={featureMenuPages(content.pages)} />
       {children}
       <Footer settings={content.settings} locations={content.locations} />
-      <WhatsAppFloat />
       <KinderChat content={content} />
       <ScrollEffects />
     </>

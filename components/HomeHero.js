@@ -6,7 +6,9 @@ import styles from './HomeHero.module.css';
 
 const appointment = '/book';
 
-// How long each slide holds before the next one takes over.
+// How long each slide holds before the next one takes over. The slides move
+// on their own (holding while the pointer or focus is on them); visitors can
+// also swipe or use the arrow keys, so no on-screen controls are shown.
 const SLIDE_MS = 6000;
 
 function Headline({ text }) {
@@ -17,7 +19,6 @@ function Headline({ text }) {
 export default function HomeHero({ settings = {}, locations = [] }) {
   const [current, setCurrent] = useState(0);
   const [motionOk, setMotionOk] = useState(false);
-  const [paused, setPaused] = useState(false); // the visitor pressed pause
   const [hold, setHold] = useState(false);     // pointer or keyboard focus is on the hero
   const [hidden, setHidden] = useState(false); // the tab is in the background
   const touchStart = useRef(null);
@@ -68,7 +69,7 @@ export default function HomeHero({ settings = {}, locations = [] }) {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, []);
 
-  const running = motionOk && !paused && !hold && !hidden;
+  const running = motionOk && !hold && !hidden;
   useEffect(() => {
     if (!running) return;
     const timer = setTimeout(() => setCurrent((n) => (n + 1) % count), SLIDE_MS);
@@ -122,22 +123,6 @@ export default function HomeHero({ settings = {}, locations = [] }) {
         </div>
       </div>
     </div>)}
-    <div className={styles.controls}>
-      <button type="button" onClick={() => select(current - 1)} aria-label="Previous highlight">←</button>
-      <div className={styles.dots} role="group" aria-label="Choose a highlight">
-        {slides.map((slide, i) => <button type="button" key={i} aria-label={`Show ${slide.label}`} aria-pressed={current === i} onClick={() => select(i)}><span /></button>)}
-      </div>
-      <button type="button" onClick={() => select(current + 1)} aria-label="Next highlight">→</button>
-      {motionOk && <button type="button" className={styles.playPause} onClick={() => setPaused((p) => !p)}
-        aria-label={paused ? 'Play the highlights' : 'Pause the highlights'}>
-        {paused
-          ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
-          : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zm5 0h3v14h-3z" /></svg>}
-      </button>}
-      <span className={styles.counter} aria-hidden="true">
-        <strong>{String(current + 1).padStart(2, '0')}</strong> / {String(count).padStart(2, '0')}
-      </span>
-    </div>
     {motionOk && <div className={styles.progress} aria-hidden="true">
       <span key={current} style={{ animationDuration: `${SLIDE_MS}ms`, animationPlayState: running ? 'running' : 'paused' }} />
     </div>}
