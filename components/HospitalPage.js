@@ -9,6 +9,8 @@ import { centreName } from '@/lib/locations';
 import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
 import DepartmentShowcase from '@/components/DepartmentShowcase';
 import CentreServiceMenu from '@/components/CentreServiceMenu';
+import LeadershipTeam from '@/components/LeadershipTeam';
+import { centreLeaders } from '@/lib/leadership.mjs';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
@@ -99,6 +101,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   const base = `/hospitals/${hospitalSlug}`;
   const book = `${base}/book`;
   const specialityGroups = groupSpecialities(specialities);
+  const leaders = centreLeaders(featurePages, loc.name);
   // "Kinder Hospitals Kochi": the name is set in the display face with the
   // place picked out, so split it into its lead-in and the place itself.
   const name = centreName(loc);
@@ -381,6 +384,22 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                 </blockquote>
               ))}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* The centre's own leadership (Content Library pages in the
+          Leadership category with this centre as their Location) */}
+      {leaders.length > 0 && (
+        <section id="leadership" className="hosp-leadership">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Leadership</span>
+                <h2 className="section-title">Leading <em>{name}</em></h2>
+              </div>
+            </div>
+            <LeadershipTeam leaders={leaders} base={base} />
           </div>
         </section>
       )}
