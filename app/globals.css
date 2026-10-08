@@ -5585,3 +5585,151 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
 
 /* A centre's leadership section */
 .hosp-leadership { background: linear-gradient(180deg, #F6F9FD, #EEF3FA); }
+
+/* =====================================================================
+   Main menu row — modern navy band (desktop)
+   A deep navy gradient band under the white brand row: white labels on
+   frosted-glass hover pills, the current page as a solid white pill, the
+   two signature menus as rose / gold accent pills, and the red CTA glowing.
+   High contrast (white on navy ≥ 10:1), visible focus rings, 200ms easing.
+   ===================================================================== */
+@media (min-width: 1025px) {
+  html body .header .nav {
+    background:
+      radial-gradient(120% 220% at 0% 0%, rgba(74,123,200,.45) 0%, transparent 46%),
+      radial-gradient(90% 200% at 100% 100%, rgba(224,57,63,.22) 0%, transparent 50%),
+      linear-gradient(100deg, #12285A 0%, #1B3A73 48%, #183466 100%) !important;
+    border-top: 0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 30px -18px rgba(18,40,90,.75) !important;
+  }
+  html body .header .nav::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #E0393F 22%, #E9C46A 50%, #6E9BE0 78%, transparent 100%) !important;
+    opacity: .9;
+  }
+  html body .header .nav-list { padding-top: 7px; padding-bottom: 7px; gap: 4px; }
+
+  /* Items: white labels, frosted pill on hover */
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a {
+    color: rgba(255,255,255,.88) !important;
+    font-weight: 600 !important; letter-spacing: .01em;
+    border-radius: 999px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    transition: color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease !important;
+  }
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a::after { display: none !important; }
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a:hover,
+  html body .header .nav-list > li.is-open:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li:not(.nav-cta-wrap):focus-within > a {
+    color: #fff !important;
+    background: rgba(255,255,255,.12) !important;
+    border-color: rgba(255,255,255,.22) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 18px -12px rgba(0,0,0,.6) !important;
+    transform: translateY(-1px) !important;
+  }
+  /* Current page: a solid white pill */
+  html body .header .nav-list > li.is-active:not(.nav-cta-wrap):not(.nav-pregnancy):not(.nav-premium) > a {
+    color: #1B3A73 !important; font-weight: 700 !important;
+    background: #fff !important; border-color: #fff !important;
+    box-shadow: 0 10px 22px -12px rgba(0,0,0,.65) !important;
+  }
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a .caret { color: currentColor !important; opacity: .65 !important; }
+
+  /* Icons: soft blue-white, brightening on hover; red on the current page */
+  html body .header .nav-list > li > a .nav-ico { color: #A9C1EA !important; }
+  html body .header .nav-list > li:hover > a .nav-ico,
+  html body .header .nav-list > li.is-open > a .nav-ico { color: #fff !important; }
+  html body .header .nav-list > li.is-active:not(.nav-pregnancy):not(.nav-premium) > a .nav-ico { color: #E0393F !important; }
+
+  /* Celebrate Pregnancy: rose glass pill */
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a .caret {
+    color: #FFE3E5 !important;
+  }
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a {
+    background: linear-gradient(180deg, rgba(240,96,104,.30), rgba(224,57,63,.18)) !important;
+    border-color: rgba(255,170,176,.45) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -12px rgba(224,57,63,.8) !important;
+  }
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a:hover,
+  html body .header .nav-list > li.nav-pregnancy.is-open:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-pregnancy.is-active:not(.nav-cta-wrap) > a {
+    color: #fff !important;
+    background: linear-gradient(180deg, rgba(240,96,104,.52), rgba(224,57,63,.36)) !important;
+    border-color: rgba(255,190,195,.7) !important;
+  }
+
+  /* Premium Birthing Centre: gold-rimmed glass pill */
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a .caret {
+    color: #F6D68C !important;
+  }
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a {
+    background: linear-gradient(180deg, rgba(233,196,106,.16), rgba(233,196,106,.06)) !important;
+    border-color: rgba(233,196,106,.45) !important;
+  }
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a:hover,
+  html body .header .nav-list > li.nav-premium.is-open:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-premium.is-active:not(.nav-cta-wrap) > a {
+    color: #FFE7AE !important;
+    background: linear-gradient(180deg, rgba(233,196,106,.30), rgba(233,196,106,.14)) !important;
+    border-color: rgba(240,210,130,.8) !important;
+  }
+  html body .header .nav-premium-mark { color: #F6D68C !important; }
+  /* The sparkle beside Celebrate Pregnancy: solid gold on the navy */
+  html body .header .nav-list .nav-spark { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: #F6D68C !important; -webkit-text-fill-color: #F6D68C !important; }
+
+  /* Book Appointment: the one primary action, glowing red */
+  html body .header .nav-cta {
+    background: linear-gradient(135deg, #F0525A 0%, #E0393F 45%, #B9262C 100%) !important;
+    color: #fff !important; font-weight: 700 !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+    box-shadow: 0 0 0 4px rgba(224,57,63,.18), 0 12px 26px -10px rgba(224,57,63,.85) !important;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease !important;
+  }
+  html body .header .nav-cta:hover {
+    transform: translateY(-1px) !important; filter: brightness(1.06);
+    box-shadow: 0 0 0 6px rgba(224,57,63,.24), 0 16px 32px -10px rgba(224,57,63,.95) !important;
+  }
+
+  /* Keyboard focus: a clear white ring on the navy */
+  html body .header .nav-list > li > a:focus-visible,
+  html body .header .nav-cta:focus-visible {
+    outline: 3px solid #fff !important; outline-offset: 2px !important;
+  }
+}
+/* Laptop widths: tighter pills so the whole row, Book button included,
+   stays on one line */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  html body .header .nav-list { gap: 2px; }
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a { padding-left: 11px !important; padding-right: 11px !important; font-size: 14px !important; }
+  html body .header .nav-cta { padding: 10px 16px !important; font-size: 14px !important; }
+}
+/* The pills are roomier, so the short "Birthing Centre" label is used a
+   little wider, and the smallest laptops get a slightly tighter row */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  html body .header .nav-premium .nav-label-full { display: none !important; }
+  html body .header .nav-premium .nav-label-short { display: inline !important; }
+}
+@media (min-width: 1025px) and (max-width: 1279px) {
+  /* the dropdowns still open on hover, focus and tap; the carets go to save room */
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a .caret { display: none !important; }
+}
+@media (min-width: 1025px) and (max-width: 1199px) {
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a { padding-left: 8px !important; padding-right: 8px !important; font-size: 13.5px !important; }
+  html body .header .nav-list { gap: 0; }
+  html body .header .nav-cta { padding: 9px 12px !important; font-size: 13px !important; }
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a { padding-left: 10px !important; padding-right: 10px !important; }
+}
+@media (min-width: 1025px) and (prefers-reduced-motion: reduce) {
+  html body .header .nav-list > li > a, html body .header .nav-cta { transition: none !important; transform: none !important; }
+}
+@media (min-width: 1025px) and (max-width: 1099px) {
+  html body .header .nav-list > li:not(.nav-cta-wrap) > a { padding-left: 6px !important; padding-right: 6px !important; font-size: 13px !important; }
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a { padding-left: 8px !important; padding-right: 8px !important; }
+  html body .header .nav-cta { padding: 8px 10px !important; font-size: 12.5px !important; }
+}
