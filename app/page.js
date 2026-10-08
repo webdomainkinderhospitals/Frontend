@@ -26,6 +26,9 @@ import Footer from '@/components/Footer';
 import KinderChat from '@/components/KinderChat';
 import ScrollEffects from '@/components/ScrollEffects';
 import HomeInteractions from '@/components/HomeInteractions';
+import Blueprint from '@/components/home/Blueprint';
+import BrandAmbassador from '@/components/home/BrandAmbassador';
+import Roadmap from '@/components/home/Roadmap';
 
 export const revalidate = 60;
 
@@ -48,8 +51,10 @@ export default async function HomePage() {
         settings={settings}
         hospitals={hospitals.map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}
       />
+      <Blueprint />
       <CelebratePregnancy pages={content.pages} settings={settings} />
       <PremiumBirthingCentre pages={content.pages} settings={settings} />
+      <BrandAmbassador />
       <MomentsAtKinder gallery={content.gallery} />
       <CoeGrid />
       <Doctors doctors={doctors} locations={hospitals} />
@@ -60,6 +65,7 @@ export default async function HomePage() {
       <News news={news} />
       <Accreditations />
       <Locations locations={hospitals} />
+      <Roadmap />
       </main>
       <Footer settings={settings} locations={locations} />
       <KinderChat content={content} />
