@@ -39,3 +39,10 @@ test('a summary never stops at "Mr."', () => {
   const r = leaderOf({ title: 'Mr. A B', body: 'Mr. A B\n\nCEO – X\n\nMr. A B has over 15 years of experience in hospital management and healthcare business operations. As the CEO of Kinder Hospitals Group, Mr. A B aims at maintaining a growing and profitable business according to standards.' });
   assert.match(r.summary, /operations\.$/);
 });
+
+test('the order and Anto Twinkle\'s centre hold even before the stored data is updated', () => {
+  const stale = pages.map((p) => ({ ...p, location: '', sortOrder: { 'leadership-mr-anto-twinkle': 1, 'leadership-mr-basanta-kumar-dash': 2, 'leadership-dr-v-k-pradeep-kumar': 3, 'leadership-mr-renjith-krishnan': 4 }[p.slug] ?? 9 }));
+  assert.deepEqual(groupLeaders(stale).map((l) => l.slug),
+    ['leadership-dr-v-k-pradeep-kumar', 'leadership-mr-renjith-krishnan', 'leadership-mr-basanta-kumar-dash']);
+  assert.deepEqual(centreLeaders(stale, 'Kochi').map((l) => l.slug), ['leadership-mr-anto-twinkle']);
+});
