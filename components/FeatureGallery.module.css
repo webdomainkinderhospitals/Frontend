@@ -1,11 +1,11 @@
 .section { padding: clamp(56px, 7vw, 96px) 0; background: linear-gradient(180deg, #FBF6F8 0%, #F3F0F8 100%); }
 .head { max-width: 720px; margin-bottom: clamp(26px, 3.5vw, 40px); }
 .eyebrow { display: block; font-size: 12px; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; color: #BC363B; margin-bottom: 12px; }
-.head h2 { margin: 0; font-family: var(--display); font-size: clamp(30px, 3.4vw, 46px); line-height: 1.12; letter-spacing: -.03em; color: var(--primary-dark, #1B3A73); }
+.head h2, .head h3 { margin: 0; font-family: var(--display); font-size: clamp(30px, 3.4vw, 46px); line-height: 1.12; letter-spacing: -.03em; color: var(--primary-dark, #1B3A73); }
 .head p { margin: 14px 0 0; font-size: 17px; line-height: 1.75; color: var(--ink-soft, #515A68); }
 .grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1.6fr 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 16px; height: clamp(420px, 44vw, 600px); }
 .lead { grid-row: 1 / 3; }
-.grid li:nth-child(4) { grid-column: 2 / 4; }
+.grid[data-n='4'] li:nth-child(4) { grid-column: 2 / 4; }
 .grid li { min-height: 0; }
 .tile {
   position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; overflow: hidden; cursor: zoom-in;
@@ -26,7 +26,8 @@
 @media (max-width: 860px) {
   .grid { grid-template-columns: 1fr 1fr; grid-template-rows: none; height: auto; }
   .lead { grid-row: auto; grid-column: 1 / 3; }
-  .grid li:nth-child(4) { grid-column: auto; }
+  .grid[data-n='4'] li:nth-child(4) { grid-column: auto; }
+  .grid[data-n='5'] li:nth-child(5) { grid-column: 1 / 3; aspect-ratio: 3 / 2; }
   .grid li { aspect-ratio: 4 / 3; }
   .lead { aspect-ratio: 3 / 2; }
 }
@@ -38,3 +39,25 @@
   .lead .caption em { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .tile img, .zoom { transition: none; } .tile:hover img { transform: none; } }
+
+/* Inside the home page's Celebrate Pregnancy section */
+.embedded { margin-top: clamp(40px, 5vw, 64px); padding: clamp(24px, 3vw, 36px); border-radius: 28px; background: #fff; border: 1px solid #F0E3E8; box-shadow: 0 30px 60px -44px rgba(42,30,74,.45); }
+.embedded .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 32px; align-items: end; max-width: none; margin-bottom: 22px; }
+.embedded .head .eyebrow, .embedded .head h3, .embedded .head p { grid-column: 1; }
+.embedded .head h3 { font-size: clamp(26px, 2.6vw, 36px); }
+.embedded .head p { max-width: 64ch; font-size: 16px; }
+.embedded .more { grid-column: 2; grid-row: 1 / 4; align-self: end; }
+.embedded .grid { height: clamp(380px, 38vw, 520px); }
+.more {
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 999px; white-space: nowrap;
+  background: var(--primary-dark, #1B3A73); color: #fff; font-weight: 700; font-size: 14.5px; text-decoration: none;
+  box-shadow: 0 14px 30px -14px rgba(27,58,115,.6); transition: transform .2s ease;
+}
+.more:hover { transform: translateY(-2px); }
+.more:focus-visible { outline: 3px solid #E0393F; outline-offset: 3px; }
+@media (max-width: 860px) {
+  .embedded .head { grid-template-columns: 1fr; }
+  .embedded .more { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 16px; }
+  .embedded .grid { height: auto; }
+}
+@media (max-width: 520px) { .embedded { padding: 18px 14px; border-radius: 20px; } }

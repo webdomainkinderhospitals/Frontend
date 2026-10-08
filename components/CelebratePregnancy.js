@@ -2,6 +2,8 @@ import { maternityHome } from '@/lib/maternity-home.mjs';
 import { pregnancyPhoto } from '@/lib/kochi-features.mjs';
 import { withoutCentre, pageWithoutCentre } from '@/lib/no-centre.mjs';
 import PregnancySlider from '@/components/PregnancySlider';
+import FeatureGallery from '@/components/FeatureGallery';
+import { featureGallery } from '@/lib/feature-galleries.mjs';
 import styles from './CelebratePregnancy.module.css';
 
 // Celebrate Pregnancy, on the group homepage (and Kochi's page): the
@@ -30,6 +32,7 @@ export default function CelebratePregnancy({ pages = [], settings = {}, scope = 
 
   const showcase = SHOWCASE.map((shorts) => section.links.find((l) => shorts.includes(l.short))).filter(Boolean);
   const welcome = section.links.find((link) => link.short === 'first-moments');
+  const momMix = section.links.find((link) => link.short === 'mom-mix');
   const cards = section.links.filter((link) => !showcase.includes(link) && link !== welcome);
 
   const slides = showcase.map((link) => ({
@@ -62,6 +65,9 @@ export default function CelebratePregnancy({ pages = [], settings = {}, scope = 
           ? <PregnancySlider slides={slides} />
           : section.imageUrl && <figure className={styles.heroPhoto}><img src={section.imageUrl} alt={section.imageAlt} loading="lazy" /></figure>}
       </div>
+
+      {/* Cake Mixing (Mom Mix): the season's photos, opening its page. */}
+      {momMix && <FeatureGallery gallery={featureGallery(momMix.slug)} embedded href={momMix.href} linkLabel="Explore Cake Mixing" />}
 
       {cards.length > 0 && <>
         <div className={styles.subhead}>
