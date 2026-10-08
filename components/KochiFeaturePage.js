@@ -2,6 +2,8 @@ import ContentBody from './ContentBody';
 import { careSections, careFaqs } from '@/lib/care-content.mjs';
 import { featureImages, pregnancyPhoto, PREMIUM_SLUG, BIRTHING_STILL } from '@/lib/kochi-features.mjs';
 import { withoutCentre, pageWithoutCentre } from '@/lib/no-centre.mjs';
+import FeatureGallery from './FeatureGallery';
+import { featureGallery } from '@/lib/feature-galleries.mjs';
 import styles from './KochiFeaturePage.module.css';
 
 // One of Kinder Kochi's pregnancy experiences or its birthing centre. On
@@ -73,6 +75,8 @@ export default function KochiFeaturePage({ page: stored, loc, links: storedLinks
         })}
       </article>
     </div>
+
+    <FeatureGallery gallery={featureGallery(page.slug)} />
 
     {spotlight && <section className={styles.spotlight} aria-labelledby="spotlight-title"><div className={`container ${styles.spotInner}`}>
       {spotPhoto && <figure className={styles.spotPhoto}><img src={spotPhoto} alt={spotlight.page.title || spotlight.label} loading="lazy" /></figure>}
