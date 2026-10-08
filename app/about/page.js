@@ -1,4 +1,6 @@
 import ContentPages from '@/components/ContentPages';
+import LeadershipTeam from '@/components/LeadershipTeam';
+import { groupLeaders } from '@/lib/leadership.mjs';
 import Accreditations from '@/components/Accreditations';
 import { HubProse } from '@/components/Hub';
 import { getContent } from '@/lib/api';
@@ -56,6 +58,12 @@ function brandOf(settings = {}) {
 export default async function AboutPage() {
   const content = await getContent();
   const brand = brandOf(content.settings);
+  // The group's leaders (centre leaders appear on their centre's page). The
+  // About Kinder Hospitals and Mission pages are already this page's story
+  // and purpose, so only other About Us pages are listed at the end.
+  const leaders = groupLeaders(content.pages || []);
+  const SHOWN = new Set(['about-us-about-kinder-hospitals', 'about-us-mission-vision-values']);
+  const morePages = (content.pages || []).filter((p) => p.category === 'About Us' && !SHOWN.has(p.slug));
   return (
     <SiteChrome content={content}>
       <main className={styles.about}>
@@ -206,6 +214,13 @@ export default async function AboutPage() {
                 <span>Chairman, Kinder Medical Group</span>
               </footer>
             </blockquote>
+            {leaders.length > 0 && <>
+              <div className={styles.teamHead}>
+                <span className="section-eyebrow">Our leadership team</span>
+                <h3>The people who lead <em>Kinder Hospitals</em></h3>
+              </div>
+              <LeadershipTeam leaders={leaders} />
+            </>}
           </div>
         </section>
 
@@ -247,7 +262,7 @@ export default async function AboutPage() {
           <p><a className="view-all" href="/contact">Enquire about academics →</a></p>
         </HubProse>
 
-        <ContentPages title="More about Kinder Hospitals" pages={(content.pages || []).filter((p) => ['About Us', 'Leadership'].includes(p.category))} />
+        <ContentPages title="More about Kinder Hospitals" pages={morePages} />
         <section className="hosp-cta-wrap">
           <div className="container">
             <div className="cta-strip">

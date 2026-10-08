@@ -90,3 +90,9 @@
   .values ul { grid-template-columns: repeat(2, 1fr); }
   .values li { font-size: 17px; }
 }
+
+/* Leadership team, under the chairman's message */
+.teamHead { margin: 64px 0 28px; }
+.teamHead h3 { margin: 10px 0 0; font-family: var(--display); font-size: clamp(26px, 2.8vw, 36px); font-weight: 600; line-height: 1.2; letter-spacing: -.03em; color: var(--primary-dark); }
+.teamHead h3 em { font-style: normal; color: var(--primary); }
+@media (max-width: 640px) { .teamHead { margin: 44px 0 20px; } }

@@ -5582,3 +5582,6 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   .kc-launcher-label { display: none; }
   .kc-bot-wrap { width: 60px; height: 60px; }
 }
+
+/* A centre's leadership section */
+.hosp-leadership { background: linear-gradient(180deg, #F6F9FD, #EEF3FA); }
