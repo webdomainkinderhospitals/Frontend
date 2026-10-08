@@ -1,10 +1,19 @@
 import { maternityHome } from '@/lib/maternity-home.mjs';
 import { pregnancyPhoto, PREMIUM_SLUG } from '@/lib/kochi-features.mjs';
+import { withoutCentre, pageWithoutCentre } from '@/lib/no-centre.mjs';
 import styles from './CelebratePregnancy.module.css';
 
 export default function PremiumBirthingCentre({ pages = [], settings = {}, scope = 'group' }) {
-  const section = maternityHome(pages, settings, 'birthing', scope);
-  if (!section) return null;
+  const found = maternityHome(pages, settings, 'birthing', scope);
+  if (!found) return null;
+  // On the main site the centre is Kinder Hospitals' own: no hospital named.
+  const group = scope === 'group';
+  const section = group ? {
+    ...found,
+    eyebrow: withoutCentre(found.eyebrow), title: withoutCentre(found.title), description: withoutCentre(found.description),
+    imageAlt: withoutCentre(found.imageAlt), highlights: withoutCentre(found.highlights),
+    links: found.links.map((link) => ({ ...link, label: withoutCentre(link.label), page: pageWithoutCentre(link.page) })),
+  } : found;
   const highlights = String(section.highlights || '').split(/\n|\\n/).map((s) => s.trim()).filter(Boolean);
   // Water Birth, inside the centre.
   const inside = section.links.filter((link) => link.slug !== PREMIUM_SLUG);

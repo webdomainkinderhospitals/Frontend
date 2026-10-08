@@ -1,6 +1,7 @@
 import ContentBody from './ContentBody';
 import { careSections, careFaqs } from '@/lib/care-content.mjs';
 import { featureImages, pregnancyPhoto, PREMIUM_SLUG, BIRTHING_STILL } from '@/lib/kochi-features.mjs';
+import { withoutCentre, pageWithoutCentre } from '@/lib/no-centre.mjs';
 import styles from './KochiFeaturePage.module.css';
 
 // One of Kinder Kochi's pregnancy experiences or its birthing centre. On
@@ -8,8 +9,16 @@ import styles from './KochiFeaturePage.module.css';
 // it stays on the main site, under Celebrate Pregnancy.
 // `spotlight` is a related page presented as a feature band: Water Birth on
 // the Premium Birthing Centre's page, and the centre on Water Birth's.
-export default function KochiFeaturePage({ page, loc, links = [], main = false, spotlight = null }) {
+export default function KochiFeaturePage({ page: stored, loc, links: storedLinks = [], main = false, spotlight: storedSpot = null }) {
+  // On the main site these experiences are Kinder Hospitals' own, so no
+  // hospital is named anywhere on the page; Kochi's own site keeps its name.
+  const clean = main ? withoutCentre : (t) => t;
+  const tidy = (link) => link && (main ? { ...link, label: clean(link.label), page: pageWithoutCentre(link.page) } : link);
+  const page = main ? pageWithoutCentre(stored) : stored;
+  const links = storedLinks.map(tidy);
+  const spotlight = tidy(storedSpot);
   const centre = loc.name || 'Kochi';
+  const brand = main ? 'Kinder Hospitals' : `Kinder ${centre}`;
   const birthing = links.find((link) => link.slug === page.slug)?.group === 'Premium Birthing Centre';
   const back = !main ? { href: '/hospitals/kochi', label: '← Kinder Kochi' }
     : birthing && page.slug !== PREMIUM_SLUG ? { href: '/premium-birthing-centre', label: '← Premium Birthing Centre' }
@@ -38,11 +47,11 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false, 
       <div className={`container ${styles.heroInner}`}>
         <div className={styles.heroCopy}>
           <a className={styles.back} href={back.href}>{back.label}</a>
-          <span className={styles.kicker}>{birthing ? 'Premium Birthing Centre' : isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : `Kinder ${centre} · Maternity Care`}{main ? ` · at Kinder Hospitals ${centre}` : ''}</span>
+          <span className={styles.kicker}>{birthing ? 'Premium Birthing Centre' : isEvent || page.category === 'Celebrate Pregnancy' ? 'Celebrate Pregnancy' : `${brand} · Maternity Care`}{main ? ' · Kinder Hospitals' : ''}</span>
           <h1>{page.title}</h1>
           <p>{page.excerpt}</p>
           <div className={styles.actions}>
-            <a className={styles.primary} href={book} {...(book.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>Enquire with Kinder {centre} →</a>
+            <a className={styles.primary} href={book} {...(book.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>Enquire with {brand} →</a>
             <a className={styles.secondary} href={hub}>Explore pregnancy care</a>
           </div>
         </div>
@@ -76,7 +85,7 @@ export default function KochiFeaturePage({ page, loc, links = [], main = false, 
     </div></section>}
 
     {images.length > 0 && <section className={styles.gallery}><div className="container">
-      <span className={styles.kicker}>Kinder {centre}</span><h2>Moments &amp; spaces</h2>
+      <span className={styles.kicker}>{brand}</span><h2>Moments &amp; spaces</h2>
       <div className={styles.galleryGrid}>{images.map((src, i) => <figure key={src}><img src={src} alt={`${page.title} — image ${i + 1}`} loading="lazy" /></figure>)}</div>
     </div></section>}
 
