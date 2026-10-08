@@ -296,7 +296,7 @@ export default function Header({ settings, locations: allLocations = [], special
                     <span className="caret" aria-hidden="true">▾</span>
                   </a>
                   <div className="dropdown dropdown-pregnancy dropdown-birthing">
-                    <span className="birthing-head" aria-hidden="true">Premium Birthing Centre · Kinder Kochi</span>
+                    <span className="birthing-head" aria-hidden="true">Premium Birthing Centre · Kinder Hospitals</span>
                     {birthing.map((f) => (
                       <a key={f.slug} href={f.href} onClick={onLeafClick} className="preg-item birthing-card">
                         <span className="preg-thumb" aria-hidden="true"><img src={BIRTHING_PHOTOS[f.slug] || f.page.photo || pregnancyPhoto(f.page)} alt="" loading="lazy" /></span>

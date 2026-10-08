@@ -1,5 +1,6 @@
 import { maternityHome } from '@/lib/maternity-home.mjs';
 import { pregnancyPhoto } from '@/lib/kochi-features.mjs';
+import { withoutCentre, pageWithoutCentre } from '@/lib/no-centre.mjs';
 import PregnancySlider from '@/components/PregnancySlider';
 import styles from './CelebratePregnancy.module.css';
 
@@ -14,8 +15,18 @@ const imageOf = (link) => pregnancyPhoto(link.page);
 const placeOf = (link) => String(link.page.location || 'Kochi').split(',')[0].trim();
 
 export default function CelebratePregnancy({ pages = [], settings = {}, scope = 'group' }) {
-  const section = maternityHome(pages, settings, 'pregnancy', scope);
-  if (!section) return null;
+  const found = maternityHome(pages, settings, 'pregnancy', scope);
+  if (!found) return null;
+  // On the main site the experiences are Kinder Hospitals' own: no centre is
+  // named, in the text or as a tag. Kochi's own site keeps its name.
+  const group = scope === 'group';
+  const clean = group ? withoutCentre : (t) => t;
+  const section = group ? {
+    ...found,
+    eyebrow: clean(found.eyebrow), title: clean(found.title), description: clean(found.description), imageAlt: clean(found.imageAlt),
+    links: found.links.map((link) => ({ ...link, label: clean(link.label), page: pageWithoutCentre(link.page) })),
+  } : found;
+  const placeTag = (link) => (group ? '' : `Kinder ${placeOf(link)}`);
 
   const showcase = SHOWCASE.map((shorts) => section.links.find((l) => shorts.includes(l.short))).filter(Boolean);
   const welcome = section.links.find((link) => link.short === 'first-moments');
@@ -23,7 +34,7 @@ export default function CelebratePregnancy({ pages = [], settings = {}, scope = 
 
   const slides = showcase.map((link) => ({
     key: link.slug, href: link.href, title: link.page.title || link.label, short: (link.page.title || link.label).split(' · ')[0],
-    location: placeOf(link), excerpt: link.page.excerpt, image: imageOf(link),
+    location: group ? '' : placeOf(link), excerpt: link.page.excerpt, image: imageOf(link),
   }));
   // A photo chosen for this section in the admin opens the slider.
   if (String(settings.maternityPregnancyImageUrl || '').trim()) {
@@ -40,7 +51,7 @@ export default function CelebratePregnancy({ pages = [], settings = {}, scope = 
           <h2 id="celebrate-title" className={styles.title}>{section.title}</h2>
           <p className={styles.lead}>{section.description}</p>
           {showcase.length > 0 && <ul className={styles.points}>
-            {showcase.map((link) => <li key={link.slug}><span aria-hidden="true" />{(link.page.title || link.label).split(' · ')[0]}<small>Kinder {placeOf(link)}</small></li>)}
+            {showcase.map((link) => <li key={link.slug}><span aria-hidden="true" />{(link.page.title || link.label).split(' · ')[0]}{placeTag(link) && <small>{placeTag(link)}</small>}</li>)}
           </ul>}
           <div className={styles.actions}>
             {section.buttonLabel && <a className={styles.primary} href={section.href}>{section.buttonLabel} <span aria-hidden="true">→</span></a>}
@@ -63,7 +74,7 @@ export default function CelebratePregnancy({ pages = [], settings = {}, scope = 
             return <a key={link.slug} className={styles.card} href={link.href}>
               <span className={styles.media}>
                 {image && <img className={styles.cardPhoto} src={image} alt="" loading="lazy" />}
-                <small className={styles.tag}>Kinder {placeOf(link)}</small>
+                {placeTag(link) && <small className={styles.tag}>{placeTag(link)}</small>}
               </span>
               <span className={styles.cardBody}>
                 <strong>{(link.page.title || link.label).split(' · ')[0]}</strong>
@@ -80,7 +91,7 @@ export default function CelebratePregnancy({ pages = [], settings = {}, scope = 
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.33-9A5.33 5.33 0 0 1 12 6.6 5.33 5.33 0 0 1 21.33 12C19 16.65 12 21 12 21Z" /></svg>
         </span>
         <div className={styles.welcomeText}>
-          <span className={styles.welcomeKicker}>Your first moments together · Kinder {placeOf(welcome)}</span>
+          <span className={styles.welcomeKicker}>Your first moments together{placeTag(welcome) ? ` · ${placeTag(welcome)}` : ''}</span>
           <h3>{welcome.page.title}</h3>
           <p>{welcome.page.excerpt}</p>
         </div>

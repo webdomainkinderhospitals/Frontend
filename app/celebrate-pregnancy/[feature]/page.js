@@ -1,4 +1,5 @@
 import { pregnancyHighlights } from '@/lib/pregnancy-highlights.mjs';
+import { withoutCentre } from '@/lib/no-centre.mjs';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { kochiFeaturePages } from '@/lib/kochi-features.mjs';
@@ -26,7 +27,7 @@ async function resolve(params) {
 export async function generateMetadata({ params }) {
   const found = await resolve(params);
   return found
-    ? { title: `${found.selected.page.title} · Celebrate Pregnancy · Kinder Hospitals`, description: found.selected.page.excerpt }
+    ? { title: `${withoutCentre(found.selected.page.title)} · Celebrate Pregnancy · Kinder Hospitals`, description: withoutCentre(found.selected.page.excerpt) }
     : { title: 'Page not found' };
 }
 

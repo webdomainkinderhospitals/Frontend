@@ -1,3 +1,4 @@
+import { withoutCentre } from '@/lib/no-centre.mjs';
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
 import { kochiFeaturePages, PREMIUM_SLUG } from '@/lib/kochi-features.mjs';
@@ -22,7 +23,7 @@ async function resolve() {
 export async function generateMetadata() {
   const found = await resolve();
   return found
-    ? { title: `${found.selected.page.title} · Kinder Hospitals`, description: found.selected.page.excerpt }
+    ? { title: `${withoutCentre(found.selected.page.title)} · Kinder Hospitals`, description: withoutCentre(found.selected.page.excerpt) }
     : { title: 'Premium Birthing Centre · Kinder Hospitals' };
 }
 

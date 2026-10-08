@@ -4,6 +4,7 @@ import { groupServices, slugify } from '@/lib/services';
 import { carePageHref, isCarePage } from '@/lib/care-content.mjs';
 import { hospitalSlugForPage } from '@/lib/locations';
 import { KOCHI_FEATURES, kochiFeaturePages } from '@/lib/kochi-features.mjs';
+import { withoutCentre } from '@/lib/no-centre.mjs';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import { HubTiles, HubProse, HubCta, whatsapp } from '@/components/Hub';
@@ -26,9 +27,10 @@ export default async function CelebratePregnancyPage() {
   const content = await getContent();
   const pages = (content.pages || []).filter((p) => p.published !== false);
   // Kinder Kochi's pregnancy experiences and birthing centre, opened here on the main site.
+  // No hospital is named in these lists: they are Kinder Hospitals' own.
   const experiences = kochiFeaturePages(content.pages, 'Kochi', { site: 'main' }).map((f) => ({
-    title: f.label,
-    text: f.page.excerpt,
+    title: withoutCentre(f.label),
+    text: withoutCentre(f.page.excerpt),
     href: f.href,
     cta: f.group === 'Premium Birthing Centre' ? 'Discover the suites' : 'Explore',
   }));
@@ -40,8 +42,8 @@ export default async function CelebratePregnancyPage() {
     .filter((p) => !featured.has(p.slug))
     .filter((p) => isCarePage(p) && /birth|labour|labor|maternity|obstetric|pregnan/i.test(`${p.title} ${p.excerpt}`))
     .map((p) => ({
-      title: p.title,
-      text: p.excerpt,
+      title: withoutCentre(p.title),
+      text: withoutCentre(p.excerpt),
       href: carePageHref(p, hospitalSlugForPage(p, content.locations)),
       cta: 'Explore this service',
     }));
