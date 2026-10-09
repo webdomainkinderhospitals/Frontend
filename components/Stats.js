@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import CareOrbit from './CareOrbit';
+import { homeStats } from '@/lib/home-stats.mjs';
 
 /**
  * Animated count-up for stat values like "13,000+", "6L+", "98%".
@@ -57,7 +58,7 @@ function StatValue({ value }) {
 }
 
 export default function Stats({ settings, hospitals = [], since = 2011 }) {
-  const stats = settings.stats || [];
+  const stats = homeStats(settings.stats || []);
 
   return (
     <section className="overview" id="about">
