@@ -188,7 +188,7 @@ function buildReply(text, content) {
     return reply(`We are always happy to meet caring professionals. Send your profile to ${settings.email || 'our team'} and we will get in touch.`, [{ label: 'Email your profile', href: `mailto:${settings.email}?subject=Careers%20at%20Kinder`, external: true }]);
   }
   if (/about|history|chairman|founder|group|since|story/.test(q)) {
-    return reply('The Kinder Medical Group has been kindling life since 2011 — 5 hospitals, 13,000+ births and 6 lakh+ women cared for. The About page has our story, vision and milestones.', [{ label: 'About the Kinder Group', href: '/about' }]);
+    return reply('The Kinder Medical Group has been kindling life since 2011 — 5 hospitals, 30,000+ births and 6 lakh+ women cared for. The About page has our story, vision and milestones.', [{ label: 'About the Kinder Group', href: '/about' }]);
   }
   if (/contact|phone|call|email|reach|address|timing|hours|open/.test(q)) {
     return reply(
