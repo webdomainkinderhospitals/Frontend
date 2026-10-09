@@ -96,3 +96,37 @@
 .teamHead h3 { margin: 10px 0 0; font-family: var(--display); font-size: clamp(26px, 2.8vw, 36px); font-weight: 600; line-height: 1.2; letter-spacing: -.03em; color: var(--primary-dark); }
 .teamHead h3 em { font-style: normal; color: var(--primary); }
 @media (max-width: 640px) { .teamHead { margin: 44px 0 20px; } }
+
+/* Chairman's message: portrait beside the signed quote */
+.chairman {
+  position: relative; margin: 40px 0 0; display: grid; grid-template-columns: minmax(240px, 380px) minmax(0, 1fr);
+  gap: clamp(28px, 4.5vw, 64px); align-items: center;
+  padding: clamp(22px, 3vw, 40px); border-radius: 32px; background: #fff;
+  border: 1px solid #DCE9E5; box-shadow: 0 40px 80px -56px rgba(25,74,66,.55);
+  overflow: hidden;
+}
+.chairman::before { content: ""; position: absolute; right: -120px; top: -140px; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, rgba(120,165,155,.18), transparent 65%); pointer-events: none; }
+.chairmanPhoto { position: relative; align-self: stretch; min-height: 100%; }
+.chairmanPhoto img { display: block; width: 100%; height: 100%; aspect-ratio: 760 / 866; object-fit: cover; object-position: center 18%; border-radius: 200px 200px 24px 24px; background: #EEF2F0; box-shadow: 0 0 0 8px #F1F7F5, 0 30px 60px -36px rgba(25,74,66,.6); }
+.chairmanBadge {
+  position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%);
+  padding: 8px 20px; border-radius: 999px; background: var(--primary-dark, #1B3A73); color: #fff;
+  font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap;
+  box-shadow: 0 14px 28px -14px rgba(27,58,115,.7);
+}
+.chairmanQuote { position: relative; margin: 0; padding: 0; border: 0; }
+.quoteMark { display: block; height: 64px; margin-bottom: 4px; font-family: Georgia, 'Times New Roman', serif; font-size: 120px; line-height: 1; color: #E0393F; opacity: .9; }
+.chairmanQuote p { margin: 0; font-size: clamp(20px, 2.1vw, 26px); line-height: 1.65; color: #294c45; letter-spacing: -.005em; }
+.chairmanQuote p strong { color: var(--primary-dark, #1B3A73); font-weight: 600; }
+.signature { display: flex; align-items: center; gap: 18px; margin-top: 30px; }
+.signLine { flex: none; width: 48px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, #E0393F, #78a59b); }
+.signature strong { display: block; font-family: var(--display); font-size: 20px; color: var(--primary-dark, #1B3A73); }
+.signature small { display: block; margin-top: 3px; font-size: 13.5px; color: #5E6B7A; }
+@media (max-width: 860px) {
+  .chairman { grid-template-columns: 1fr; text-align: left; }
+  .chairmanPhoto { max-width: 320px; justify-self: center; margin-bottom: 18px; }
+}
+@media (max-width: 520px) {
+  .chairman { padding: 18px 16px 24px; border-radius: 22px; }
+  .quoteMark { font-size: 90px; height: 48px; }
+}
