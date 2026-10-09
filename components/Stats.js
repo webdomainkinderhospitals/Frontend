@@ -82,7 +82,7 @@ export default function Stats({ settings, hospitals = [], since = 2011 }) {
               comprehensive, personalised maternity, IVF, neonatology, and paediatric care at
               affordable cost, to all strata of society.
             </p>
-            <div className="stats-row">
+            <div className="stats-row" style={{ '--n': stats.length > 4 ? 3 : Math.max(stats.length, 1) }}>
               {stats.map((stat, i) => (
                 <div className="stat" key={i}>
                   <StatValue value={stat.value} />

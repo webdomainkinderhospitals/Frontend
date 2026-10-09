@@ -5734,3 +5734,8 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a { padding-left: 8px !important; padding-right: 8px !important; }
   html body .header .nav-cta { padding: 8px 10px !important; font-size: 12.5px !important; }
 }
+
+/* Home stats: one column per number (five or more wrap as rows of three) */
+@media (min-width: 821px) {
+  .stats-row { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)) !important; }
+}

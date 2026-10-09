@@ -22,7 +22,7 @@ const body = Inter({
 export const metadata = {
   title: 'Kinder Hospitals — Medical Group · India · Singapore',
   description:
-    "Kinder Medical Group (Kindorama Healthcare Pvt Ltd) — a multi-centre women's & children's healthcare network across India and Singapore. NABH accredited maternity, IVF, neonatology, and paediatrics. 6 lakh+ women treated, 13,000+ births since 2011.",
+    "Kinder Medical Group (Kindorama Healthcare Pvt Ltd) — a multi-centre women's & children's healthcare network across India and Singapore. NABH accredited maternity, IVF, neonatology, and paediatrics. 6 lakh+ women treated, 30,000+ births since 2011.",
   icons: { icon: '/favicon.png' },
 };
 
