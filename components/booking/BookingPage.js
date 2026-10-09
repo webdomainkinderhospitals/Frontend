@@ -3,7 +3,7 @@
 import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { initials } from '@/components/DoctorCard';
-import { TIME_SLOTS, WEEKDAY_INITIALS, bookingMonth, dayInfo, monthGrid, monthShort, monthTitle, normalisePhone } from '@/lib/booking.mjs';
+import { TIME_SLOTS, WEEKDAY_INITIALS, bookingMonth, dayInfo, monthGrid, monthShort, monthTitle, normalisePhone, slotPassed } from '@/lib/booking.mjs';
 import { sendEnquiry } from '@/lib/enquiries.mjs';
 import { cardSummary, profileText, tidyQualifications } from '@/lib/doctor-profile.mjs';
 import ContentBody from '@/components/ContentBody';
@@ -120,7 +120,7 @@ const ChevronIcon = ({ dir }) => (
   </svg>
 );
 
-// The preferred day: a month calendar over the next year (tomorrow to 12
+// The preferred day: a month calendar over the next year (today to 12
 // months ahead), Sunday first. Arrows step a month; the month's name opens a
 // grid of every month in the window. `dates` are the days that can be asked
 // for (Sundays excepted, the outpatient desks are closed); other days show
@@ -231,7 +231,7 @@ function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = 
           <span className="bk-cal-key bk-cal-key-sun" aria-hidden="true" /> Sunday closed
         </span>
         <button type="button" className="bk-cal-quick" onClick={() => pick(first)}>
-          {dateOf(first).getTime() - dateOf(todayIso).getTime() === 86400000 ? 'Tomorrow' : 'Earliest'}
+          {first === todayIso ? 'Today' : dateOf(first).getTime() - dateOf(todayIso).getTime() === 86400000 ? 'Tomorrow' : 'Earliest'}
         </button>
       </div>
     </>
@@ -302,7 +302,7 @@ function DatePicker({ id, dates, value, onChange, label, placeholder, invalid = 
 
 // The preferred time: "Any time", or a half-hour slot, laid out as a grid
 // of times under Morning, Afternoon and Evening.
-function TimePicker({ id, value, onChange, label, inline = false }) {
+function TimePicker({ id, value, onChange, label, inline = false, day = '' }) {
   const pop = usePopover({ inline, width: 360 });
 
   useEffect(() => {
@@ -323,7 +323,8 @@ function TimePicker({ id, value, onChange, label, inline = false }) {
           <span className="bk-time-part">{g.part}</span>
           <div className="bk-time-grid">
             {g.slots.map((t) => (
-              <button key={t} type="button" className={`bk-time-slot${value === t ? ' is-on' : ''}`} aria-pressed={value === t} onClick={() => pick(t)}>
+              <button key={t} type="button" className={`bk-time-slot${value === t ? ' is-on' : ''}`} aria-pressed={value === t} onClick={() => pick(t)}
+                disabled={slotPassed(day, t)} title={slotPassed(day, t) ? 'This time has passed today' : undefined}>
                 {t}
               </button>
             ))}
@@ -372,7 +373,12 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
   const [profile, setProfile] = useState(null); // doctor whose profile is open
   const profileRef = useRef(null);
   const [chosen, setChosen] = useState({});     // doctor id -> { date, time } picked on its card
-  const choose = (id, patch) => setChosen((c) => ({ ...c, [id]: { ...c[id], ...patch } }));
+  // Changing the day to today drops a time that has already gone by.
+  const choose = (id, patch) => setChosen((c) => {
+    const next = { ...c[id], ...patch };
+    if (next.time && slotPassed(next.date?.iso || '', next.time)) next.time = '';
+    return { ...c, [id]: next };
+  });
   const dialogRef = useRef(null);
 
   // Dates are the visitor's own local days, so they are worked out in the
@@ -517,6 +523,7 @@ export default function BookingPage({ doctors = [], centres = [], fixedCentre = 
                       <TimePicker
                         id={`bk-time-${doc.id}`}
                         value={chosen[doc.id]?.time || ''}
+                        day={chosen[doc.id]?.date?.iso || ''}
                         onChange={(time) => choose(doc.id, { time })}
                         label={`Preferred time with ${doc.name}`}
                       />
@@ -696,7 +703,11 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
                 id="bk-day"
                 dates={dates}
                 value={pick.date?.iso}
-                onChange={(date) => { onChangeDate(date || null); if (errors.day) setErrors((x) => ({ ...x, day: undefined })); }}
+                onChange={(date) => {
+                  onChangeDate(date || null);
+                  if (time && slotPassed(date?.iso || '', time)) { setTime(''); onChangeTime?.(''); }
+                  if (errors.day) setErrors((x) => ({ ...x, day: undefined }));
+                }}
                 label="Preferred day"
                 placeholder="Select a preferred day"
                 invalid={!!errors.day}
@@ -711,6 +722,7 @@ const BookingDialog = forwardRef(function BookingDialog({ pick, dates, fixedCent
               <TimePicker
                 id="bk-time"
                 value={time}
+                day={pick.date?.iso || ''}
                 onChange={(t) => { setTime(t); onChangeTime?.(t); }}
                 label="Preferred time"
                 inline

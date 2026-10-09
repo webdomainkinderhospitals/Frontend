@@ -1,6 +1,6 @@
 import ContentPages from '@/components/ContentPages';
 import LeadershipTeam from '@/components/LeadershipTeam';
-import { groupLeaders } from '@/lib/leadership.mjs';
+import { groupLeaders, SHOW_LEADERSHIP } from '@/lib/leadership.mjs';
 import Accreditations from '@/components/Accreditations';
 import { HubProse } from '@/components/Hub';
 import { getContent } from '@/lib/api';
@@ -88,7 +88,7 @@ export default async function AboutPage() {
           </div>
         </section>
         <nav className={styles.sectionNav} aria-label="Explore About Us"><div className="container">
-          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ['leadership', 'Leadership'], ['accreditations', 'Accreditations'], ['quality', 'Quality & safety'], ['csr', 'CSR'], ['academics', 'Academics']].map(([id, label], i) => <a key={id} href={`#${id}`}><span>0{i + 1}</span>{label}<span aria-hidden="true">↗</span></a>)}
+          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ...(SHOW_LEADERSHIP ? [['leadership', 'Leadership']] : []), ['accreditations', 'Accreditations'], ['quality', 'Quality & safety'], ['csr', 'CSR'], ['academics', 'Academics']].map(([id, label], i) => <a key={id} href={`#${id}`}><span>0{i + 1}</span>{label}<span aria-hidden="true">↗</span></a>)}
         </div></nav>
 
         <section id="story" className={styles.story}>
@@ -194,7 +194,7 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        <section id="leadership" className={styles.leadership}>
+        {SHOW_LEADERSHIP && <section id="leadership" className={styles.leadership}>
           <div className="container">
             <div className="section-head">
               <div>
@@ -233,7 +233,7 @@ export default async function AboutPage() {
               <LeadershipTeam leaders={leaders} />
             </>}
           </div>
-        </section>
+        </section>}
 
         <section id="accreditations" style={{ background: 'var(--bg-soft)' }}>
           <div className="container">
