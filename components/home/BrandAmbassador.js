@@ -6,7 +6,7 @@ export default function BrandAmbassador() {
     <section id="brand-ambassador" className={styles.section} aria-labelledby="ambassador-title">
       <div className={`container ${styles.layout}`}>
         <figure className={styles.portrait}>
-          <img src="/home/amala-paul.webp" alt="Amala Paul, brand ambassador of Kinder Hospitals" loading="lazy" width={450} height={681} />
+          <img src="/home/amala-paul-portrait.webp" alt="Amala Paul, brand ambassador of Kinder Hospitals" loading="lazy" width={450} height={681} />
           <figcaption><strong>Amala Paul</strong><span>Brand Ambassador</span></figcaption>
         </figure>
         <div className={styles.copy}>
