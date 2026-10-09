@@ -48,7 +48,7 @@ export default function Blueprint() {
             </article>
           ))}
           <figure className={styles.photo}>
-            <img src="/home/care-team.webp" alt="Kinder Hospitals care team" loading="lazy" width={422} height={476} />
+            <img src="/home/vision-forward.webp" alt="Looking ahead: the Kinder Hospitals vision" loading="lazy" width={422} height={476} />
           </figure>
         </div>
       </div>

@@ -17,7 +17,7 @@
 .valueIcon { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #C3383D; box-shadow: inset 0 0 0 2px #F3C9CB; }
 .valueIcon svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .photo { grid-area: photo; position: relative; align-self: center; aspect-ratio: 422 / 476; margin: 0; border-radius: 200px 200px 26px 26px; overflow: hidden; background: linear-gradient(180deg, #DCE6F4, #F4F7FB); box-shadow: 0 0 0 8px #fff, 0 40px 70px -40px rgba(19,33,59,.6); }
-.photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
+.photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 @media (max-width: 1080px) {
   .layout { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "photo photo" "first second"; }
   .photo { max-width: 420px; justify-self: center; aspect-ratio: 422 / 476; width: 100%; }
