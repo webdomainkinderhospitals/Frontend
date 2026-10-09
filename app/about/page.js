@@ -202,18 +202,29 @@ export default async function AboutPage() {
                 <h2 className="section-title">Chairman&apos;s <em>message</em></h2>
               </div>
             </div>
-            <blockquote className="chairman-quote">
-              <p>
-                “When we started Kinder, we made one promise — that every mother and every child
-                who walks through our doors is treated the way we would treat our own family.
-                Five centres later, that promise has not changed. Kindness is not our slogan;
-                it is our clinical standard.”
-              </p>
-              <footer>
-                <strong>Dr. Pradeep Kumar V.K</strong>
-                <span>Chairman, Kinder Medical Group</span>
-              </footer>
-            </blockquote>
+            {/* The chairman's message: his portrait beside the quote, signed */}
+            <figure className={styles.chairman}>
+              <div className={styles.chairmanPhoto}>
+                <img src="/leadership/dr-v-k-pradeep-kumar.webp" alt="Dr. V K Pradeep Kumar, Chairman, Kinder Medical Group" width={760} height={866} loading="lazy" />
+                <span className={styles.chairmanBadge}>Chairman</span>
+              </div>
+              <blockquote className={styles.chairmanQuote}>
+                <span className={styles.quoteMark} aria-hidden="true">“</span>
+                <p>
+                  When we started Kinder, we made one promise — that every mother and every child
+                  who walks through our doors is treated the way we would treat our own family.
+                  Five centres later, that promise has not changed. <strong>Kindness is not our slogan;
+                  it is our clinical standard.</strong>
+                </p>
+                <figcaption className={styles.signature}>
+                  <span className={styles.signLine} aria-hidden="true" />
+                  <span>
+                    <strong>Dr. V K Pradeep Kumar</strong>
+                    <small>Chairman, Kinder Medical Group · Kindorama Healthcare Pvt Ltd</small>
+                  </span>
+                </figcaption>
+              </blockquote>
+            </figure>
             {leaders.length > 0 && <>
               <div className={styles.teamHead}>
                 <span className="section-eyebrow">Our leadership team</span>
