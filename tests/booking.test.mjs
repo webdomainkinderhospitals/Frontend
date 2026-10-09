@@ -2,20 +2,21 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { bookingDates, normalisePhone, whatsappNumber, bookingMessage, whatsappLink, GROUP_WHATSAPP } from '../lib/booking.mjs';
 
-test('twelve working days from tomorrow, never a Sunday', () => {
+test('twelve working days from today, never a Sunday', () => {
   const monday = new Date(2026, 8, 28);                    // Mon 28 Sep 2026
   const days = bookingDates(monday);
   assert.equal(days.length, 12);
-  assert.equal(days[0].label, 'Tue 29 Sep', 'starts tomorrow, not today');
+  assert.equal(days[0].label, 'Mon 28 Sep', 'starts today');
   assert.ok(days.every((d) => !d.label.startsWith('Sun')));
-  assert.deepEqual(days.slice(4, 6).map((d) => d.label), ['Sat 03 Oct', 'Mon 05 Oct']);
-  assert.equal(days[0].iso, '2026-09-29');
-  assert.equal(days[0].long, 'Tuesday, 29 September 2026');
+  assert.deepEqual(days.slice(5, 7).map((d) => d.label), ['Sat 03 Oct', 'Mon 05 Oct']);
+  assert.equal(days[0].iso, '2026-09-28');
+  assert.equal(days[0].long, 'Monday, 28 September 2026');
+  assert.equal(bookingDates(new Date(2026, 9, 4), 1)[0].iso, '2026-10-05', 'a Sunday today starts on Monday');
 });
 
 test('dates roll over month and year ends', () => {
   const days = bookingDates(new Date(2026, 11, 30), 3);    // Wed 30 Dec 2026
-  assert.deepEqual(days.map((d) => d.iso), ['2026-12-31', '2027-01-01', '2027-01-02']);
+  assert.deepEqual(days.map((d) => d.iso), ['2026-12-30', '2026-12-31', '2027-01-01']);
 });
 
 test('Indian mobile numbers in every usual form', () => {
@@ -61,14 +62,14 @@ test('the link opens WhatsApp with the message intact', () => {
   assert.equal(decodeURIComponent(new URL(url).searchParams.get('text')), 'Hello & welcome\nLine 2');
 });
 
-import { bookingMonth, monthGrid, TIME_SLOTS } from '../lib/booking.mjs';
+import { bookingMonth, monthGrid, TIME_SLOTS, slotPassed } from '../lib/booking.mjs';
 
 test('a whole month of days to choose from, Sundays excepted', () => {
   const days = bookingMonth(new Date(2026, 9, 5), 30);           // Mon 5 Oct 2026
-  assert.equal(days[0].iso, '2026-10-06');                         // starts tomorrow
+  assert.equal(days[0].iso, '2026-10-05');                         // starts today
   assert.equal(days[days.length - 1].iso, '2026-11-04');            // 30 days ahead
   assert.ok(days.every((d) => !d.long.startsWith('Sunday')));
-  assert.equal(days.length, 26);
+  assert.equal(days.length, 27);
 });
 
 test('the month calendar lays out weeks from Sunday', () => {
@@ -98,4 +99,14 @@ test('all 30 days show at once, in whole weeks across the month change', () => {
   assert.equal(weeks.length, 5);
   assert.equal(rangeTitle(days[0].iso, days.at(-1).iso), 'October – November 2026');
   assert.equal(rangeTitle('2026-12-20', '2027-01-18'), 'December 2026 – January 2027');
+});
+
+test("today's slots that have already begun can't be picked; other days are open", () => {
+  const now = new Date(2026, 9, 9, 13, 10);                       // Fri 9 Oct 2026, 1:10 PM
+  assert.equal(slotPassed('2026-10-09', '9:00 AM', now), true);
+  assert.equal(slotPassed('2026-10-09', '1:00 PM', now), true);
+  assert.equal(slotPassed('2026-10-09', '1:30 PM', now), false);
+  assert.equal(slotPassed('2026-10-09', '12:00 PM', now), true);
+  assert.equal(slotPassed('2026-10-10', '9:00 AM', now), false);
+  assert.equal(slotPassed('', '9:00 AM', now), false);
 });

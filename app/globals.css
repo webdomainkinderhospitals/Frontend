@@ -5215,6 +5215,7 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
 }
 .bk-time-slot:hover { border-color: rgba(47,98,176,.45); background: #EEF3FB; color: var(--primary-dark); }
 .bk-time-slot.is-on { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 6px 14px -8px rgba(27,58,115,.8); }
+.bk-time-slot:disabled, .bk-time-slot:disabled:hover { background: #F4F6FA; border-color: #E6EAF1; color: #A9B2C1; text-decoration: line-through; cursor: not-allowed; box-shadow: none; }
 .bk-time-slot:focus-visible, .bk-time-any:focus-visible, .bk-cal-month:focus-visible, .bk-cal-quick:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 @media (max-width: 380px) { .bk-time-grid { grid-template-columns: repeat(3, 1fr); } }
 .bk-dialog .bk-time.bk-cal-inline { max-width: 420px; }
