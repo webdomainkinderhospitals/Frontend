@@ -1,4 +1,4 @@
-.about { --about-teal: #196a66; }
+.about { --about-teal: var(--primary); }
 .about > section { padding: 88px 0; }
 .about .hero { padding: 28px 0 72px; background: radial-gradient(ellipse at 94% 0%, #F7E8E9, transparent 50%), linear-gradient(135deg, #F8FBFF, #EEF2F9); }
 .breadcrumb { display: flex; gap: 12px; color: #626D7E; font-size: 13px; margin-bottom: 44px; }
