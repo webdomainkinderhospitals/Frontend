@@ -9,6 +9,7 @@ import styles from './home.module.css';
 import QuickBar from '@/components/QuickBar';
 import PromoBanner from '@/components/PromoBanner';
 import { promoSlides } from '@/lib/promo';
+import { withEventBanners } from '@/lib/home-promos.mjs';
 import Stats from '@/components/Stats';
 import CelebratePregnancy from '@/components/CelebratePregnancy';
 import PremiumBirthingCentre from '@/components/PremiumBirthingCentre';
@@ -46,7 +47,7 @@ export default async function HomePage() {
       <main className={styles.home}>
       <HomeHero settings={settings} locations={hospitals} />
       <QuickBar />
-      <PromoBanner slides={promoSlides(settings, 'homePromo')} label="Kinder Hospitals announcements" />
+      <PromoBanner slides={withEventBanners(promoSlides(settings, 'homePromo'))} label="Kinder Hospitals announcements" />
       <Stats
         settings={settings}
         hospitals={hospitals.map((loc) => ({ slug: slugOfLocation(loc), name: loc.name }))}

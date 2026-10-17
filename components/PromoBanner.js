@@ -80,23 +80,26 @@ export default function PromoBanner({ slides = [], label = 'Announcements' }) {
               <button type="button" className={`${styles.arrow} ${styles.next}`} onClick={() => go(index + 1)} aria-label="Next banner">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
               </button>
-              <div className={styles.dots}>
-                {slides.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`${styles.dot}${i === index ? ` ${styles.dotActive}` : ''}`}
-                    onClick={() => go(i)}
-                    aria-label={`Show banner ${i + 1} of ${count}`}
-                    aria-current={i === index ? 'true' : undefined}
-                  >
-                    {i === index && <span key={index} className={styles.progress} style={{ animationDuration: `${INTERVAL}ms` }} />}
-                  </button>
-                ))}
-              </div>
             </>
           )}
         </div>
+        {/* Below the banner, so they never cover the artwork's own text or logos */}
+        {multi && (
+          <div className={styles.dots}>
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`${styles.dot}${i === index ? ` ${styles.dotActive}` : ''}`}
+                onClick={() => go(i)}
+                aria-label={`Show banner ${i + 1} of ${count}`}
+                aria-current={i === index ? 'true' : undefined}
+              >
+                {i === index && <span key={index} className={styles.progress} style={{ animationDuration: `${INTERVAL}ms` }} />}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </aside>
   );
