@@ -53,17 +53,10 @@ a.slide:focus-visible { outline: 3px solid #fff; outline-offset: -6px; border-ra
 .arrow:focus-visible, .dot:focus-visible { outline: 3px solid var(--primary, #3F66A0); outline-offset: 2px; }
 
 .dots {
-  position: absolute;
-  left: 50%;
-  bottom: 14px;
-  z-index: 2;
   display: flex;
+  justify-content: center;
   gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(12,23,40, 0.28);
-  backdrop-filter: blur(6px);
-  transform: translateX(-50%);
+  margin-top: 16px;
 }
 .dot {
   position: relative;
@@ -73,28 +66,28 @@ a.slide:focus-visible { outline: 3px solid #fff; outline-offset: -6px; border-ra
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(27,58,115, 0.22);
   cursor: pointer;
   transition: width .35s ease, background .2s ease;
 }
-.dot:hover { background: rgba(255, 255, 255, 0.85); }
-.dotActive { width: 28px; background: rgba(255, 255, 255, 0.5); }
+.dot:hover { background: rgba(27,58,115, 0.45); }
+.dotActive { width: 28px; background: rgba(27,58,115, 0.18); }
 .progress {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: #fff;
+  background: var(--primary, #2F62B0);
   transform-origin: left center;
   animation: fill linear forwards;
 }
-.dotActive:not(:has(.progress)) { background: #fff; }
+.dotActive:not(:has(.progress)) { background: var(--primary, #2F62B0); }
 @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (max-width: 768px) {
   .promo { padding: 28px 0 16px; }
   .frame, a.slide:focus-visible { border-radius: 12px; }
   .arrow { display: none; }
-  .dots { bottom: 6px; padding: 4px 7px; gap: 6px; }
+  .dots { margin-top: 12px; gap: 6px; }
   .dot { width: 6px; height: 6px; }
   .dotActive { width: 18px; }
 }
