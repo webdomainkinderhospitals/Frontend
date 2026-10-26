@@ -198,90 +198,35 @@ export default async function AboutPage() {
             <div className="section-head">
               <div>
                 <span className="section-eyebrow">Leadership</span>
-                <h2 className="section-title">Chairman&apos;s <em>message</em></h2>
+                <h2 className="section-title">Our <em>leadership</em></h2>
               </div>
             </div>
-            <figure className={styles.chairman}>
-              <div className={styles.chairmanPhoto}>
-                <img src="/leadership/dr-v-k-pradeep-kumar.webp" alt="Dr. V K Pradeep Kumar, Chairman, Kinder Hospitals" width={760} height={866} loading="lazy" />
-                <span className={styles.chairmanBadge}>Chairman</span>
-              </div>
-              <blockquote className={styles.chairmanQuote}>
-                <span className={styles.quoteMark} aria-hidden="true">“</span>
-                <p>
-                  <strong>Dr V. K. Pradeep Kumar</strong><br />
-                  <span>Chairman, Kinder Hospitals</span>
-                </p>
-                <p>
-                  Dr V. K. Pradeep Kumar brings more than 37 years of experience in Paediatrics and Neonatology,
-                  with a distinguished career spanning India, Ireland and Singapore. A paediatrician and neonatologist,
-                  he has been associated with clinical practice, research and publications in Paediatrics,
-                  Neonatology and Obstetrics over four decades.
-                </p>
-                <p>
-                  His experience across different healthcare systems shaped a clear conviction: quality healthcare should
-                  not be a privilege determined by geography or the ability to pay. It was this belief that led him to
-                  bring international experience and standards of care closer to home, while keeping them accessible to
-                  families in India.
-                </p>
-                <p>
-                  As Chairman of Kinder Hospitals, Dr Pradeep Kumar has guided the organisation’s growth and long-term
-                  direction, with a particular focus on women’s and children’s healthcare. At the heart of his vision is a
-                  simple principle: no woman should be denied necessary healthcare because she cannot afford it. Kinder’s
-                  mission reflects this commitment by seeking to provide high-quality, personalised and comprehensive care
-                  at a cost that remains accessible to all sections of society.
-                </p>
-                <p>
-                  For him, healthcare is about changing how families experience life’s most important moments. Pregnancy
-                  should be a time of anticipation, confidence and joy, not fear shaped by the cost or availability of care.
-                  Kinder’s emphasis on celebrating pregnancy reflects that belief.
-                </p>
-                <figcaption className={styles.signature}>
-                  <span className={styles.signLine} aria-hidden="true" />
-                  <span>
-                    <strong>Dr. V K Pradeep Kumar</strong>
-                    <small>Chairman, Kinder Hospitals · Kindorama Healthcare Pvt Ltd</small>
-                  </span>
-                </figcaption>
-              </blockquote>
-            </figure>
 
-            <figure className={styles.chairman}>
-              <div className={styles.chairmanPhoto}>
-                <img src="/leadership/renjith-krishnan.webp" alt="Renjith Krishnan, Chief Executive Officer & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
-                <span className={styles.chairmanBadge}>CEO &amp; MD</span>
-              </div>
-              <blockquote className={styles.chairmanQuote}>
-                <span className={styles.quoteMark} aria-hidden="true">“</span>
-                <p>
-                  <strong>Renjith Krishnan</strong><br />
-                  <span>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</span>
-                </p>
-                <p>
-                  Renjith Krishnan brings more than 20 years of experience in hospital management and healthcare business operations,
-                  with expertise in strategic planning, hospital administration, operational management, systems development and healthcare business growth.
-                </p>
-                <p>
-                  As Chief Executive Officer and Managing Director of Kinder Hospitals, he has played a central role in translating the organisation’s vision into a scalable and sustainable healthcare platform. Under his leadership, Kinder has grown from two centres to five hospitals and one clinic within four years, while establishing the systems and operating frameworks required to manage a rapidly expanding network.
-                </p>
-                <p>
-                  His leadership impact has been particularly evident in building standardised processes across hospitals, strengthening operational controls, developing strategic business units and creating management systems that support consistency as the organisation grows. His focus on performance, resource utilisation and process discipline has helped Kinder expand without losing sight of quality, patient experience and financial sustainability.
-                </p>
-                <p>
-                  Rather than viewing growth simply as an increase in the number of hospitals, Renjith has focused on building the organisational infrastructure behind that growth — putting in place people, processes, systems and accountability that allow each centre to operate effectively while maintaining common standards across the Group.
-                </p>
-                <p>
-                  His career includes leadership roles at Rajagiri Hospital, Kinder Women’s Hospital &amp; Fertility Centre, Manipal Hospital and Aravind Eye Hospital. He has also contributed to the wider healthcare sector through his association with CAHO and AHPI.
-                </p>
-                <figcaption className={styles.signature}>
-                  <span className={styles.signLine} aria-hidden="true" />
-                  <span>
-                    <strong>Renjith Krishnan</strong>
-                    <small>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</small>
-                  </span>
-                </figcaption>
-              </blockquote>
-            </figure>
+            <div className={styles.leadershipProfiles}>
+              <article className={styles.leaderCard}>
+                <div className={styles.leaderMedia}>
+                  <img src="/leadership/dr-v-k-pradeep-kumar.webp" alt="Dr. V K Pradeep Kumar, Chairman, Kinder Hospitals" width={760} height={866} loading="lazy" />
+                </div>
+                <div className={styles.leaderContent}>
+                  <span className={styles.leaderLabel}>Chairman</span>
+                  <h3>Dr. V K Pradeep Kumar</h3>
+                  <p className={styles.leaderRole}>Chairman, Kinder Hospitals</p>
+                  <p>Dr V. K. Pradeep Kumar brings more than 37 years of experience in Paediatrics and Neonatology, with a distinguished career spanning India, Ireland and Singapore. His vision is simple: world-class healthcare should be within reach of every woman and every child.</p>
+                </div>
+              </article>
+
+              <article className={styles.leaderCard}>
+                <div className={styles.leaderMediaFallback} aria-label="Renjith Krishnan portrait placeholder">
+                  <span>RK</span>
+                </div>
+                <div className={styles.leaderContent}>
+                  <span className={styles.leaderLabel}>CEO &amp; MD</span>
+                  <h3>Renjith Krishnan</h3>
+                  <p className={styles.leaderRole}>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</p>
+                  <p>Renjith Krishnan brings more than 20 years of healthcare leadership experience, with expertise in hospital administration, strategic planning, operational governance and business growth across the healthcare sector.</p>
+                </div>
+              </article>
+            </div>
 
             {leaders.length > 0 && <>
               <div className={styles.teamHead}>
