@@ -32,13 +32,13 @@ const BRAND = {
     'To make available high-quality, personalised care with specialised and comprehensive range of services, in a cost-effective health care facility in India at par with international standards.',
   brandValues: 'Compassion\nIntegrity\nExcellence\nInnovation\nAccessibility',
   brandMark:
-    "The red form represents a mother, symbolising love, care, protection and nurturing, while the blue form represents a child, reflecting innocence, trust and the promise of a healthy future. Together they represent the essence of Kinder's holistic healthcare philosophy.",
+    "The red form represents a mother, symbolising love, care, protection and nurturing, while the blue form represents a child, reflecting innocence, trust and the promise of a healthy future. Together, they express the organisation's purpose of protecting life and supporting families through every stage of care.",
   brandCoreIdea: 'A caring presence protecting and nurturing life.',
 };
 
 const VALUE_ICONS = {
   compassion: <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" />,
-  integrity: <><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a3.8 3.8 0 0 1 4.6-.6l.5.3a2 2 0 0 0 1.5.2L21 4" /><path d="M3 21h18" /></>,
+  integrity: <><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a3.8 3.8 0 0 1 4.6-.6l.5.3a2 2 0 0 0 1.5.2L21 4" /><path d="M17 6.5 21 10" /><path d="M11 9h2" /></>,
   excellence: <><circle cx="12" cy="9" r="6" /><path d="m9 14.5-1.5 7L12 19l4.5 2.5-1.5-7" /><path d="m9.5 9 1.8 1.8L14.5 7.5" /></>,
   innovation: <><path d="M9 18h6" /><path d="M10 22h4" /><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z" /></>,
   accessibility: <><circle cx="12" cy="4" r="2" /><path d="M5 8h14" /><path d="M12 8v6" /><path d="m8 21 4-7 4 7" /></>,
@@ -72,12 +72,12 @@ export default async function AboutPage() {
                 <span className={styles.eyebrow}>THE KINDER MEDICAL GROUP</span>
                 <h1>Expert care.<br /><em>A kinder touch.</em></h1>
                 <p>A women&apos;s and children&apos;s healthcare network built on one promise: world-class care, delivered with kindness, close to home.</p>
-                <div className={styles.heroActions}><a href="#story" className="btn btn-primary">Discover our story <span aria-hidden="true">↗</span></a><a href="/#hospitals" className={styles.textLink}>View our hospitals</a></div>
+                <div className={styles.heroActions}><a href="#story" className="btn btn-primary">Discover our story <span aria-hidden="true">↗</span></a><a href="/#hospitals" className={styles.secondaryCta}>Explore our centres</a></div>
                 <span className={styles.legal}>A unit of Kindorama Healthcare Pvt Ltd</span>
               </div>
               <aside className={styles.brandPanel} aria-label="The Kinder philosophy">
                 <span className={styles.panelLabel}>OUR CORE IDEA</span>
-                <svg className={styles.heart} viewBox="0 0 120 110" fill="none" aria-hidden="true"><path d="M60 96 17 55C-12 25 30-9 60 23 90-9 132 25 103 55Z" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" /></svg>
+                <svg className={styles.heart} viewBox="0 0 120 110" fill="none" aria-hidden="true"><path d="M60 96 17 55C-12 25 30-9 60 23 90-9 132 25 103 55Z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 <h2>{brand.coreIdea}</h2>
                 <div className={styles.panelFooter}><span>Rooted in Singapore</span><span>Connected by care</span></div>
               </aside>
@@ -85,7 +85,7 @@ export default async function AboutPage() {
           </div>
         </section>
         <nav className={styles.sectionNav} aria-label="Explore About Us"><div className="container">
-          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ...(SHOW_LEADERSHIP ? [['leadership', 'Leadership']] : []), ['accreditations', 'Accreditations'], ['quality', 'Quality'], ['csr', 'CSR']].map(([id, label]) => (
+          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ...(SHOW_LEADERSHIP ? [['leadership', 'Leadership']] : []), ['accreditations', 'Accreditations'], ['quality', 'Quality'], ['csr', 'CSR'], ['academics', 'Academics']].map(([id, label]) => (
             <a key={id} href={`#${id}`}>{label}</a>
           ))}
         </div></nav>
@@ -211,19 +211,29 @@ export default async function AboutPage() {
                   <span className={styles.leaderLabel}>Chairman</span>
                   <h3>Dr. V K Pradeep Kumar</h3>
                   <p className={styles.leaderRole}>Chairman, Kinder Hospitals</p>
-                  <p>Dr V. K. Pradeep Kumar brings more than 37 years of experience in Paediatrics and Neonatology, with a distinguished career spanning India, Ireland and Singapore. His vision is simple: world-class healthcare should be within reach of every woman and every child.</p>
+                  <p>
+                    Dr. V. K. Pradeep Kumar is a distinguished paediatrician and neonatologist with more than 37 years of experience in clinical care, research, and leadership across India, Ireland, and Singapore. His career has spanned paediatrics, neonatology, and obstetrics, with a deep commitment to evidence-based, patient-centred care.
+                  </p>
+                  <p>
+                    His experience across diverse healthcare systems shaped a clear conviction: quality healthcare should not depend on geography or affordability. It was this belief that inspired him to bring international standards of care closer to home, while making them accessible to families across India.
+                  </p>
                 </div>
               </article>
 
               <article className={styles.leaderCard}>
                 <div className={styles.leaderMedia}>
-                  <img src="/leadership/renjith-krishnan.jpg" alt="Renjith Krishnan, CEO & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
+                  <img src="/leadership/renjith-krishnan.svg" alt="Renjith Krishnan, CEO & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
                 </div>
                 <div className={styles.leaderContent}>
                   <span className={styles.leaderLabel}>CEO &amp; MD</span>
                   <h3>Renjith Krishnan</h3>
                   <p className={styles.leaderRole}>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</p>
-                  <p>Renjith Krishnan brings more than 20 years of healthcare leadership experience, with expertise in hospital administration, strategic planning, operational governance and business growth across the healthcare sector.</p>
+                  <p>
+                    Renjith Krishnan brings more than 20 years of experience in hospital management and healthcare operations, with expertise in strategic planning, hospital administration, operational excellence, systems development, and sustainable business growth. His leadership has been instrumental in building Kinder Hospitals into a scalable and disciplined healthcare platform.
+                  </p>
+                  <p>
+                    As Chief Executive Officer &amp; Managing Director, he has played a central role in translating the organisation&apos;s vision into a structured operating model. Under his leadership, Kinder Hospitals has expanded from two centres to five hospitals and one clinic within four years, while creating the processes, systems, and governance structures needed to support long-term growth without compromising quality or patient experience.
+                  </p>
                 </div>
               </article>
             </div>
@@ -244,22 +254,22 @@ export default async function AboutPage() {
               <div>
                 <span className="section-eyebrow">Accreditations &amp; certifications</span>
                 <h2 className="section-title">Standards we are <em>held to</em></h2>
-                <p className="hosp-section-intro">Accreditation is an outside audit of how we actually work — protocols, infection control, records, consent and outcomes. Certificates for each centre and programme are evidence of discipline, transparency and trust.</p>
+                <p className="hosp-section-intro">Accreditation is an outside audit of how we actually work — protocols, infection control, records, consent and outcomes. Certificates for each centre are a public statement of quality, and a promise to patients that their care is measured, audited and improved continuously.</p>
               </div>
             </div>
             <Accreditations />
           </div>
         </section>
 
-        <HubProse id="quality" eyebrow="Quality &amp; patient safety" title={<>One standard of care, <em>every centre</em></>} intro="Our centres work to shared clinical protocols with audit and governance, from maternity and neonatal units to intensive care and fertility programmes."> 
+        <HubProse id="quality" eyebrow="Quality &amp; patient safety" title={<><em>One standard</em> of care, every centre</>} intro="Our centres work to shared clinical protocols with audit and oversight designed to protect outcomes, experience and continuity."> 
           <p><a className="view-all" href="/patients/patient-rights">Patient rights &amp; responsibilities →</a></p>
         </HubProse>
 
-        <HubProse id="csr" eyebrow="CSR" soft title={<>Care beyond <em>our walls</em></>} intro="Kinder teams run health camps, screening drives and awareness programmes in the communities around our centres, extending care beyond hospital doors."> 
+        <HubProse id="csr" eyebrow="CSR" soft title={<>Care beyond <em>our walls</em></>} intro="Kinder teams run health camps, screening drives and awareness programmes in the communities around our hospitals, reaching beyond treatment to prevention and education.">
           <p><a className="view-all" href="/news">See camps &amp; events →</a></p>
         </HubProse>
 
-        <HubProse id="academics" eyebrow="Academics" title={<>Teaching, <em>training, research</em></>} intro="Structured teaching sessions, case discussions and skills training run alongside clinical care to strengthen outcomes and build long-term capability."> 
+        <HubProse id="academics" eyebrow="Academics" title={<>Teaching, <em>training, research</em></>} intro="Structured teaching sessions, case discussions and skills training run alongside clinical work, helping teams learn, improve and innovate.">
           <p><a className="view-all" href="/contact">Enquire about academics →</a></p>
         </HubProse>
 
