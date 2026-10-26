@@ -212,10 +212,8 @@ export default async function AboutPage() {
               <blockquote className={styles.chairmanQuote}>
                 <span className={styles.quoteMark} aria-hidden="true">“</span>
                 <p>
-                  When we started Kinder, we made one promise — that every mother and every child
-                  who walks through our doors is treated the way we would treat our own family.
-                  Five centres later, that promise has not changed. <strong>Kindness is not our slogan;
-                  it is our clinical standard.</strong>
+                  <strong>Dr V. K. Pradeep Kumar</strong><br />
+                  <span>Chairman, Kinder Hospitals</span>
                 </p>
                 <p>
                   Dr V. K. Pradeep Kumar brings more than 37 years of experience in Paediatrics and Neonatology,
