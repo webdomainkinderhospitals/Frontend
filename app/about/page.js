@@ -32,13 +32,13 @@ const BRAND = {
     'To make available high-quality, personalised care with specialised and comprehensive range of services, in a cost-effective health care facility in India at par with international standards.',
   brandValues: 'Compassion\nIntegrity\nExcellence\nInnovation\nAccessibility',
   brandMark:
-    "The red form represents a mother, symbolising love, care, protection and nurturing, while the blue form represents a child, reflecting innocence, trust and the promise of a healthy future. Together, the two forms create a warm and distinctive symbol of the unbreakable bond between mother and child, embodying Kinder Hospitals' commitment to nurturing life with compassion and care.",
+    "The red form represents a mother, symbolising love, care, protection and nurturing, while the blue form represents a child, reflecting innocence, trust and the promise of a healthy future. Together, they express the group’s belief that every woman and child deserves dignity, safety and hope.",
   brandCoreIdea: 'A caring presence protecting and nurturing life.',
 };
 
 const VALUE_ICONS = {
   compassion: <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" />,
-  integrity: <><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a3.8 3.8 0 0 1 4.6-.6l.5.3a2 2 0 0 0 1.5.2L21 4" /><path d="m21 3 1 11h-2" /><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" /><path d="M3 4h8" /></>,
+  integrity: <><path d="m11 17 2 2a1 1 0 1 0 3-3" /><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-.9.9a1 1 0 1 1-3-3l2.8-2.8a3.8 3.8 0 0 1 4.6-.6l.5.3a2 2 0 0 0 1.5.2L21 4" /><path d="M4 18.5 8.5 14" /><path d="M4 12l6 6" /></>,
   excellence: <><circle cx="12" cy="9" r="6" /><path d="m9 14.5-1.5 7L12 19l4.5 2.5-1.5-7" /><path d="m9.5 9 1.8 1.8L14.5 7.5" /></>,
   innovation: <><path d="M9 18h6" /><path d="M10 22h4" /><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z" /></>,
   accessibility: <><circle cx="12" cy="4" r="2" /><path d="M5 8h14" /><path d="M12 8v6" /><path d="m8 21 4-7 4 7" /></>,
@@ -49,7 +49,7 @@ function brandOf(settings = {}) {
   return {
     vision: pick('brandVision'),
     mission: pick('brandMission'),
-    values: pick('brandValues').split(/\\n|\n/).map((v) => v.trim()).filter(Boolean),
+    values: pick('brandValues').split(/\n|\n/).map((v) => v.trim()).filter(Boolean),
     mark: pick('brandMark'),
     coreIdea: pick('brandCoreIdea'),
   };
@@ -75,12 +75,12 @@ export default async function AboutPage() {
                 <span className={styles.eyebrow}>THE KINDER MEDICAL GROUP</span>
                 <h1>Expert care.<br /><em>A kinder touch.</em></h1>
                 <p>A women&apos;s and children&apos;s healthcare network built on one promise: world-class care, delivered with kindness, close to home.</p>
-                <div className={styles.heroActions}><a href="#story" className="btn btn-primary">Discover our story <span aria-hidden="true">↗</span></a><a href="/#hospitals" className={styles.textLink}>Find a Kinder hospital <span aria-hidden="true">→</span></a></div>
+                <div className={styles.heroActions}><a href="#story" className="btn btn-primary">Discover our story <span aria-hidden="true">↗</span></a><a href="/#hospitals" className={styles.secondaryBtn}>Explore centres</a></div>
                 <span className={styles.legal}>A unit of Kindorama Healthcare Pvt Ltd</span>
               </div>
               <aside className={styles.brandPanel} aria-label="The Kinder philosophy">
                 <span className={styles.panelLabel}>OUR CORE IDEA</span>
-                <svg className={styles.heart} viewBox="0 0 120 110" fill="none" aria-hidden="true"><path d="M60 96 17 55C-12 25 30-9 60 23 90-9 132 25 103 55Z" stroke="currentColor" strokeWidth="2"/><path d="M30 55h15l8-17 14 35 9-18h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <svg className={styles.heart} viewBox="0 0 120 110" fill="none" aria-hidden="true"><path d="M60 96 17 55C-12 25 30-9 60 23 90-9 132 25 103 55Z" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" /><path d="M60 46c0-17 13-27 27-27 9 0 18 6 22 16 5 13-3 27-20 40l-29 27-29-27C20 35 12 21 17 8c4-10 13-16 22-16 14 0 27 10 27 27Z" fill="currentColor" fillOpacity="0.12" /></svg>
                 <h2>{brand.coreIdea}</h2>
                 <div className={styles.panelFooter}><span>Rooted in Singapore</span><span>Connected by care</span></div>
               </aside>
@@ -88,7 +88,9 @@ export default async function AboutPage() {
           </div>
         </section>
         <nav className={styles.sectionNav} aria-label="Explore About Us"><div className="container">
-          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ...(SHOW_LEADERSHIP ? [['leadership', 'Leadership']] : []), ['accreditations', 'Accreditations'], ['quality', 'Quality & safety'], ['csr', 'CSR'], ['academics', 'Academics']].map(([id, label], i) => <a key={id} href={`#${id}`}><span>0{i + 1}</span>{label}<span aria-hidden="true">↗</span></a>)}
+          {[['story', 'Our story'], ['vision', 'Our purpose'], ['milestones', 'Our journey'], ...(SHOW_LEADERSHIP ? [['leadership', 'Leadership']] : []), ['accreditations', 'Accreditations'], ['quality', 'Quality']].map(([id, label]) => (
+            <a key={id} href={`#${id}`}>{label}</a>
+          ))}
         </div></nav>
 
         <section id="story" className={styles.story}>
@@ -202,10 +204,9 @@ export default async function AboutPage() {
                 <h2 className="section-title">Chairman&apos;s <em>message</em></h2>
               </div>
             </div>
-            {/* The chairman's message: his portrait beside the quote, signed */}
             <figure className={styles.chairman}>
               <div className={styles.chairmanPhoto}>
-                <img src="/leadership/dr-v-k-pradeep-kumar.webp" alt="Dr. V K Pradeep Kumar, Chairman, Kinder Medical Group" width={760} height={866} loading="lazy" />
+                <img src="/leadership/dr-v-k-pradeep-kumar.webp" alt="Dr. V K Pradeep Kumar, Chairman, Kinder Hospitals" width={760} height={866} loading="lazy" />
                 <span className={styles.chairmanBadge}>Chairman</span>
               </div>
               <blockquote className={styles.chairmanQuote}>
@@ -216,11 +217,35 @@ export default async function AboutPage() {
                   Five centres later, that promise has not changed. <strong>Kindness is not our slogan;
                   it is our clinical standard.</strong>
                 </p>
+                <p>
+                  Dr V. K. Pradeep Kumar brings more than 37 years of experience in Paediatrics and Neonatology,
+                  with a distinguished career spanning India, Ireland and Singapore. A paediatrician and neonatologist,
+                  he has been associated with clinical practice, research and publications in Paediatrics,
+                  Neonatology and Obstetrics over four decades.
+                </p>
+                <p>
+                  His experience across different healthcare systems shaped a clear conviction: quality healthcare should
+                  not be a privilege determined by geography or the ability to pay. It was this belief that led him to
+                  bring international experience and standards of care closer to home, while keeping them accessible to
+                  families in India.
+                </p>
+                <p>
+                  As Chairman of Kinder Hospitals, Dr Pradeep Kumar has guided the organisation’s growth and long-term
+                  direction, with a particular focus on women’s and children’s healthcare. At the heart of his vision is a
+                  simple principle: no woman should be denied necessary healthcare because she cannot afford it. Kinder’s
+                  mission reflects this commitment by seeking to provide high-quality, personalised and comprehensive care
+                  at a cost that remains accessible to all sections of society.
+                </p>
+                <p>
+                  For him, healthcare is about changing how families experience life’s most important moments. Pregnancy
+                  should be a time of anticipation, confidence and joy, not fear shaped by the cost or availability of care.
+                  Kinder’s emphasis on celebrating pregnancy reflects that belief.
+                </p>
                 <figcaption className={styles.signature}>
                   <span className={styles.signLine} aria-hidden="true" />
                   <span>
                     <strong>Dr. V K Pradeep Kumar</strong>
-                    <small>Chairman, Kinder Medical Group · Kindorama Healthcare Pvt Ltd</small>
+                    <small>Chairman, Kinder Hospitals · Kindorama Healthcare Pvt Ltd</small>
                   </span>
                 </figcaption>
               </blockquote>
@@ -241,35 +266,22 @@ export default async function AboutPage() {
               <div>
                 <span className="section-eyebrow">Accreditations &amp; certifications</span>
                 <h2 className="section-title">Standards we are <em>held to</em></h2>
-                <p className="hosp-section-intro">Accreditation is an outside audit of how we actually work — protocols, infection control, records, consent and outcomes. Certificates for each centre are displayed at its reception and available on request.</p>
+                <p className="hosp-section-intro">Accreditation is an outside audit of how we actually work — protocols, infection control, records, consent and outcomes. Certificates for each centre are a sign of our discipline, transparency and commitment to safety.</p>
               </div>
             </div>
             <Accreditations />
           </div>
         </section>
 
-        <HubProse id="quality" eyebrow="Quality &amp; patient safety" title={<>One standard of care, <em>every centre</em></>}
-          intro="Our centres work to shared clinical protocols with audit and clinical governance across the group, so the care a family receives does not depend on which Kinder hospital they walk into."
-          points={[
-            'Shared clinical protocols across all centres',
-            'Clinical audit and governance review',
-            'Infection-control and hand-hygiene programmes',
-            'Informed consent before every procedure',
-            'Incident reporting, with learning shared across the group',
-            'Patient feedback reviewed by each centre\u2019s management',
-          ]}>
+        <HubProse id="quality" eyebrow="Quality &amp; patient safety" title={<>One standard of care, <em>every centre</em></>} intro="Our centres work to shared clinical protocols with audit and clinical governance across the group, so the care a family receives does not depend on which Kinder hospital they walk into." points={['Shared clinical protocols across all centres', 'Clinical audit and governance review', 'Infection-control and hand-hygiene programmes', 'Informed consent before every procedure', 'Incident reporting, with learning shared across the group', 'Patient feedback reviewed by each centre’s management']}>
           <p><a className="view-all" href="/patients/patient-rights">Patient rights &amp; responsibilities →</a></p>
         </HubProse>
 
-        <HubProse id="csr" eyebrow="CSR" soft title={<>Care beyond <em>our walls</em></>}
-          intro="Kinder teams run health camps, screening drives and awareness programmes in the communities around our centres, often with schools, local bodies and partner organisations. Centres publish the camps they are running under news and events."
-          points={['Community health and screening camps', 'Awareness drives on maternal and child health', 'School and community education sessions', 'Support for families who need help accessing care']}>
+        <HubProse id="csr" eyebrow="CSR" soft title={<>Care beyond <em>our walls</em></>} intro="Kinder teams run health camps, screening drives and awareness programmes in the communities around our centres, often with schools, local bodies and partner organisations." points={['Community health and screening camps', 'Awareness drives on maternal and child health', 'School and community education sessions', 'Support for families who need help accessing care']}>
           <p><a className="view-all" href="/news">See camps &amp; events →</a></p>
         </HubProse>
 
-        <HubProse id="academics" eyebrow="Academics" title={<>Teaching, <em>training, research</em></>}
-          intro="Structured teaching sessions, case discussions and skills training run alongside clinical work, and our consultants supervise trainees and visiting clinicians. For academic collaborations or observerships, write to our team."
-          points={['Structured teaching and case discussions', 'Skills and simulation training for clinical teams', 'Observerships and supervised training by arrangement', 'Academic collaboration enquiries welcome']}>
+        <HubProse id="academics" eyebrow="Academics" title={<>Teaching, <em>training, research</em></>} intro="Structured teaching sessions, case discussions and skills training run alongside clinical work, and our consultants supervise trainees and visiting clinicians." points={['Structured teaching and case discussions', 'Skills and simulation training for clinical teams', 'Observerships and supervised training by arrangement', 'Academic collaboration with specialist teams']}>
           <p><a className="view-all" href="/contact">Enquire about academics →</a></p>
         </HubProse>
 
