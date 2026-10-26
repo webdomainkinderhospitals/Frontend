@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 866" role="img" aria-labelledby="title desc">
+  <title id="title">Renjith Krishnan portrait placeholder</title>
+  <desc id="desc">Stylized portrait placeholder for Renjith Krishnan, Managing Director of Kinder Hospitals.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#e5eef9"/>
+      <stop offset="100%" stop-color="#d8e3f1"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1f3e73"/>
+      <stop offset="100%" stop-color="#2d5fa8"/>
+    </linearGradient>
+  </defs>
+  <rect width="760" height="866" fill="url(#bg)"/>
+  <circle cx="394" cy="276" r="202" fill="#f3d9d3" opacity="0.85"/>
+  <path d="M252 688c24-128 98-190 180-190s156 62 180 190" fill="url(#panel)" opacity="0.96"/>
+  <circle cx="378" cy="308" r="124" fill="#1d355d"/>
+  <path d="M328 452c24-28 65-46 104-46 46 0 88 18 112 52 14 20 21 44 20 70v102H278V535c0-29 12-57 50-83Z" fill="#1d355d"/>
+  <path d="M388 302c-38 0-69 31-69 69v36c0 20 8 38 21 50 13 14 31 22 50 22h11c34 0 63-25 69-58 8-48-35-119-82-119Z" fill="#f4d5c4" opacity="0.96"/>
+  <path d="M420 484c8 14 20 39 21 64 2 59-43 109-101 113 11 30 53 48 87 52 72 8 141-56 143-129 2-45-20-84-58-110-28-18-55-17-92 10Z" fill="#f4d5c4" opacity="0.9"/>
+  <path d="M296 260c10-103 96-166 182-166 85 0 162 58 182 160-47-31-111-48-182-48-66 0-129 18-182 54Z" fill="#203f6d" opacity="0.9"/>
+  <rect x="236" y="682" width="288" height="94" rx="10" fill="#f7f9fc" opacity="0.9"/>
+  <text x="380" y="732" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="68" fill="#1d355d" letter-spacing="6">RK</text>
+  <text x="380" y="785" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="24" fill="#2d5fa8" letter-spacing="4">RENJITH KRISHNAN</text>
+</svg>
