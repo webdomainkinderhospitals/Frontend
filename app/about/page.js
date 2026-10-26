@@ -217,7 +217,7 @@ export default async function AboutPage() {
 
               <article className={styles.leaderCard}>
                 <div className={styles.leaderMedia}>
-                  <img src="/leadership/renjith-krishnan.svg" alt="Renjith Krishnan, CEO & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
+                  <img src="/leadership/renjith-krishnan.jpg" alt="Renjith Krishnan, CEO & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
                 </div>
                 <div className={styles.leaderContent}>
                   <span className={styles.leaderLabel}>CEO &amp; MD</span>
