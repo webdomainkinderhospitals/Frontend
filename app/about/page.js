@@ -58,9 +58,6 @@ function brandOf(settings = {}) {
 export default async function AboutPage() {
   const content = await getContent();
   const brand = brandOf(content.settings);
-  // The group's leaders (centre leaders appear on their centre's page). The
-  // About Kinder Hospitals and Mission pages are already this page's story
-  // and purpose, so only other About Us pages are listed at the end.
   const leaders = groupLeaders(content.pages || []);
   const SHOWN = new Set(['about-us-about-kinder-hospitals', 'about-us-mission-vision-values']);
   const morePages = (content.pages || []).filter((p) => p.category === 'About Us' && !SHOWN.has(p.slug));
@@ -248,6 +245,44 @@ export default async function AboutPage() {
                 </figcaption>
               </blockquote>
             </figure>
+
+            <figure className={styles.chairman}>
+              <div className={styles.chairmanPhoto}>
+                <img src="/leadership/renjith-krishnan.webp" alt="Renjith Krishnan, Chief Executive Officer & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
+                <span className={styles.chairmanBadge}>CEO &amp; MD</span>
+              </div>
+              <blockquote className={styles.chairmanQuote}>
+                <span className={styles.quoteMark} aria-hidden="true">“</span>
+                <p>
+                  <strong>Renjith Krishnan</strong><br />
+                  <span>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</span>
+                </p>
+                <p>
+                  Renjith Krishnan brings more than 20 years of experience in hospital management and healthcare business operations,
+                  with expertise in strategic planning, hospital administration, operational management, systems development and healthcare business growth.
+                </p>
+                <p>
+                  As Chief Executive Officer and Managing Director of Kinder Hospitals, he has played a central role in translating the organisation’s vision into a scalable and sustainable healthcare platform. Under his leadership, Kinder has grown from two centres to five hospitals and one clinic within four years, while establishing the systems and operating frameworks required to manage a rapidly expanding network.
+                </p>
+                <p>
+                  His leadership impact has been particularly evident in building standardised processes across hospitals, strengthening operational controls, developing strategic business units and creating management systems that support consistency as the organisation grows. His focus on performance, resource utilisation and process discipline has helped Kinder expand without losing sight of quality, patient experience and financial sustainability.
+                </p>
+                <p>
+                  Rather than viewing growth simply as an increase in the number of hospitals, Renjith has focused on building the organisational infrastructure behind that growth — putting in place people, processes, systems and accountability that allow each centre to operate effectively while maintaining common standards across the Group.
+                </p>
+                <p>
+                  His career includes leadership roles at Rajagiri Hospital, Kinder Women’s Hospital &amp; Fertility Centre, Manipal Hospital and Aravind Eye Hospital. He has also contributed to the wider healthcare sector through his association with CAHO and AHPI.
+                </p>
+                <figcaption className={styles.signature}>
+                  <span className={styles.signLine} aria-hidden="true" />
+                  <span>
+                    <strong>Renjith Krishnan</strong>
+                    <small>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</small>
+                  </span>
+                </figcaption>
+              </blockquote>
+            </figure>
+
             {leaders.length > 0 && <>
               <div className={styles.teamHead}>
                 <span className="section-eyebrow">Our leadership team</span>
