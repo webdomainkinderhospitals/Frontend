@@ -130,3 +130,39 @@
   .chairman { padding: 18px 16px 24px; border-radius: 22px; }
   .quoteMark { font-size: 90px; height: 48px; }
 }
+
+/* Leadership: the chairman and the CEO, profiled in full */
+.profiles { display: grid; gap: 72px; margin-top: 12px; }
+.profile { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 64px; align-items: start; }
+.profileFlip { grid-template-columns: minmax(0, 1fr) minmax(0, 380px); }
+.profileFlip .profileMedia { order: 2; }
+.profileMedia { position: sticky; top: 120px; margin: 0; border-radius: 120px 24px 24px 24px; overflow: hidden; background: #1A3570; box-shadow: 0 28px 60px #1a35702b; }
+.profileFlip .profileMedia { border-radius: 24px 120px 24px 24px; }
+.profileMedia img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; }
+.profileMedia figcaption { position: absolute; inset: auto 0 0 0; display: grid; gap: 2px; padding: 48px 24px 22px; background: linear-gradient(transparent, #0f1f45e6); color: #fff; }
+.profileMedia figcaption strong { font-size: 17px; font-weight: 600; }
+.profileMedia figcaption span { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #D5E1F4; }
+.profileText { max-width: 70ch; }
+.profileLabel { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #fff; color: var(--primary-dark); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.profileText h3 { margin: 18px 0 6px; font-family: var(--display); font-size: clamp(30px, 3.4vw, 44px); font-weight: 600; line-height: 1.12; letter-spacing: -.035em; color: var(--primary-dark); }
+.profileRole { margin: 0; font-size: 15px; font-weight: 600; color: var(--primary); }
+.profileFacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 28px 0; }
+.profileFacts div { padding: 18px 20px; border: 1px solid #d4e3df; border-radius: 14px; background: #fff; }
+.profileFacts dt { font-family: var(--display); font-size: 26px; font-weight: 600; letter-spacing: -.03em; color: var(--primary-dark); }
+.profileFacts dd { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+.profileText p { margin: 0 0 18px; font-size: 16px; line-height: 1.85; color: var(--ink-soft); }
+.profileText .profileLead { font-size: 18px; line-height: 1.8; color: var(--ink); }
+.profileQuote { margin: 30px 0; padding: 4px 0 4px 26px; border-left: 3px solid #E0453F; }
+.profileText .profileQuote p { margin: 0; font-family: var(--display); font-size: clamp(20px, 2.1vw, 25px); line-height: 1.5; letter-spacing: -.015em; color: #294c45; }
+@media (max-width: 900px) {
+  .profile, .profileFlip { grid-template-columns: 1fr; gap: 32px; }
+  .profileFlip .profileMedia { order: 0; }
+  .profileMedia { position: static; max-width: 420px; }
+}
+@media (max-width: 640px) {
+  .profiles { gap: 56px; }
+  .profileMedia { border-radius: 72px 20px 20px 20px; }
+  .profileFlip .profileMedia { border-radius: 72px 20px 20px 20px; }
+  .profileFacts { gap: 10px; } .profileFacts div { padding: 14px; } .profileFacts dt { font-size: 21px; }
+  .profileText .profileLead { font-size: 17px; }
+}
