@@ -1,6 +1,7 @@
 import ContentPages from '@/components/ContentPages';
 import LeadershipTeam from '@/components/LeadershipTeam';
 import { groupLeaders, SHOW_LEADERSHIP } from '@/lib/leadership.mjs';
+import { LEADERSHIP_PROFILES, PROFILED } from '@/lib/leadership-profiles.mjs';
 import Accreditations from '@/components/Accreditations';
 import { HubProse } from '@/components/Hub';
 import { getContent } from '@/lib/api';
@@ -58,7 +59,8 @@ function brandOf(settings = {}) {
 export default async function AboutPage() {
   const content = await getContent();
   const brand = brandOf(content.settings);
-  const leaders = groupLeaders(content.pages || []);
+  // The chairman and the CEO are profiled in full above the team cards.
+  const leaders = groupLeaders(content.pages || []).filter((l) => !PROFILED.has(l.slug));
   const SHOWN = new Set(['about-us-about-kinder-hospitals', 'about-us-mission-vision-values']);
   const morePages = (content.pages || []).filter((p) => p.category === 'About Us' && !SHOWN.has(p.slug));
   return (
@@ -202,30 +204,29 @@ export default async function AboutPage() {
               </div>
             </div>
 
-            <div className={styles.leadershipProfiles}>
-              <article className={styles.leaderCard}>
-                <div className={styles.leaderMedia}>
-                  <img src="/leadership/dr-v-k-pradeep-kumar.webp" alt="Dr. V K Pradeep Kumar, Chairman, Kinder Hospitals" width={760} height={866} loading="lazy" />
-                </div>
-                <div className={styles.leaderContent}>
-                  <span className={styles.leaderLabel}>Chairman</span>
-                  <h3>Dr. V K Pradeep Kumar</h3>
-                  <p className={styles.leaderRole}>Chairman, Kinder Hospitals</p>
-                  <p>Dr V. K. Pradeep Kumar brings more than 37 years of experience in Paediatrics and Neonatology, with a distinguished career spanning India, Ireland and Singapore. His vision is simple: world-class healthcare should be within reach of every woman and every child.</p>
-                </div>
-              </article>
-
-              <article className={styles.leaderCard}>
-                <div className={styles.leaderMedia}>
-                  <img src="/leadership/renjith-krishnan.jpg" alt="Renjith Krishnan, CEO & Managing Director, Kinder Hospitals" width={760} height={866} loading="lazy" />
-                </div>
-                <div className={styles.leaderContent}>
-                  <span className={styles.leaderLabel}>CEO &amp; MD</span>
-                  <h3>Renjith Krishnan</h3>
-                  <p className={styles.leaderRole}>Chief Executive Officer &amp; Managing Director, Kinder Hospitals</p>
-                  <p>Renjith Krishnan brings more than 20 years of healthcare leadership experience, with expertise in hospital administration, strategic planning, operational governance and business growth across the healthcare sector.</p>
-                </div>
-              </article>
+            <div className={styles.profiles}>
+              {LEADERSHIP_PROFILES.map((p, i) => (
+                <article key={p.slug} id={p.slug} className={`${styles.profile}${i % 2 ? ` ${styles.profileFlip}` : ''}`}>
+                  <figure className={styles.profileMedia}>
+                    <img src={p.photo} alt={`${p.name}, ${p.role}`} width={800} height={1200} loading="lazy" />
+                    <figcaption>
+                      <strong>{p.name}</strong>
+                      <span>{p.label}</span>
+                    </figcaption>
+                  </figure>
+                  <div className={styles.profileText}>
+                    <span className={styles.profileLabel}>{p.label}</span>
+                    <h3>{p.name}</h3>
+                    <p className={styles.profileRole}>{p.role}</p>
+                    <dl className={styles.profileFacts}>
+                      {p.facts.map(([value, text]) => <div key={value}><dt>{value}</dt><dd>{text}</dd></div>)}
+                    </dl>
+                    <p className={styles.profileLead}>{p.bio[0]}</p>
+                    <blockquote className={styles.profileQuote}><p>{p.quote}</p></blockquote>
+                    {p.bio.slice(1).map((para) => <p key={para.slice(0, 32)}>{para}</p>)}
+                  </div>
+                </article>
+              ))}
             </div>
 
             {leaders.length > 0 && <>
