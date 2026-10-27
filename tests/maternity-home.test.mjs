@@ -59,3 +59,13 @@ test('source highlights respect publication, centre scope and existing editorial
   assert.equal(maternityHome(additions, { maternityPregnancyShowOnGroup: false }), null);
   assert.equal(maternityHome(additions, { maternityPregnancyTitle: 'Edited heading' }).title, 'Edited heading');
 });
+
+test('the birthing centre photo never relies on the old kinderkochi.com images', () => {
+  const imported = [{ slug: 'kochi-premium-birthing-centre', location: 'Kochi', published: true, title: 'Premium', imageUrl: 'https://www.kinderkochi.com/images/birth1.jpg' }];
+  assert.equal(maternityHome(imported, {}, 'birthing').imageUrl, '/premium-birthing-centre/welcome.webp');
+  const none = [{ ...imported[0], imageUrl: '', galleryUrls: '' }];
+  assert.equal(maternityHome(none, {}, 'birthing').imageUrl, '/premium-birthing-centre/welcome.webp');
+  const own = [{ ...imported[0], imageUrl: '/uploads/suite.webp' }];
+  assert.equal(maternityHome(own, {}, 'birthing').imageUrl, '/uploads/suite.webp');
+  assert.equal(maternityHome(own, { maternityBirthingImageUrl: '/admin.webp' }, 'birthing').imageUrl, '/admin.webp');
+});

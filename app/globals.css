@@ -5559,6 +5559,48 @@ html { scroll-padding-top: 140px; }
   .dropdown-birthing a.birthing-card:hover .preg-text em span { transform: translateX(3px); }
 }
 
+/* ---- Celebrate Pregnancy menu: experiences as photo cards under a heading,
+   the pregnancy journey as a closing band (desktop); a photo list on mobile ---- */
+.preg-head { display: none; }
+.dropdown-celebrate .preg-journey em { display: none; }
+@media (min-width: 1025px) {
+  .dropdown.dropdown-celebrate {
+    width: calc(var(--preg-cols, 3) * 196px + 48px); padding: 14px; gap: 10px;
+    grid-template-columns: repeat(var(--preg-cols, 3), minmax(0, 1fr));
+  }
+  .dropdown-celebrate .preg-head {
+    display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; padding: 2px 4px 4px;
+    font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #B8325A;
+  }
+  .dropdown-celebrate .preg-head::before { content: "✦"; color: #E0393F; letter-spacing: 0; }
+  .dropdown-celebrate a.preg-card {
+    flex-direction: column; align-items: stretch; gap: 10px; padding: 8px 8px 12px;
+    border: 1px solid #F3E1E5; border-radius: 16px; background: #fff;
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+  }
+  .dropdown-celebrate a.preg-card:hover, .dropdown-celebrate a.preg-card:focus-visible {
+    border-color: rgba(224,57,63,.38); background: linear-gradient(180deg, #fff, #FFF6F7);
+    box-shadow: 0 18px 36px -24px rgba(19,33,59,.5);
+  }
+  .dropdown-celebrate .preg-card .preg-thumb { width: 100%; height: 118px; border-radius: 12px; }
+  .dropdown-celebrate .preg-card .preg-text { padding: 0 4px; }
+  .dropdown-celebrate a.preg-card strong { font-size: 15px; }
+  .dropdown-celebrate a.preg-card small { font-size: 12.5px; line-height: 1.45; }
+  .dropdown-celebrate a.preg-journey {
+    grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 10px 16px 10px 10px;
+    border-radius: 14px; background: linear-gradient(120deg, #FFE7EC 0%, #E8EFFB 100%);
+    border: 1px solid #F1E2E8;
+  }
+  .dropdown-celebrate a.preg-journey:hover, .dropdown-celebrate a.preg-journey:focus-visible { border-color: rgba(27,58,115,.25); box-shadow: 0 14px 30px -22px rgba(19,33,59,.5); }
+  .dropdown-celebrate .preg-journey .preg-thumb { width: 52px; height: 52px; border-radius: 12px; }
+  .dropdown-celebrate .preg-journey .preg-text { flex: 1; }
+  .dropdown-celebrate .preg-journey em {
+    display: inline-flex; gap: 6px; font-style: normal; font-size: 13px; font-weight: 700; color: #B8325A; white-space: nowrap;
+  }
+  .dropdown-celebrate .preg-journey em span { transition: transform .2s ease; }
+  .dropdown-celebrate a.preg-journey:hover em span { transform: translateX(3px); }
+}
+
 /* Pages without the WhatsApp button (the main site): Kinder Maa takes its corner. */
 body:not(:has(.whatsapp-float)) .kc-launcher,
 body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
@@ -5645,41 +5687,54 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   html body .header .nav-list > li.is-open > a .nav-ico { color: #fff !important; }
   html body .header .nav-list > li.is-active:not(.nav-pregnancy):not(.nav-premium) > a .nav-ico { color: #E0393F !important; }
 
-  /* Celebrate Pregnancy: rose glass pill */
+  /* Celebrate Pregnancy: a rose-outlined pill that fills with rose when open */
   html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a,
   html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a .caret {
-    color: #FFE3E5 !important;
+    color: #FFE6EA !important;
   }
   html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a {
-    background: linear-gradient(180deg, rgba(240,96,104,.30), rgba(224,57,63,.18)) !important;
-    border-color: rgba(255,170,176,.45) !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 20px -12px rgba(224,57,63,.8) !important;
+    background: rgba(255,255,255,.06) !important;
+    border-color: rgba(255,150,170,.6) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.1) !important;
   }
   html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a:hover,
   html body .header .nav-list > li.nav-pregnancy.is-open:not(.nav-cta-wrap) > a,
-  html body .header .nav-list > li.nav-pregnancy.is-active:not(.nav-cta-wrap) > a {
+  html body .header .nav-list > li.nav-pregnancy.is-active:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap):focus-within > a {
     color: #fff !important;
-    background: linear-gradient(180deg, rgba(240,96,104,.52), rgba(224,57,63,.36)) !important;
-    border-color: rgba(255,190,195,.7) !important;
+    background: linear-gradient(135deg, #EC5C7E 0%, #C93A65 100%) !important;
+    border-color: rgba(255,190,205,.75) !important;
+    box-shadow: 0 10px 24px -12px rgba(201,58,101,.9) !important;
   }
+  html body .header .nav-list > li.nav-pregnancy:not(.nav-cta-wrap) > a:hover .caret,
+  html body .header .nav-list > li.nav-pregnancy.is-open:not(.nav-cta-wrap) > a .caret,
+  html body .header .nav-list > li.nav-pregnancy.is-active:not(.nav-cta-wrap) > a .caret { color: #fff !important; }
 
-  /* Premium Birthing Centre: gold-rimmed glass pill */
+  /* Premium Birthing Centre: a gold-outlined pill that fills with gold when open */
   html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a,
   html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a .caret {
     color: #F6D68C !important;
   }
   html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a {
-    background: linear-gradient(180deg, rgba(233,196,106,.16), rgba(233,196,106,.06)) !important;
-    border-color: rgba(233,196,106,.45) !important;
+    background: rgba(255,255,255,.06) !important;
+    border-color: rgba(233,196,106,.6) !important;
   }
   html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a:hover,
   html body .header .nav-list > li.nav-premium.is-open:not(.nav-cta-wrap) > a,
-  html body .header .nav-list > li.nav-premium.is-active:not(.nav-cta-wrap) > a {
-    color: #FFE7AE !important;
-    background: linear-gradient(180deg, rgba(233,196,106,.30), rgba(233,196,106,.14)) !important;
-    border-color: rgba(240,210,130,.8) !important;
+  html body .header .nav-list > li.nav-premium.is-active:not(.nav-cta-wrap) > a,
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap):focus-within > a {
+    color: #1B2B4F !important;
+    background: linear-gradient(135deg, #F8DE9A 0%, #E2B24F 100%) !important;
+    border-color: rgba(255,230,170,.9) !important;
+    box-shadow: 0 10px 24px -12px rgba(226,178,79,.9) !important;
   }
-  html body .header .nav-premium-mark { color: #F6D68C !important; }
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a:hover .caret,
+  html body .header .nav-list > li.nav-premium.is-open:not(.nav-cta-wrap) > a .caret,
+  html body .header .nav-list > li.nav-premium.is-active:not(.nav-cta-wrap) > a .caret,
+  html body .header .nav-list > li.nav-premium:not(.nav-cta-wrap) > a:hover .nav-premium-mark,
+  html body .header .nav-list > li.nav-premium.is-open:not(.nav-cta-wrap) > a .nav-premium-mark,
+  html body .header .nav-list > li.nav-premium.is-active:not(.nav-cta-wrap) > a .nav-premium-mark { color: #1B2B4F !important; }
+  html body .header .nav-list > li.nav-premium:not(:hover):not(.is-open):not(.is-active) .nav-premium-mark { color: #F6D68C !important; }
   /* The sparkle beside Celebrate Pregnancy: solid gold on the navy */
   html body .header .nav-list .nav-spark { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: #F6D68C !important; -webkit-text-fill-color: #F6D68C !important; }
 
