@@ -270,18 +270,35 @@ export default function Header({ settings, locations: allLocations = [], special
                   <a href="/celebrate-pregnancy" onClick={(e) => toggleDropdown(e, 'pregnancy')}>
                     <span className="nav-spark" aria-hidden="true">✦</span> Celebrate Pregnancy <span className="caret">▾</span>
                   </a>
-                  <div className="dropdown dropdown-pregnancy">
-                    {[
+                  {(() => {
+                    const items = [
                       { key: 'journey', href: '/celebrate-pregnancy', label: 'Your pregnancy journey', note: 'Antenatal care to going home', photo: JOURNEY_PHOTO },
                       ...features.map((f) => ({ key: f.slug, href: f.href, label: f.label, note: FEATURE_NOTES[f.slug] || f.group, photo: f.page.photo || pregnancyPhoto(f.page) })),
                       ...highlights.map((h) => ({ key: h.slug, ...h })),
-                    ].sort((a, b) => menuRank(a.key) - menuRank(b.key)).map((item) => (
-                      <a key={item.key} href={item.href} onClick={onLeafClick} className="preg-item">
-                        <span className="preg-thumb" aria-hidden="true">{item.photo && <img src={item.photo} alt="" loading="lazy" />}</span>
-                        <span className="preg-text"><strong>{item.label}</strong><small>{item.note}</small></span>
-                      </a>
-                    ))}
-                  </div>
+                    ].sort((a, b) => menuRank(a.key) - menuRank(b.key));
+                    const experiences = items.filter((item) => item.key !== 'journey');
+                    const journey = items.find((item) => item.key === 'journey');
+                    // On desktop the experiences are photo cards (four, or three
+                    // to a row) under a heading, with the journey as a closing band.
+                    return (
+                      <div className="dropdown dropdown-pregnancy dropdown-celebrate" style={{ '--preg-cols': experiences.length <= 4 ? experiences.length : 3 }}>
+                        <span className="preg-head" aria-hidden="true">Celebrate Pregnancy · Kinder Hospitals</span>
+                        {experiences.map((item) => (
+                          <a key={item.key} href={item.href} onClick={onLeafClick} className="preg-item preg-card">
+                            <span className="preg-thumb" aria-hidden="true">{item.photo && <img src={item.photo} alt="" loading="lazy" />}</span>
+                            <span className="preg-text"><strong>{item.label}</strong><small>{item.note}</small></span>
+                          </a>
+                        ))}
+                        {journey && (
+                          <a href={journey.href} onClick={onLeafClick} className="preg-item preg-journey">
+                            <span className="preg-thumb" aria-hidden="true"><img src={journey.photo} alt="" loading="lazy" /></span>
+                            <span className="preg-text"><strong>{journey.label}</strong><small>{journey.note}</small></span>
+                            <em aria-hidden="true">Explore <span>→</span></em>
+                          </a>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </li>
               ) : (
                 <li className={act('pregnancy')}><a href="/celebrate-pregnancy" onClick={onLeafClick}>Celebrate Pregnancy</a></li>
