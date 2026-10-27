@@ -34,8 +34,19 @@ test('the home page plays the featured video large, with the others beside it', 
   assert.equal(featured.id, 1);
   assert.deepEqual(others.map((g) => g.id).sort(), [2, 3]);
   assert.equal(homeGallery([photo, yt]).featured.id, 3, 'without a featured video, the first video');
-  assert.equal(homeGallery([photo]).featured, null);
+  assert.equal(homeGallery([photo]).featured.mediaUrl, '/gallery/water-birthing.mp4', 'without any video, the built-in film');
+  assert.equal(homeGallery([]).featured.mediaUrl, '/gallery/water-birthing.mp4', 'with no gallery at all, the built-in film');
   assert.equal(homeGallery([{ ...photo, showOnHome: false }]).others.length, 0);
   assert.equal(placeOf(film), 'Kinder Kochi');
   assert.equal(placeOf(photo), 'Kinder Hospitals');
+});
+
+test('the CMS copy of the Water Birthing film plays from the website itself', () => {
+  const cms = { id: 7, kind: 'video', title: 'Water Birthing at Kinder Hospitals Kochi', mediaUrl: 'https://kinder-api.run.app/uploads/gallery/x.mp4', posterUrl: 'https://kinder-api.run.app/uploads/gallery/x.webp', featured: true, published: true };
+  const { featured } = homeGallery([cms, photo]);
+  assert.equal(featured.id, 7);
+  assert.equal(featured.mediaUrl, '/gallery/water-birthing.mp4');
+  assert.equal(featured.posterUrl, '/gallery/water-birthing-poster.webp');
+  // Any other video from the admin still leads
+  assert.equal(homeGallery([film, photo]).featured.mediaUrl, '/f.mp4');
 });
