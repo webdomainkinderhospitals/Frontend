@@ -34,7 +34,8 @@ import Roadmap from '@/components/home/Roadmap';
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const content = await getContent();
+  // If the CMS can't be reached, keep the last homepage built from it.
+  const content = await getContent({ keepLastGood: true });
   const { settings, specialities, locations, doctors, testimonials, news, procedures } = content;
   // The group site presents the hospitals; each clinic is listed on its home
   // hospital's sub-site (Alappuzha under Cherthala).

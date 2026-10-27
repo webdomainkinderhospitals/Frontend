@@ -6,14 +6,29 @@ import DoctorCard from './DoctorCard';
 
 const norm = (s) => String(s || '').trim().toLowerCase();
 
+// The homepage's "All hospitals" view: doctors with a portrait first, taken
+// in turn from each hospital (Cherthala, Kochi, Aranmula, Kollam…), so every
+// hospital is represented from the first slide.
+export function featuredOrder(doctors = [], locations = []) {
+  const inTurn = (list) => {
+    const queues = locations.map((l) => list.filter((d) => atLocation(d, l.name)));
+    const turns = [];
+    for (let i = 0; queues.some((q) => i < q.length); i++) for (const q of queues) if (i < q.length) turns.push(q[i]);
+    return [...turns, ...list];
+  };
+  const seen = new Set();
+  return [...inTurn(doctors.filter((d) => d.imageUrl)), ...inTurn(doctors.filter((d) => !d.imageUrl))]
+    .filter((d) => !seen.has(d) && seen.add(d));
+}
+
 export default function Doctors({ doctors: all = [], locations = [] }) {
   const trackRef = useRef(null);
   const [pageIndex, setPageIndex] = useState(0);
   const [hospital, setHospital] = useState('');
   // Group-wide doctors ("" location) practise at every centre.
   const doctors = useMemo(
-    () => all.filter((d) => !hospital || locationsOf(d).length === 0 || atLocation(d, hospital)),
-    [all, hospital]
+    () => featuredOrder(all.filter((d) => !hospital || locationsOf(d).length === 0 || atLocation(d, hospital)), locations),
+    [all, hospital, locations]
   );
   const pick = (name) => { setHospital(norm(name) === norm(hospital) ? '' : name); setPageIndex(0); };
   const [cardsPerView, setCardsPerView] = useState(4);
