@@ -40,3 +40,24 @@ test('dates, places and stories to read next', () => {
   assert.equal(newsPlace(posts[0]), 'Kinder Hospitals');
   assert.deepEqual(relatedNews(posts, posts[1]).map((p) => p.id), [3, 1]);
 });
+
+test('the hospital\'s news archive is always there; the admin\'s copy of a story wins', async () => {
+  const { withNewsArchive, SAMPLE_POSTS } = await import('../lib/news.mjs');
+  const { NEWS_ARCHIVE } = await import('../lib/news-archive.mjs');
+  assert.equal(NEWS_ARCHIVE.length, 21);
+  const samples = [...SAMPLE_POSTS].map((slug, i) => ({ id: i, slug, title: slug, body: '' }));
+  // Backend not deployed yet: the three design samples give way to the archive
+  const merged = withNewsArchive(samples);
+  assert.equal(merged.length, 21);
+  assert.ok(merged.every((n) => !SAMPLE_POSTS.has(n.slug)));
+  // Backend deployed: its posts (GCS photos, admin edits) replace the bundled copies
+  const fromAdmin = { id: 99, slug: 'mom-mix-season-3', title: 'Edited in the admin', imageUrl: 'https://storage.googleapis.com/x.webp' };
+  const both = withNewsArchive([fromAdmin, ...samples]);
+  assert.equal(both.length, 21);
+  assert.equal(both.filter((n) => n.slug === 'mom-mix-season-3').length, 1);
+  assert.equal(both.find((n) => n.slug === 'mom-mix-season-3').title, 'Edited in the admin');
+  // A post the team writes in the admin is kept, and every archive photo exists
+  assert.equal(withNewsArchive([{ id: 5, slug: 'new-camp', title: 'New camp' }]).length, 22);
+  const fs = await import('node:fs');
+  for (const n of NEWS_ARCHIVE) for (const u of [n.imageUrl, ...n.galleryUrls.split('\n').filter(Boolean)]) assert.ok(fs.existsSync(`public${u}`), u);
+});

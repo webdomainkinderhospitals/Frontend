@@ -28,7 +28,7 @@ export default async function NewsPage() {
           <div className="container">
             {news.length === 0
               ? <p className="muted">New stories are on the way — check back soon.</p>
-              : <NewsBrowser news={news} />}
+              : <NewsBrowser news={news.map(({ body, ...card }) => card)} />}
           </div>
         </section>
       </main>
