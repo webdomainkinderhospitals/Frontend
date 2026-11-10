@@ -10,6 +10,9 @@ import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
 import DepartmentShowcase from '@/components/DepartmentShowcase';
 import CentreServiceMenu from '@/components/CentreServiceMenu';
 import LeadershipTeam from '@/components/LeadershipTeam';
+import NewsCard from '@/components/news/NewsCard';
+import newsStyles from '@/components/news/News.module.css';
+import { sortedNews } from '@/lib/news.mjs';
 import { centreLeaders } from '@/lib/leadership.mjs';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919446654500&text=' +
@@ -416,20 +419,13 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                 </h2>
               </div>
             </div>
-            <div className="hosp-news-grid">
-              {news.map((item, i) => (
-                <article className="hosp-news-card" key={item.id ?? i}>
-                  {item.imageUrl && (
-                    <div className="hosp-news-img" style={{ backgroundImage: `url('${item.imageUrl}')` }}></div>
-                  )}
-                  <div className="hosp-news-meta">
-                    <span className="hosp-news-cat">{item.category}</span>
-                    <h4>{item.title}</h4>
-                    {item.excerpt && <p>{item.excerpt}</p>}
-                  </div>
-                </article>
-              ))}
+            {/* The three latest; every story is on the News page */}
+            <div className={newsStyles.grid}>
+              {sortedNews(news).slice(0, 3).map((item) => <NewsCard key={item.id ?? item.slug ?? item.title} item={item} />)}
             </div>
+            {sortedNews(news).length > 3 && (
+              <p className="hosp-news-all"><a href="/news" className="btn btn-soft">All news &amp; events <span aria-hidden="true">→</span></a></p>
+            )}
           </div>
         </section>
       )}

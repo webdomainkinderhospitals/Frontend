@@ -1,45 +1,29 @@
-function formatDate(value) {
-  if (!value) return '';
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-}
+import { sortedNews } from '@/lib/news.mjs';
+import NewsCard from '@/components/news/NewsCard';
+import newsStyles from '@/components/news/News.module.css';
 
+// The home page's newsroom: the three latest stories, each opening its own
+// page, and a way into every story on the News page.
 export default function News({ news = [] }) {
+  const latest = sortedNews(news).slice(0, 3);
+  if (!latest.length) return null;
   return (
     <section id="news" style={{ background: 'var(--bg-soft)' }}>
       <div className="container">
         <div className="section-head">
           <div>
-            <span className="section-eyebrow">News &amp; Insights</span>
+            <span className="section-eyebrow">News &amp; Events</span>
             <h2 className="section-title">
-              News, events <em>&amp; health insights</em>
+              The latest <em>from Kinder</em>
             </h2>
             <p className="section-intro">
-              Trustworthy health and medical information from our doctors, researchers, and
-              clinical teams at Kinder Hospitals.
+              Celebrations of motherhood, new services, awards and our work in the community, from across Kinder Hospitals.
             </p>
           </div>
-          <a href="https://api.whatsapp.com/send?phone=919446654500&text=Hello%20Kinder%20Hospitals%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener" className="view-all">View All →</a>
+          <a href="/news" className="view-all">All news &amp; events →</a>
         </div>
-        <div className="blog-grid">
-          {news.map((item, i) => (
-            <div className="blog-card" key={item.id ?? i}>
-              <div
-                className="blog-img"
-                style={{
-                  backgroundImage: item.imageUrl
-                    ? `url('${item.imageUrl}'), var(--mesh-card)`
-                    : 'var(--mesh-card)',
-                }}
-              ></div>
-              {item.category ? <span className="blog-tag">{item.category}</span> : null}
-              <h3>{item.title}</h3>
-              <div className="blog-meta">
-                {[item.author, formatDate(item.publishedAt)].filter(Boolean).join(' · ')}
-              </div>
-            </div>
-          ))}
+        <div className={newsStyles.grid}>
+          {latest.map((item) => <NewsCard key={item.id ?? item.slug ?? item.title} item={item} />)}
         </div>
       </div>
     </section>
