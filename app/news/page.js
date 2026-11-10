@@ -1,60 +1,34 @@
 import { getContent } from '@/lib/api';
-import { locationLabel } from '@/lib/locations';
+import { sortedNews } from '@/lib/news.mjs';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
+import NewsBrowser from '@/components/news/NewsBrowser';
+import styles from '@/components/news/News.module.css';
 
 export const revalidate = 60;
 
 export const metadata = {
   title: 'News & Events · Kinder Hospitals',
-  description: 'Latest news, health articles, camps and events from the Kinder Medical Group.',
+  description: 'Celebrations, milestones, awards, health camps and community work from across Kinder Hospitals.',
 };
-
-function formatDate(d) {
-  try {
-    return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-  } catch {
-    return '';
-  }
-}
 
 export default async function NewsPage() {
   const content = await getContent();
-  const news = content.news || [];
+  const news = sortedNews(content.news);
   return (
     <SiteChrome content={content}>
       <main>
         <PageHero
           crumb="News & Events"
-          eyebrow="Resources"
-          titleHtml="News, health articles <em>& events</em>"
-          intro="Insights from our doctors, camp announcements and the latest from across the Kinder network."
+          eyebrow="Newsroom"
+          titleHtml="News, events <em>&amp; milestones</em>"
+          intro="Celebrations of motherhood, new services, awards, health camps and community work — the stories of Kinder Hospitals."
         />
-        <section>
+        <section className={styles.newsroom}>
           <div className="container">
-            {news.length === 0 ? (
-              <p className="muted">New articles are on the way — check back soon.</p>
-            ) : (
-              <div className="hosp-news-grid news-page-grid">
-                {news.map((item, i) => (
-                  <article className="hosp-news-card" key={item.id ?? i}>
-                    {item.imageUrl && (
-                      <div className="hosp-news-img" style={{ backgroundImage: `url('${item.imageUrl}')` }}></div>
-                    )}
-                    <div className="hosp-news-meta">
-                      <span className="hosp-news-cat">{item.category}</span>
-                      <h4>{item.title}</h4>
-                      {item.excerpt && <p>{item.excerpt}</p>}
-                      <small className="news-byline">
-                        {[item.author, formatDate(item.publishedAt), locationLabel(item)]
-                          .filter(Boolean)
-                          .join(' · ')}
-                      </small>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
+            {news.length === 0
+              ? <p className="muted">New stories are on the way — check back soon.</p>
+              : <NewsBrowser news={news} />}
           </div>
         </section>
       </main>
