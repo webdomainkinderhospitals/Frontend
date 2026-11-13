@@ -125,23 +125,13 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
     }))
     : [];
 
-  // Kochi's department menu and its campaign banner open the page, above
-  // the hospital's own banner; other centres show their campaign banner just
-  // below it.
+  // Every centre opens with its own banner. Kochi's department menu and its
+  // campaign banner follow it; other centres show just their campaign banner.
   const topFirst = menuGroups.length > 0;
   const campaign = <PromoBanner slides={promoSlides(loc, 'promo')} label={`Kinder ${loc.name} announcements`} />;
 
   return (
     <main>
-      {topFirst && (
-        <div className="hosp-top">
-          <div className="container">
-            <CentreServiceMenu groups={menuGroups} centre={name} image={hero || ''} />
-          </div>
-          {campaign}
-        </div>
-      )}
-
       {/* Banner */}
       <section
         className="hosp-hero"
@@ -179,10 +169,17 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       </section>
 
-      {/* Campaign banner, set per centre in the admin portal (at the top for
-          Kochi); every centre's address, numbers and map are in the Visit us
-          section near the end */}
-      {!topFirst && campaign}
+      {/* Kochi's department menu, then the campaign banner set per centre in
+          the admin portal; every centre's address, numbers and map are in the
+          Visit us section near the end */}
+      {topFirst ? (
+        <div className="hosp-top hosp-top-after">
+          <div className="container">
+            <CentreServiceMenu groups={menuGroups} centre={name} image={hero || ''} />
+          </div>
+          {campaign}
+        </div>
+      ) : campaign}
 
       {/* Kochi's Celebrate Pregnancy and Premium Birthing Centre, set in the
           admin portal */}

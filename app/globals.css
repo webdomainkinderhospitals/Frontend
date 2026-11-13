@@ -5221,14 +5221,14 @@ summary:hover .spec-ico, .quick-item:hover .spec-ico,
 @media (max-width: 380px) { .bk-time-grid { grid-template-columns: repeat(3, 1fr); } }
 .bk-dialog .bk-time.bk-cal-inline { max-width: 420px; }
 
-/* Kochi: department menu and campaign banner open the page, above the hospital banner */
-/* One spacing step (--top-gap) separates the two cards, the cards from the
-   banner and the banner from the hospital banner below; the cards and the
-   banner share the same edges, corner radius and depth. */
+/* Kochi: department menu and campaign banner, just below the hospital banner */
+/* One spacing step (--top-gap) separates the two cards and the cards from the
+   campaign banner; the cards and the banner share the same edges, corner
+   radius and depth. */
 .hosp-top {
   --top-gap: clamp(16px, 1.6vw, 24px);
   --top-radius: 20px;
-  padding: clamp(20px, 2.4vw, 36px) 0 clamp(28px, 3vw, 44px);
+  padding: clamp(28px, 3vw, 44px) 0 clamp(28px, 3vw, 44px);
   background:
     radial-gradient(60% 80% at 0% 0%, rgba(59,111,192,.08), transparent 70%),
     radial-gradient(50% 70% at 100% 0%, rgba(224,57,63,.06), transparent 70%),
