@@ -8,6 +8,7 @@ import { isOwnImageOf } from '@/lib/hospital';
 import { centreName } from '@/lib/locations';
 import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
 import DepartmentShowcase from '@/components/DepartmentShowcase';
+import { centreGroups } from '@/lib/centre-departments.mjs';
 import CentreServiceMenu from '@/components/CentreServiceMenu';
 import LeadershipTeam from '@/components/LeadershipTeam';
 import NewsCard from '@/components/news/NewsCard';
@@ -33,19 +34,6 @@ export function lines(text) {
 export function splitHighlight(line) {
   const match = String(line).match(/^(.{2,60}?)\s+[—–]\s+(.+)$/s);
   return match ? { title: match[1], text: match[2] } : { title: '', text: line };
-}
-
-// Specialities read better grouped by the care journey they belong to than as
-// one long alphabet of department names.
-function groupSpecialities(specialities) {
-  const groups = [];
-  for (const spec of specialities) {
-    const title = spec.group || spec.category || '';
-    let group = groups.find((g) => g.title === title);
-    if (!group) groups.push((group = { title, items: [] }));
-    group.items.push(spec);
-  }
-  return groups.length > 1 || groups[0]?.title ? groups : [];
 }
 
 const tel = (phone) => `tel:${String(phone).replace(/[^+\d]/g, '')}`;
@@ -103,7 +91,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   // and Book Appointment opens its booking page with this centre's doctors.
   const base = `/hospitals/${hospitalSlug}`;
   const book = `${base}/book`;
-  const specialityGroups = groupSpecialities(specialities);
+  const specialityGroups = centreGroups(specialities);
   const leaders = centreLeaders(featurePages, loc.name);
   // "Kinder Hospitals Kochi": the name is set in the display face with the
   // place picked out, so split it into its lead-in and the place itself.
@@ -114,19 +102,18 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   const enquire = (topic) => whatsappLink(whatsappNumber(loc), `Hello ${name}, I would like to ${topic}.`);
 
   const specSlug = (name) => String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-  // A centre whose departments fall into two or three substantial groups
-  // (Kochi: Multispeciality Services and the Women & Fertility Centre) gets
-  // them as its headline menu under the banner; its address then moves down
-  // to a Visit us section near the end of the page.
-  const menuGroups = specialityGroups.length >= 2 && specialityGroups.length <= 3 && specialityGroups.every((g) => g.title && g.items.length >= 3)
+  // Every centre's departments as two cards under its banner: Other
+  // Specialities and the Women Hospital & Fertility Centre. Its address is in
+  // the Visit us section near the end of the page.
+  const menuGroups = specialityGroups.length === 2
     ? specialityGroups.map((g) => ({
       title: g.title,
       items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
     }))
     : [];
 
-  // Every centre opens with its own banner. Kochi's department menu and its
-  // campaign banner follow it; other centres show just their campaign banner.
+  // Every centre opens with its own banner; its two department cards and its
+  // campaign banner follow it.
   const topFirst = menuGroups.length > 0;
   const campaign = <PromoBanner slides={promoSlides(loc, 'promo')} label={`Kinder ${loc.name} announcements`} />;
 
@@ -169,7 +156,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       </section>
 
-      {/* Kochi's department menu, then the campaign banner set per centre in
+      {/* The two department cards, then the campaign banner set per centre in
           the admin portal; every centre's address, numbers and map are in the
           Visit us section near the end */}
       {topFirst ? (
