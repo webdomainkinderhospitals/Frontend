@@ -6,10 +6,10 @@ import styles from './CelebratePregnancy.module.css';
 
 // Celebrate Pregnancy, on the group homepage (and Kochi's page): the
 // introduction beside a slider of the signature experiences — Water Birth,
-// Spandanam and Mom Mix — then the other experiences as cards, and the
+// Spandanam — then the other experiences as cards, and the
 // welcome every new family receives. Everything comes from published Content
 // Library pages, so the admin controls what appears.
-const SHOWCASE = [['water-birth', 'water-birthing-suite'], ['spandanam'], ['mom-mix']];
+const SHOWCASE = [['water-birth', 'water-birthing-suite'], ['spandanam']];
 
 const imageOf = (link) => pregnancyPhoto(link.page);
 const placeOf = (link) => String(link.page.location || 'Kochi').split(',')[0].trim();
