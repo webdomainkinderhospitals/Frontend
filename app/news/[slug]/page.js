@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
-import { findNews, newsDate, newsParagraphs, newsPhotos, newsPlace, relatedNews } from '@/lib/news.mjs';
+import { findNews, newsDateOf, newsParagraphs, newsPhotos, newsPlace, relatedNews } from '@/lib/news.mjs';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
 import NewsCard from '@/components/news/NewsCard';
@@ -29,7 +29,7 @@ export default async function NewsStory({ params }) {
   if (!item) notFound();
   const photos = newsPhotos(item);
   const paragraphs = newsParagraphs(item.body);
-  const date = newsDate(item.publishedAt);
+  const date = newsDateOf(item);
   const place = newsPlace(item);
   const more = relatedNews(content.news, item);
   // Stories kept in Malayalam, as the hospital wrote them, are marked so
@@ -54,7 +54,7 @@ export default async function NewsStory({ params }) {
                 </figure>
               )}
               <dl className={styles.storyFacts}>
-                {date && <div><dt>Date</dt><dd><time dateTime={item.publishedAt}>{date}</time></dd></div>}
+                {date && <div><dt>Date</dt><dd><time dateTime={item.dateLabel || item.publishedAt}>{date}</time></dd></div>}
                 <div><dt>Where</dt><dd>{place}</dd></div>
                 {item.category && <div><dt>Type</dt><dd>{item.category}</dd></div>}
               </dl>
