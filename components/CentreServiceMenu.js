@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { iconsForList, specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // A centre's departments as its headline menu, right under the banner: one
-// large card per group (the Women Hospital & Fertility Centre, and Other
+// large card per group (the Women Hospital & Fertility Centre, then Other
 // Specialities — Multispeciality Services at Kochi). A card opens a panel with every department in that
 // group, each linking to its own page on the centre's site.
 //

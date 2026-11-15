@@ -103,8 +103,8 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
 
   const specSlug = (name) => String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   // Every centre's departments as two cards under its banner: the Women
-  // Hospital & Fertility Centre and Other Specialities (Kochi: Multispeciality
-  // Services first). Its address is in the Visit us section near the end.
+  // Hospital & Fertility Centre, then Other Specialities (Kochi: Multispeciality
+  // Services). Its address is in the Visit us section near the end.
   const menuGroups = specialityGroups.length === 2
     ? specialityGroups.map((g) => ({
       title: g.title,
@@ -117,6 +117,100 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   // campaign banner follow it.
   const topFirst = menuGroups.length > 0;
   const campaign = <PromoBanner slides={promoSlides(loc, 'promo')} label={`Kinder ${loc.name} announcements`} />;
+
+
+  // Sections that Kinder Kochi shows in its own order, near the top of the
+  // page: book an appointment, departments, doctors, Water Birth (in the
+  // Premium Birthing Centre section), then news and events.
+  const departmentsSection = (<>
+        {/* Departments at this centre: the hospital's icon band, one tab per group */}
+        {specialities.length > 0 && (
+          <section id="specialities" className="dept-section">
+            <DepartmentShowcase
+              centre={name}
+              image={hero || ''}
+              groups={(specialityGroups.length ? specialityGroups : [{ title: '', items: specialities }]).map((g) => ({
+                title: g.title,
+                items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
+              }))}
+              heading={(
+                <div className="dept-head">
+                  <span className="section-eyebrow">Departments at {name}</span>
+                  <h2 className="section-title">
+                    {centreSpecific ? <>Our <em>departments</em></> : <>Specialities <em>across our group</em></>}
+                  </h2>
+                </div>
+              )}
+            />
+          </section>
+        )}
+  </>);
+  const doctorsSection = (<>
+        {/* Doctors at this centre */}
+        {doctors.length > 0 && (
+          <section id="doctors" style={{ background: 'var(--bg-soft)' }}>
+            <div className="container">
+              <div className="section-head">
+                <div>
+                  <span className="section-eyebrow">Our team at {name}</span>
+                  <h2 className="section-title">
+                    Specialists <em>at this centre</em>
+                  </h2>
+                </div>
+              </div>
+              <div className="hosp-doctor-grid">
+                {doctors.map((doc, i) => (
+                  <DoctorCard doc={doc} key={doc.id} hideHospitals servicePages={servicePages} base={base} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+  </>);
+  const newsSection = (<>
+        {/* News from this centre */}
+        {news.length > 0 && (
+          <section id="news">
+            <div className="container">
+              <div className="section-head">
+                <div>
+                  <span className="section-eyebrow">Updates from {name}</span>
+                  <h2 className="section-title">
+                    News &amp; <em>events here</em>
+                  </h2>
+                </div>
+              </div>
+              {/* The three latest; every story is on the News page */}
+              <div className={newsStyles.grid}>
+                {sortedNews(news).slice(0, 3).map((item) => <NewsCard key={item.id ?? item.slug ?? item.title} item={item} />)}
+              </div>
+              {sortedNews(news).length > 3 && (
+                <p className="hosp-news-all"><a href="/news" className="btn btn-soft">All news &amp; events <span aria-hidden="true">→</span></a></p>
+              )}
+            </div>
+          </section>
+        )}
+  </>);
+  const bookBanner = (
+    <section className="hosp-cta-wrap hosp-book-band" aria-label={`Book an appointment at ${name}`}>
+      <div className="container">
+        <div className="cta-strip">
+          <div>
+            <h3>Book an appointment at {name}</h3>
+            <p>
+              {loc.phone
+                ? `Choose your doctor and a day that suits you, or call ${loc.phone} — our care coordinators will confirm your visit.`
+                : 'Choose your doctor and a day that suits you — our care coordinators will confirm your visit.'}
+            </p>
+          </div>
+          <div className="hosp-book-band-actions">
+            <a href={book} className="btn btn-primary">Book an Appointment →</a>
+            {loc.phone && <a href={tel(loc.phone)} className="btn btn-outline">Call {loc.phone}</a>}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 
   return (
     <main>
@@ -169,11 +263,16 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       ) : campaign}
 
-      {/* Kochi's Celebrate Pregnancy and Premium Birthing Centre, set in the
-          admin portal */}
+      {/* Kochi: book an appointment, departments, doctors, Water Birth (the
+          Premium Birthing Centre section), news and events, then Celebrate
+          Pregnancy — all set in the admin portal */}
       {isKochi && <>
-        <CelebratePregnancy pages={featurePages} settings={settings} scope="kochi" />
+        {bookBanner}
+        {departmentsSection}
+        {doctorsSection}
         <PremiumBirthingCentre pages={featurePages} settings={settings} scope="kochi" />
+        {newsSection}
+        <CelebratePregnancy pages={featurePages} settings={settings} scope="kochi" />
       </>}
 
       {/* About + highlights */}
@@ -251,27 +350,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         }]}
       />
 
-      {/* Departments at this centre: the hospital's icon band, one tab per group */}
-      {specialities.length > 0 && (
-        <section id="specialities" className="dept-section">
-          <DepartmentShowcase
-            centre={name}
-            image={hero || ''}
-            groups={(specialityGroups.length ? specialityGroups : [{ title: '', items: specialities }]).map((g) => ({
-              title: g.title,
-              items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
-            }))}
-            heading={(
-              <div className="dept-head">
-                <span className="section-eyebrow">Departments at {name}</span>
-                <h2 className="section-title">
-                  {centreSpecific ? <>Our <em>departments</em></> : <>Specialities <em>across our group</em></>}
-                </h2>
-              </div>
-            )}
-          />
-        </section>
-      )}
+      {!isKochi && departmentsSection}
 
       {/* Packages, insurance and consultation for this centre */}
       <section id="patient-services">
@@ -304,26 +383,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       </section>
 
-      {/* Doctors at this centre */}
-      {doctors.length > 0 && (
-        <section id="doctors" style={{ background: 'var(--bg-soft)' }}>
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <span className="section-eyebrow">Our team at {name}</span>
-                <h2 className="section-title">
-                  Specialists <em>at this centre</em>
-                </h2>
-              </div>
-            </div>
-            <div className="hosp-doctor-grid">
-              {doctors.map((doc, i) => (
-                <DoctorCard doc={doc} key={doc.id} hideHospitals servicePages={servicePages} base={base} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {!isKochi && doctorsSection}
 
       {/* Procedures at this centre */}
       {procedures.length > 0 && (
@@ -392,28 +452,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </section>
       )}
 
-      {/* News from this centre */}
-      {news.length > 0 && (
-        <section id="news">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <span className="section-eyebrow">Updates from {name}</span>
-                <h2 className="section-title">
-                  News &amp; <em>events here</em>
-                </h2>
-              </div>
-            </div>
-            {/* The three latest; every story is on the News page */}
-            <div className={newsStyles.grid}>
-              {sortedNews(news).slice(0, 3).map((item) => <NewsCard key={item.id ?? item.slug ?? item.title} item={item} />)}
-            </div>
-            {sortedNews(news).length > 3 && (
-              <p className="hosp-news-all"><a href="/news" className="btn btn-soft">All news &amp; events <span aria-hidden="true">→</span></a></p>
-            )}
-          </div>
-        </section>
-      )}
+      {!isKochi && newsSection}
 
       {/* Visit us: where the centre is, with its numbers, email and map */}
       {(loc.address || loc.phone || loc.email) && (
@@ -454,24 +493,26 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </section>
       )}
 
-      {/* CTA */}
-      <section className="hosp-cta-wrap">
-        <div className="container">
-          <div className="cta-strip">
-            <div>
-              <h3>Visit {name}</h3>
-              <p>
-                {loc.phone
-                  ? `Call ${loc.phone} or book on WhatsApp — our care coordinators will guide you.`
-                  : 'Book on WhatsApp — our care coordinators will guide you.'}
-              </p>
+      {/* CTA (Kochi shows it near the top instead) */}
+      {!isKochi && (
+        <section className="hosp-cta-wrap">
+          <div className="container">
+            <div className="cta-strip">
+              <div>
+                <h3>Visit {name}</h3>
+                <p>
+                  {loc.phone
+                    ? `Call ${loc.phone} or book on WhatsApp — our care coordinators will guide you.`
+                    : 'Book on WhatsApp — our care coordinators will guide you.'}
+                </p>
+              </div>
+              <a href={book} className="btn btn-primary">
+                Book an Appointment →
+              </a>
             </div>
-            <a href={book} className="btn btn-primary">
-              Book an Appointment →
-            </a>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </main>
   );
 }

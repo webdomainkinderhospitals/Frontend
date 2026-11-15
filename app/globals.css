@@ -5796,3 +5796,13 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
 @media (min-width: 821px) {
   .stats-row { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)) !important; }
 }
+
+/* Kinder Kochi: the book-an-appointment band right under the department cards */
+.hosp-cta-wrap.hosp-book-band { padding: clamp(24px, 3vw, 40px) 0; }
+.hosp-book-band-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hosp-book-band .btn-outline { color: #fff; border-color: rgba(255,255,255,.55); background: transparent; }
+.hosp-book-band .btn-outline:hover { background: rgba(255,255,255,.12); border-color: #fff; color: #fff; }
+.hosp-top:has(+ .hosp-book-band) { border-bottom: 0; padding-bottom: 0; }
+.hosp-top + .hosp-book-band { padding-top: var(--top-gap, 20px); background: #fff; }
+/* the band's Book button in the same red as the header's Book Appointment */
+.hosp-book-band .btn-primary { --face1: #F0575C; --face2: #D8232B; --edge: #A9161D; --glow: 216,35,43; }
