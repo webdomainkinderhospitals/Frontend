@@ -74,3 +74,10 @@ test('a story known only by its year shows the year', async () => {
   assert.equal(all[i - 1].slug, 'maa-jeevana-free-surgery-for-women');
   assert.equal(all[i + 1].slug, 'tharattazhaku-season-3-world-record');
 });
+
+test('a Mom Mix story suggests the other Mom Mix seasons first', async () => {
+  const { relatedNews, withNewsArchive } = await import('../lib/news.mjs');
+  const all = withNewsArchive([]);
+  const s3 = all.find((n) => n.slug === 'mom-mix-season-3');
+  assert.deepEqual(relatedNews(all, s3).slice(0, 2).map((n) => n.slug), ['mom-mix-season-2', 'worlds-largest-pregnant-womens-cake-mixing']);
+});

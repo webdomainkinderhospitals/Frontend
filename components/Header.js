@@ -32,7 +32,7 @@ const FEATURE_NOTES = {
 };
 // The Celebrate Pregnancy menu's order, as the hospital asked; anything not
 // listed (a new experience) goes before the closing "Your pregnancy journey".
-const MENU_ORDER = ['kochi-tharattazhaku', 'celebrate-spandanam', 'celebrate-mom-mix', 'celebrate-mom-to-be', 'kochi-wow-mom'];
+const MENU_ORDER = ['kochi-tharattazhaku', 'celebrate-spandanam', 'celebrate-mom-to-be', 'kochi-wow-mom'];
 const menuRank = (key) => (key === 'journey' ? 99 : MENU_ORDER.includes(key) ? MENU_ORDER.indexOf(key) : 50);
 // The Premium Birthing Centre menu: a still from the hospital's own film for
 // the centre, and a fuller line under each.
@@ -55,7 +55,7 @@ export default function Header({ settings, locations: allLocations = [], special
   const premium = allFeatures.find((f) => f.slug === PREMIUM_SLUG);
   const birthing = allFeatures.filter((f) => f.group === 'Premium Birthing Centre');
   const features = allFeatures.filter((f) => f.group === 'Celebrate Pregnancy');
-  // Spandanam and Cake Mixing (Mom Mix), from their Content Library pages.
+  // Spandanam and Mom-to-be, from their Content Library pages.
   const highlights = menuHighlights(pages);
   const serviceGroups = groupServices(specialities);
   // The Specialities menu shows its columns side by side, so no icon repeats across them.
