@@ -103,8 +103,8 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
 
   const specSlug = (name) => String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   // Every centre's departments as two cards under its banner: the Women
-  // Hospital & Fertility Centre and Other Specialities (Kochi: Multispeciality
-  // Services first). Its address is in the Visit us section near the end.
+  // Hospital & Fertility Centre, then Other Specialities (Kochi: Multispeciality
+  // Services). Its address is in the Visit us section near the end.
   const menuGroups = specialityGroups.length === 2
     ? specialityGroups.map((g) => ({
       title: g.title,

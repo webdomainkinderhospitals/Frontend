@@ -4,7 +4,7 @@ import { centreGroups, OTHER, KOCHI_OTHER, WOMEN } from '../lib/centre-departmen
 
 const titles = (groups) => groups.map((g) => g.title);
 
-test('Kochi keeps its own grouping and order: Multispeciality Services, then the Women Hospital', () => {
+test('Kochi keeps its own grouping: the Women Hospital first, then Multispeciality Services', () => {
   const kochi = [
     { name: 'General Medicine & Diabetology', group: 'Multispeciality Services' },
     { name: 'Andrology', group: 'Multispeciality Services' },
@@ -12,12 +12,12 @@ test('Kochi keeps its own grouping and order: Multispeciality Services, then the
     { name: 'Obstetrics & Gynaecology', group: 'Women & Fertility Centre' },
   ];
   const groups = centreGroups(kochi, { kochi: true });
-  assert.deepEqual(titles(groups), [KOCHI_OTHER, WOMEN]);
+  assert.deepEqual(titles(groups), [WOMEN, KOCHI_OTHER]);
   assert.equal(KOCHI_OTHER, 'Multispeciality Services');
   assert.equal(WOMEN, 'Women Hospital & Fertility Centre');
-  assert.deepEqual(groups[0].items.map((s) => s.name), ['General Medicine & Diabetology', 'Andrology']);
-  assert.deepEqual(groups[1].items.map((s) => s.name), ['Endocrinology', 'Obstetrics & Gynaecology']);
-  assert.deepEqual(groups.map((g) => g.women), [false, true]);
+  assert.deepEqual(groups[0].items.map((s) => s.name), ['Endocrinology', 'Obstetrics & Gynaecology']);
+  assert.deepEqual(groups[1].items.map((s) => s.name), ['General Medicine & Diabetology', 'Andrology']);
+  assert.deepEqual(groups.map((g) => g.women), [true, false]);
 });
 
 test('every other centre: the Women Hospital first, Other Specialities second', () => {
