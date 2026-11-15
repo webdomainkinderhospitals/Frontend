@@ -23,7 +23,13 @@ const STYLES = [
   ) },
 ];
 
-const styleOf = (group, i) => (group.women === undefined ? STYLES[i % STYLES.length] : STYLES[group.women ? 1 : 0]);
+// The first card is always red and the second blue, at every centre; each
+// keeps the icon of its group (stethoscope, or mother and child).
+const TONES = ['red', 'blue'];
+const styleOf = (group, i) => ({
+  tone: TONES[i % TONES.length],
+  icon: (group.women === undefined ? STYLES[i % STYLES.length] : STYLES[group.women ? 1 : 0]).icon,
+});
 
 const TAGLINES = {
   'other specialities': 'Surgery, critical care and specialist medicine for the whole family',
@@ -55,7 +61,6 @@ export default function CentreServiceMenu({ groups = [], centre = '', image = ''
     <div className="csm" aria-label={`Departments at ${centre}`}>
       <div className="csm-cards">
         {groups.map((group, i) => {
-          // blue for the hospital's general departments, red for the Women Hospital
           const style = styleOf(group, i);
           const isOpen = open === group.title;
           const id = `csm-panel-${i}`;
