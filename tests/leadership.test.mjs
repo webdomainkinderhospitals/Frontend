@@ -46,3 +46,11 @@ test('the order and Anto Twinkle\'s centre hold even before the stored data is u
     ['leadership-dr-v-k-pradeep-kumar', 'leadership-mr-renjith-krishnan', 'leadership-mr-basanta-kumar-dash']);
   assert.deepEqual(centreLeaders(stale, 'Kochi').map((l) => l.slug), ['leadership-mr-anto-twinkle']);
 });
+
+test('Mr Anto Twinkle has his portrait on his card and his profile page', async () => {
+  const { centreLeaders, leaderPortrait } = await import('../lib/leadership.mjs');
+  const page = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', body: 'Mr. Anto Twinkle\n\nHospital management.', published: true };
+  assert.equal(centreLeaders([page], 'Kochi')[0].photo, '/leadership/anto-twinkle-head.webp');
+  assert.equal(leaderPortrait(page), '/leadership/anto-twinkle.webp');
+  assert.equal(leaderPortrait({ slug: 'privacy', category: 'Policies' }), '');
+});
