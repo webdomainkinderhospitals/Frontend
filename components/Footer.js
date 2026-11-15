@@ -1,3 +1,4 @@
+import { SHOW_PATIENT_STORIES } from '@/lib/patient-stories.mjs';
 import { siteTree, LEGAL_LINKS } from '@/lib/site-tree';
 import { hospitalsOnly } from '@/lib/locations';
 
@@ -137,7 +138,7 @@ export default function Footer({ settings, locations: allLocations = [] }) {
                 {sections.map((section) => (
                   <li key={section.label}><a href={section.href}>{section.label}</a></li>
                 ))}
-                <li><a href="/stories">Patient Testimonials</a></li>
+                {SHOW_PATIENT_STORIES && <li><a href="/stories">Patient Testimonials</a></li>}
               </ul>
             </div>
 

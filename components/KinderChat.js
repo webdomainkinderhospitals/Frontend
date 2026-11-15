@@ -1,5 +1,6 @@
 'use client';
 
+import { SHOW_PATIENT_STORIES } from '@/lib/patient-stories.mjs';
 import { atLocation, hospitalsOnly, locationLabel, locationsOf } from '@/lib/locations';
 import { useEffect, useRef, useState } from 'react';
 import { allServices, doctorsForService, slugify } from '@/lib/services';
@@ -181,7 +182,7 @@ function buildReply(text, content) {
   if (/news|event|camp|blog|press/.test(q)) {
     return reply('You can find our latest news, health blogs, events and awareness camps on the News & Events page.', [{ label: 'News & Events', href: '/news' }]);
   }
-  if (/stor(y|ies)|testimonial|review|experience/.test(q)) {
+  if (SHOW_PATIENT_STORIES && /stor(y|ies)|testimonial|review|experience/.test(q)) {
     return reply('Our families tell it best — read real patient stories from across the Kinder network.', [{ label: 'Patient stories', href: '/stories' }]);
   }
   if (/career|job|vacan|hiring|recruit/.test(q)) {
