@@ -19,7 +19,9 @@ test('Celebrate Pregnancy menu lists Spandanam and Mom-to-be; Cake Mixing is in 
 
 test('pregnancy photos: an admin photo wins, imported generic banners give way to the hospital photo', () => {
   assert.equal(pregnancyPhoto({ slug: 'celebrate-spandanam', imageUrl: 'https://cdn/x.webp' }), 'https://cdn/x.webp');
-  assert.equal(pregnancyPhoto({ slug: 'kochi-tharattazhaku', imageUrl: 'https://www.kinderkochi.com/images/tharatt_left_banner.jpg' }), '/celebrate-pregnancy/tharattazhaku/season-5-winners-walk.webp');
+  // Tharattazhaku always shows the hospital's chosen award photo
+  assert.equal(pregnancyPhoto({ slug: 'kochi-tharattazhaku', imageUrl: 'https://www.kinderkochi.com/images/tharatt_left_banner.jpg' }), '/celebrate-pregnancy/tharattazhaku/book-of-records-award.webp');
+  assert.equal(pregnancyPhoto({ slug: 'kochi-tharattazhaku', imageUrl: 'https://cdn/old-award.jpg' }), '/celebrate-pregnancy/tharattazhaku/book-of-records-award.webp');
   assert.equal(pregnancyPhoto({ slug: 'kochi-wow-mom', imageUrl: 'https://www.kinderkochi.com/images/appointment.jpg' }), '/kochi/tharattazhaku/mother-to-be.webp');
   assert.equal(pregnancyPhoto({ slug: 'kochi-water-birthing-suite', imageUrl: '' }), '/celebrate-pregnancy/water-birth.webp');
   assert.equal(pregnancyPhoto({ slug: 'kochi-premium-birthing-centre', imageUrl: 'https://www.kinderkochi.com/images/birth1.jpg' }), 'https://www.kinderkochi.com/images/birth1.jpg');
