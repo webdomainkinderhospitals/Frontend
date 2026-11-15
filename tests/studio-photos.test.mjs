@@ -22,11 +22,30 @@ test('each doctor gets the studio-blue portrait from their own hospital', () => 
   assert.equal(nikhil.imageUrl, '/doctors/studio/kochi/dr-nikhil-v-mathew.webp');
   assert.equal(shoji.imageUrl, '/doctors/studio/kollam/shoji.webp');
   assert.equal(anitha.imageUrl, 'https://cdn/a.jpg');
-  // A Kollam doctor's name at another hospital is not given that photo
-  assert.equal(reshmyElsewhere.imageUrl, 'https://cdn/x.jpg');
+  // The same full name at another hospital is the same doctor working at two
+  assert.equal(reshmyElsewhere.imageUrl, '/doctors/studio/kollam/reshmy-r-pillai.webp');
+  // …but a first-name-only photo never crosses to another hospital
+  assert.equal(withStudioPhotos([{ name: 'Dr. Shoji', location: 'Cherthala', imageUrl: 'https://cdn/s.jpg' }])[0].imageUrl, 'https://cdn/s.jpg');
 });
 
 test('a first-name-only photo is not guessed when two doctors share the name', () => {
   const two = [{ name: 'Dr. Hira A', location: 'Kollam' }, { name: 'Dr. Hira B', location: 'Kollam' }];
   assert.deepEqual(withStudioPhotos(two), two);
+});
+
+test('names written differently still get their photo; a doctor at two hospitals too', () => {
+  const docs = withStudioPhotos([
+    { name: 'Dr. Kevin Antony George', location: 'Cherthala' },
+    { name: 'Dr. Abhishek Radhakrishnan', location: 'Cherthala' },
+    { name: 'Dr. Meera Mohan K', location: 'Cherthala' },
+    { name: 'Dr. Mili Mohandas', location: 'Cherthala' },
+    { name: 'Dr. Smitha Pratheesh', location: 'Kochi' },
+    { name: 'Dr. Smitha Surendran', location: 'Kochi' },
+  ]);
+  assert.equal(docs[0].imageUrl, '/doctors/studio/cherthala/kevin-george.webp');
+  assert.equal(docs[1].imageUrl, '/doctors/studio/kochi/dr-abhishek-radhakrishnan.webp');
+  assert.equal(docs[2].imageUrl, '/doctors/studio/cherthala/meera-mohan.webp');
+  assert.equal(docs[3].imageUrl, undefined);
+  assert.equal(docs[4].imageUrl, '/doctors/studio/kochi/dr-smitha-pratheesh.webp');
+  assert.equal(docs[5].imageUrl, '/doctors/studio/kochi/dr-smitha-surendran.webp');
 });
