@@ -1,4 +1,4 @@
-import { newsDate, newsHref, newsPlace, newsPhotos } from '@/lib/news.mjs';
+import { newsDateOf, newsHref, newsPlace, newsPhotos } from '@/lib/news.mjs';
 import styles from './News.module.css';
 
 // One story as a card: its cover, type, date, title and summary, the whole
@@ -16,7 +16,7 @@ export default function NewsCard({ item, feature = false, headingLevel = 3 }) {
         </span>
         <span className={styles.cardBody}>
           <span className={styles.cardMeta}>
-            {newsDate(item.publishedAt, 'short') && <time dateTime={item.publishedAt}>{newsDate(item.publishedAt, 'short')}</time>}
+            {newsDateOf(item, 'short') && <time dateTime={item.dateLabel || item.publishedAt}>{newsDateOf(item, 'short')}</time>}
             <span>{newsPlace(item)}</span>
           </span>
           <Heading className={styles.cardTitle}>{item.title}</Heading>
