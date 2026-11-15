@@ -1,4 +1,6 @@
+import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/api';
+import { SHOW_PATIENT_STORIES } from '@/lib/patient-stories.mjs';
 import { locationLabel } from '@/lib/locations';
 import SiteChrome from '@/components/SiteChrome';
 import PageHero from '@/components/PageHero';
@@ -11,6 +13,8 @@ export const metadata = {
 };
 
 export default async function StoriesPage() {
+  // Patient stories are hidden for now (lib/patient-stories.mjs).
+  if (!SHOW_PATIENT_STORIES) notFound();
   const content = await getContent();
   const testimonials = content.testimonials || [];
   return (

@@ -1,4 +1,5 @@
 export default function Testimonials({ testimonials = [] }) {
+  if (!testimonials.length) return null;
   return (
     <section className="testimonials" id="testimonials">
       <div className="container">
