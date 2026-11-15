@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { iconsForList, specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // A centre's departments as its headline menu, right under the banner: one
-// large card per group (Other Specialities, and the Women Hospital &
-// Fertility Centre). A card opens a panel with every department in that
+// large card per group (the Women Hospital & Fertility Centre, and Other
+// Specialities — Multispeciality Services at Kochi). A card opens a panel with every department in that
 // group, each linking to its own page on the centre's site.
 //
 //   groups  [{ title, items: [{ name, href, description }] }]
@@ -23,8 +23,11 @@ const STYLES = [
   ) },
 ];
 
+const styleOf = (group, i) => (group.women === undefined ? STYLES[i % STYLES.length] : STYLES[group.women ? 1 : 0]);
+
 const TAGLINES = {
   'other specialities': 'Surgery, critical care and specialist medicine for the whole family',
+  'multispeciality services': 'Surgery, critical care and specialist medicine for the whole family',
   'women hospital & fertility centre': 'Pregnancy, fertility, newborn and children’s care under one roof',
 };
 
@@ -52,7 +55,8 @@ export default function CentreServiceMenu({ groups = [], centre = '', image = ''
     <div className="csm" aria-label={`Departments at ${centre}`}>
       <div className="csm-cards">
         {groups.map((group, i) => {
-          const style = STYLES[i % STYLES.length];
+          // blue for the hospital's general departments, red for the Women Hospital
+          const style = styleOf(group, i);
           const isOpen = open === group.title;
           const id = `csm-panel-${i}`;
           return (
@@ -83,7 +87,7 @@ export default function CentreServiceMenu({ groups = [], centre = '', image = ''
           key={group.title}
           id={`csm-panel-${i}`}
           ref={open === group.title ? panelRef : null}
-          className={`csm-panel csm-panel-${STYLES[i % STYLES.length].tone}${open === group.title ? ' is-open' : ''}`}
+          className={`csm-panel csm-panel-${styleOf(group, i).tone}${open === group.title ? ' is-open' : ''}`}
           role="region"
           aria-label={group.title}
           hidden={open !== group.title}

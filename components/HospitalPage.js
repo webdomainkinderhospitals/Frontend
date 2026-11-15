@@ -91,23 +91,24 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   // and Book Appointment opens its booking page with this centre's doctors.
   const base = `/hospitals/${hospitalSlug}`;
   const book = `${base}/book`;
-  const specialityGroups = centreGroups(specialities);
   const leaders = centreLeaders(featurePages, loc.name);
   // "Kinder Hospitals Kochi": the name is set in the display face with the
   // place picked out, so split it into its lead-in and the place itself.
   const name = centreName(loc);
   const lead = name.endsWith(loc.name) ? name.slice(0, -loc.name.length).trim() : 'Kinder';
   const isKochi = /^(kochi|cochin)$/i.test(String(loc.name).trim());
+  const specialityGroups = centreGroups(specialities, { kochi: isKochi });
   const phones = [loc.phone, loc.phone2].filter((p) => String(p || '').trim());
   const enquire = (topic) => whatsappLink(whatsappNumber(loc), `Hello ${name}, I would like to ${topic}.`);
 
   const specSlug = (name) => String(name || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-  // Every centre's departments as two cards under its banner: Other
-  // Specialities and the Women Hospital & Fertility Centre. Its address is in
-  // the Visit us section near the end of the page.
+  // Every centre's departments as two cards under its banner: the Women
+  // Hospital & Fertility Centre and Other Specialities (Kochi: Multispeciality
+  // Services first). Its address is in the Visit us section near the end.
   const menuGroups = specialityGroups.length === 2
     ? specialityGroups.map((g) => ({
       title: g.title,
+      women: g.women,
       items: g.items.map((d) => ({ name: d.name, description: d.description || '', href: `${base}/services/${specSlug(d.name)}` })),
     }))
     : [];
