@@ -9,6 +9,7 @@ import { centreName } from '@/lib/locations';
 import { whatsappLink, whatsappNumber } from '@/lib/booking.mjs';
 import DepartmentShowcase from '@/components/DepartmentShowcase';
 import { centreGroups } from '@/lib/centre-departments.mjs';
+import { procedureHref } from '@/lib/procedures.mjs';
 import CentreServiceMenu from '@/components/CentreServiceMenu';
 import LeadershipTeam from '@/components/LeadershipTeam';
 import NewsCard from '@/components/news/NewsCard';
@@ -400,8 +401,9 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
             <div className="hosp-proc-grid">
               {procedures.map((proc, i) => (
                 <article className="hosp-proc-card" key={proc.id ?? i}>
-                  <h4>{proc.name}</h4>
+                  <h4><a href={procedureHref(proc)}>{proc.name}</a></h4>
                   <p>{proc.description}</p>
+                  <a className="view-all" href={procedureHref(proc)}>Read more →</a>
                 </article>
               ))}
             </div>
