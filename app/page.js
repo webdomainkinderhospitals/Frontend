@@ -48,6 +48,9 @@ export default async function HomePage() {
       <main className={styles.home}>
       <HomeHero settings={settings} locations={hospitals} />
       <QuickBar />
+      {/* What patients look for first: our specialities and our doctors */}
+      <CoeGrid />
+      <Doctors doctors={doctors} locations={hospitals} />
       <PromoBanner slides={withEventBanners(promoSlides(settings, 'homePromo'))} label="Kinder Hospitals announcements" />
       <Stats
         settings={settings}
@@ -58,8 +61,6 @@ export default async function HomePage() {
       <PremiumBirthingCentre pages={content.pages} settings={settings} />
       <BrandAmbassador />
       <MomentsAtKinder gallery={content.gallery} />
-      <CoeGrid />
-      <Doctors doctors={doctors} locations={hospitals} />
       <Procedures procedures={procedures} />
       <Care />
       <Support />
