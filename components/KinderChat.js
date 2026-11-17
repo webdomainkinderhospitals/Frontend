@@ -11,7 +11,7 @@ import { allServices, doctorsForService, slugify } from '@/lib/services';
 // answer carries buttons that take the visitor to the right page.
 
 const WA = (text) =>
-  'https://api.whatsapp.com/send?phone=919446654500&text=' + encodeURIComponent(text);
+  'https://api.whatsapp.com/send?phone=919746600600&text=' + encodeURIComponent(text);
 
 const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9\s&+]/g, ' ').replace(/\s+/g, ' ').trim();
 

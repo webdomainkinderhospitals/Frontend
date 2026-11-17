@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 const WHATSAPP =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I have an enquiry.');
 
 function slugOf(loc) {

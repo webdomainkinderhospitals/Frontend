@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const WHATSAPP_BOOK =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
 
 const STATIC_SLIDES = [
