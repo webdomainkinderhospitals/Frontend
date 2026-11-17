@@ -79,4 +79,4 @@ export function HubCta({ title, text, href, label, external = true }) {
 }
 
 export const whatsapp = (message) =>
-  'https://api.whatsapp.com/send?phone=919446654500&text=' + encodeURIComponent(message);
+  'https://api.whatsapp.com/send?phone=919746600600&text=' + encodeURIComponent(message);

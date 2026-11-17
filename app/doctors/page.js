@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 const WHATSAPP_BOOK =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment with a doctor.');
 
 export default async function DoctorsPage() {

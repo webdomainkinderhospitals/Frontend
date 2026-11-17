@@ -9,7 +9,7 @@ import { iconsForList } from '@/lib/speciality-icons.mjs';
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const enquire = (name, where) =>
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent(`Hello Kinder Hospitals, I would like to enquire about ${name}${where ? ` at Kinder ${where}` : ''}.`);
 
 // One speciality page, rendered the same on the corporate site and inside a

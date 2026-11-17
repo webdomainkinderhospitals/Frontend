@@ -110,3 +110,12 @@ test("today's slots that have already begun can't be picked; other days are open
   assert.equal(slotPassed('2026-10-10', '9:00 AM', now), false);
   assert.equal(slotPassed('', '9:00 AM', now), false);
 });
+
+test('the group website\'s WhatsApp is Kinder Hospitals Kochi (97466 00600)', async () => {
+  assert.equal(GROUP_WHATSAPP, '919746600600');
+  const fs = await import('node:fs');
+  const { execSync } = await import('node:child_process');
+  const stale = execSync('grep -rl "phone=919446654500" app components lib || true', { encoding: 'utf8' }).trim();
+  assert.equal(stale, '', 'no WhatsApp link still goes to the old number');
+  assert.ok(fs.existsSync('components/WhatsAppFloat.js'));
+});

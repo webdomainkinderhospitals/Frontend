@@ -1,7 +1,7 @@
 export default function WhatsAppFloat() {
   return (
     <a
-      href="https://api.whatsapp.com/send?phone=919446654500"
+      href="https://api.whatsapp.com/send?phone=919746600600"
       className="whatsapp-float"
       aria-label="Chat on WhatsApp"
     >

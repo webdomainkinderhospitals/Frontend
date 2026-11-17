@@ -17,7 +17,7 @@ import newsStyles from '@/components/news/News.module.css';
 import { sortedNews } from '@/lib/news.mjs';
 import { centreLeaders } from '@/lib/leadership.mjs';
 const WHATSAPP_BOOK =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
 
 // Newline-separated admin fields: some records carry the escape sequence

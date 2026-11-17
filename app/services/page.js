@@ -15,7 +15,7 @@ export const metadata = {
 };
 
 const WHATSAPP =
-  'https://api.whatsapp.com/send?phone=919446654500&text=' +
+  'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to know more about a service.');
 
 export default async function ServicesPage() {
