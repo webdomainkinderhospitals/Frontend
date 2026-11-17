@@ -5,7 +5,7 @@ import { iconsForList, specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // A hospital's departments as a band of large line icons with their names
 // beneath, in the hospital's own icon set — one tab per group of
-// departments (Other Specialities, Women Hospital & Fertility Centre).
+// departments (Other Specialities, Women’s Hospital & Fertility Centre).
 // Every department links to its page; its icon turns when hovered or
 // tapped. No icon repeats across the tabs.
 //

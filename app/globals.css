@@ -5809,3 +5809,7 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
 
 /* A leader's portrait on their profile page */
 .editorial-portrait { display: block; width: min(360px, 100%); height: auto; margin: 8px 0 28px; border-radius: 20px; box-shadow: 0 24px 50px -30px rgba(19,33,59,.6); }
+
+/* Top bars without the email and emergency number: the links sit right */
+.top-bar .container { justify-content: flex-end; }
+.subsite-topbar-in { justify-content: flex-end; }

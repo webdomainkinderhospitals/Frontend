@@ -8,14 +8,7 @@ export default function TopBar({ settings, locations = [] }) {
   return (
     <div className="top-bar">
       <div className="container">
-        <div className="top-bar-left">
-          <a href={`mailto:${settings.email}`}>
-            <UiIcon name="mail" /> {settings.email}
-          </a>
-          <a href={`tel:${(settings.emergencyPhone || '').replace(/\s/g, '')}`}>
-            <UiIcon name="ambulance" /> 24/7 Emergency: {settings.emergencyPhone}
-          </a>
-        </div>
+        {/* The email and emergency number are no longer shown up here. */}
         <div className="top-bar-right">
           {settings.announcement ? (
             <span className="loc-pill">{settings.announcement}</span>
