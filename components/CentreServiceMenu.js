@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { iconsForList, specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // A centre's departments as its headline menu, right under the banner: one
-// large card per group (the Women Hospital & Fertility Centre, then Other
+// large card per group (the Women’s Hospital & Fertility Centre, then Other
 // Specialities — Multispeciality Services at Kochi). A card opens a panel with every department in that
 // group, each linking to its own page on the centre's site.
 //
@@ -34,7 +34,7 @@ const styleOf = (group, i) => ({
 const TAGLINES = {
   'other specialities': 'Surgery, critical care and specialist medicine for the whole family',
   'multispeciality services': 'Surgery, critical care and specialist medicine for the whole family',
-  'women hospital & fertility centre': 'Pregnancy, fertility, newborn and children’s care under one roof',
+  'women’s hospital & fertility centre': 'Pregnancy, fertility, newborn and children’s care under one roof',
 };
 
 export default function CentreServiceMenu({ groups = [], centre = '', image = '' }) {

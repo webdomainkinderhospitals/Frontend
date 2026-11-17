@@ -103,18 +103,8 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, loca
       <div className="subsite-topbar">
         <div className="container">
           <div className="subsite-topbar-in">
-            <div className="subsite-topbar-contact">
-              {loc.phone && (
-                <a href={`tel:${loc.phone.replace(/\s/g, '')}`}>
-                  <UiIcon name="phone" /> 24/7 Emergency · {loc.phone}
-                </a>
-              )}
-              {loc.email && (
-                <a href={`mailto:${loc.email}`}>
-                  <UiIcon name="mail" /> {loc.email}
-                </a>
-              )}
-            </div>
+            {/* The emergency number and email are no longer shown up here;
+                they are in the hospital's Visit us and Contact sections. */}
             <div className="subsite-topbar-links">
               {homeHospital && (
                 <a className="corporate-link subsite-home-link" href={`/hospitals/${slugOfLocation(homeHospital)}`}>
