@@ -20,11 +20,16 @@ export function initials(name) {
     .toUpperCase();
 }
 
-export default function DoctorCard({ doc, compact = false, hideHospitals = false, servicePages = [], base = '' }) {
+export default function DoctorCard({ doc, compact = false, hideHospitals = false, servicePages = [], base = '', onProfile }) {
   const locs = locationsOf(doc);
   // A team member who is not in the doctor list opens their profile on About
   // Us and has no booking button.
   const profile = doc.profileHref || `${base}/doctors/${slugify(doc.name)}`;
+  // In the home page slider the profile opens over the page (onProfile); the
+  // link stays for a new tab or a visitor without JavaScript.
+  const open = onProfile
+    ? (e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return; e.preventDefault(); onProfile(doc); }
+    : undefined;
   const specSlug = doc.speciality ? slugify(doc.speciality) : '';
   // Inside a sub-site every speciality has its own page there, so the card
   // links to it whether or not the corporate catalogue lists one.
@@ -32,7 +37,7 @@ export default function DoctorCard({ doc, compact = false, hideHospitals = false
 
   return (
     <article className={`dcard${compact ? ' dcard-compact' : ''}`}>
-      <a className="dcard-media" href={profile} aria-label={`View profile of ${doc.name}`}>
+      <a className="dcard-media" href={profile} onClick={open} aria-label={`View profile of ${doc.name}`}>
         <span className="dcard-initials" aria-hidden="true">{initials(doc.name)}</span>
         {doc.imageUrl && (
           <span className="dcard-photo" style={{ backgroundImage: `url('${doc.imageUrl}')` }} role="img" aria-label={doc.name}></span>
@@ -58,7 +63,7 @@ export default function DoctorCard({ doc, compact = false, hideHospitals = false
             ? <a className="dcard-spec" href={specHref}>{doc.speciality}</a>
             : <span className="dcard-spec">{doc.speciality}</span>
         )}
-        <h4 className="dcard-name"><a href={profile}>{doc.name}</a></h4>
+        <h4 className="dcard-name"><a href={profile} onClick={open}>{doc.name}</a></h4>
         {doc.designation && <p className="dcard-role">{doc.designation}</p>}
         {doc.bio && !compact && <p className="dcard-bio">{doc.bio}</p>}
         <div className="dcard-actions">
@@ -67,7 +72,7 @@ export default function DoctorCard({ doc, compact = false, hideHospitals = false
               {compact ? 'Book' : 'Book appointment'}
             </a>
           )}
-          <a className="dcard-btn" href={profile}>{compact ? 'Profile' : 'View profile'}</a>
+          <a className="dcard-btn" href={profile} onClick={open}>{compact ? 'Profile' : 'View profile'}</a>
         </div>
       </div>
     </article>

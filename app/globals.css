@@ -5813,3 +5813,40 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
 /* Top bars without the email and emergency number: the links sit right */
 .top-bar .container { justify-content: flex-end; }
 .subsite-topbar-in { justify-content: flex-end; }
+
+/* Profile pop-up from the home page doctor slider */
+.pdlg{ border:0; padding:0; margin:auto; background:transparent; width:min(980px, calc(100vw - 32px)); max-height:calc(100dvh - 48px); overflow:visible; }
+.pdlg::backdrop{ background: rgba(19,33,59,.62); backdrop-filter: blur(3px); }
+.pdlg[open]{ animation: pdlg-in .22s ease-out; }
+@keyframes pdlg-in{ from{ opacity:0; transform: translateY(14px) scale(.985); } to{ opacity:1; transform:none; } }
+.pdlg-panel{ position:relative; display:grid; grid-template-columns: minmax(240px, 38%) 1fr; background:#fff; border-radius:20px; overflow:hidden; max-height:calc(100dvh - 48px); box-shadow: 0 30px 80px rgba(19,33,59,.35); }
+.pdlg-media{ position:relative; background: linear-gradient(160deg, var(--primary-dark), var(--primary)); min-height:320px; }
+.pdlg-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: center top; }
+.pdlg-initials{ position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:64px; font-weight:700; letter-spacing:.04em; }
+.pdlg-body{ padding:40px 40px 32px; overflow-y:auto; max-height:calc(100dvh - 48px); }
+.pdlg-close{ position:absolute; top:14px; right:14px; z-index:2; width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:#fff; color:var(--ink); display:grid; place-items:center; cursor:pointer; box-shadow:0 4px 14px rgba(19,33,59,.12); }
+.pdlg-close:hover{ background: var(--bg-soft); }
+.pdlg-close svg{ width:18px; height:18px; }
+.pdlg-eyebrow{ display:block; color: var(--accent); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; padding-right:40px; }
+.pdlg-name{ font-size: clamp(26px, 3vw, 34px); font-weight:700; color: var(--ink); margin-bottom:6px; padding-right:40px; }
+.pdlg-role{ color: var(--ink-soft); font-size:16px; margin-bottom:4px; }
+.pdlg-where{ color: var(--primary); font-size:14px; font-weight:600; margin-bottom:20px; }
+.pdlg-quals{ font-size:15px; color: var(--ink-soft); background: var(--bg-soft); border-radius:12px; padding:14px 16px; margin-bottom:18px; }
+.pdlg-quals strong{ display:block; color: var(--ink); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; }
+.pdlg-facts{ display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:20px; }
+.pdlg-facts div{ border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+.pdlg-facts dt{ font-size:22px; font-weight:700; color: var(--primary-dark); }
+.pdlg-facts dd{ font-size:13px; color: var(--muted); }
+.pdlg-quote{ border-left:3px solid var(--accent); padding:4px 0 4px 16px; margin:0 0 20px; font-size:18px; font-style:italic; color: var(--ink); }
+.pdlg-text{ font-size:15.5px; line-height:1.7; color: var(--ink-soft); }
+.pdlg-text p + p, .pdlg-text ul, .pdlg-text p + ul{ margin-top:12px; }
+.pdlg-text ul{ padding-left:20px; }
+.pdlg-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; }
+.pdlg-actions .dcard-btn{ flex:0 0 auto; padding-left:22px; padding-right:22px; }
+@media (max-width: 720px){
+  .pdlg{ width: calc(100vw - 24px); }
+  .pdlg-panel{ display:block; overflow-y:auto; }
+  .pdlg-media{ min-height:0; height:auto; aspect-ratio: 4 / 3.4; }
+  .pdlg-body{ padding:24px 20px 24px; max-height:none; overflow:visible; }
+  .pdlg-close{ position:fixed; top:36px; right:24px; }
+}

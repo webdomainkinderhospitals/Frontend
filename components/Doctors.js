@@ -3,6 +3,7 @@
 import { atLocation, locationsOf } from '@/lib/locations';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DoctorCard from './DoctorCard';
+import ProfileDialog from './ProfileDialog';
 import { teamAsDoctors } from '@/lib/management-team.mjs';
 
 const norm = (s) => String(s || '').trim().toLowerCase();
@@ -22,7 +23,9 @@ export function featuredOrder(doctors = [], locations = []) {
     .filter((d) => !seen.has(d) && seen.add(d));
 }
 
-export default function Doctors({ doctors: all = [], locations = [] }) {
+export default function Doctors({ doctors: all = [], locations = [], profiles = {} }) {
+  // The doctor whose profile is open over the page.
+  const [shown, setShown] = useState(null);
   const trackRef = useRef(null);
   const [pageIndex, setPageIndex] = useState(0);
   const [hospital, setHospital] = useState('');
@@ -148,7 +151,7 @@ export default function Doctors({ doctors: all = [], locations = [] }) {
             >
               {doctors.map((doc, i) => (
                 <div className="slider-card" key={doc.id ?? i}>
-                  <DoctorCard doc={doc} compact />
+                  <DoctorCard doc={doc} compact onProfile={setShown} />
                 </div>
               ))}
             </div>
@@ -179,6 +182,7 @@ export default function Doctors({ doctors: all = [], locations = [] }) {
           </div>
         )}
       </div>
+      <ProfileDialog doc={shown} profile={shown?.team ? profiles[shown.team] : null} onClose={() => setShown(null)} />
     </section>
   );
 }
