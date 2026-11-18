@@ -1,7 +1,7 @@
 import ContentPages from '@/components/ContentPages';
-import LeadershipTeam from '@/components/LeadershipTeam';
-import { groupLeaders, SHOW_LEADERSHIP } from '@/lib/leadership.mjs';
-import { LEADERSHIP_PROFILES, PROFILED } from '@/lib/leadership-profiles.mjs';
+import ManagementTeam from '@/components/ManagementTeam';
+import { SHOW_LEADERSHIP } from '@/lib/leadership.mjs';
+import { LEADERSHIP_PROFILES } from '@/lib/leadership-profiles.mjs';
 import Accreditations from '@/components/Accreditations';
 import { HubProse } from '@/components/Hub';
 import { getContent } from '@/lib/api';
@@ -60,7 +60,6 @@ export default async function AboutPage() {
   const content = await getContent();
   const brand = brandOf(content.settings);
   // The chairman and the CEO are profiled in full above the team cards.
-  const leaders = groupLeaders(content.pages || []).filter((l) => !PROFILED.has(l.slug));
   const SHOWN = new Set(['about-us-about-kinder-hospitals', 'about-us-mission-vision-values']);
   const morePages = (content.pages || []).filter((p) => p.category === 'About Us' && !SHOWN.has(p.slug));
   return (
@@ -229,13 +228,12 @@ export default async function AboutPage() {
               ))}
             </div>
 
-            {leaders.length > 0 && <>
-              <div className={styles.teamHead}>
-                <span className="section-eyebrow">Our leadership team</span>
-                <h3>The people who lead <em>Kinder Hospitals</em></h3>
-              </div>
-              <LeadershipTeam leaders={leaders} />
-            </>}
+            {/* The management team, in the hospital's order */}
+            <div className={styles.teamHead}>
+              <span className="section-eyebrow">Our management team</span>
+              <h3>The people who lead <em>Kinder Hospitals</em></h3>
+            </div>
+            <ManagementTeam doctors={content.doctors || []} />
           </div>
         </section>}
 
