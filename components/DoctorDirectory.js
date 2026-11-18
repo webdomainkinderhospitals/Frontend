@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import DoctorCard from './DoctorCard';
 import { atLocation, locationsOf } from '@/lib/locations';
+import { leadDoctorsFirst } from '@/lib/lead-doctors.mjs';
 
 // Corporate "Our Doctors" directory: every published doctor from every
 // centre, filterable by hospital, speciality and name. A doctor entered
@@ -47,7 +48,7 @@ export default function DoctorDirectory({ doctors = [], locations = [], serviceP
 
   const list = useMemo(() => {
     const q = norm(query);
-    return doctors.filter((d) =>
+    return (hospital ? doctors : leadDoctorsFirst(doctors)).filter((d) =>
       atHospital(d, hospital) &&
       (!speciality || norm(d.speciality) === norm(speciality)) &&
       (!q || [d.name, d.designation, d.speciality, ...locationsOf(d)].some((v) => norm(v).includes(q)))

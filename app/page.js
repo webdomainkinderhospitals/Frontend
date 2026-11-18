@@ -16,7 +16,6 @@ import PremiumBirthingCentre from '@/components/PremiumBirthingCentre';
 import CoeGrid from '@/components/CoeGrid';
 import MomentsAtKinder from '@/components/gallery/MomentsAtKinder';
 import Doctors from '@/components/Doctors';
-import { teamProfiles } from '@/lib/management-team.mjs';
 import Procedures from '@/components/Procedures';
 import Care from '@/components/Care';
 import Support from '@/components/Support';
@@ -51,7 +50,7 @@ export default async function HomePage() {
       <QuickBar />
       {/* What patients look for first: our specialities and our doctors */}
       <CoeGrid />
-      <Doctors doctors={doctors} locations={hospitals} profiles={teamProfiles(content.pages)} />
+      <Doctors doctors={doctors} locations={hospitals} />
       <PromoBanner slides={withEventBanners(promoSlides(settings, 'homePromo'))} label="Kinder Hospitals announcements" />
       <Stats
         settings={settings}
