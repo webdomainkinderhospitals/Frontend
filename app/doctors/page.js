@@ -9,7 +9,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: 'Our Doctors · Kinder Hospitals',
-  description: 'Senior consultants and specialists across every Kinder centre — medicine, surgery, fertility and women’s & children’s health.',
+  description: 'Specialist doctors across every Kinder centre — medicine, surgery, fertility and women’s & children’s health.',
 };
 
 const WHATSAPP_BOOK =
@@ -28,7 +28,7 @@ export default async function DoctorsPage() {
           crumb="Doctors"
           eyebrow="Our Specialists"
           titleHtml="Meet the <em>Kinder family of doctors</em>"
-          intro="Senior consultants practising under shared protocols, audit and clinical governance across every Kinder centre. Filter by hospital or speciality to find yours."
+          intro="Specialist doctors practising under shared protocols, audit and clinical governance across every Kinder centre. Filter by hospital or speciality to find yours."
         />
 
         <section className="dd-section" id="directory">

@@ -10,7 +10,7 @@ const STATIC_SLIDES = [
   {
     eyebrow: 'Group-Wide Expertise',
     titleHtml: '60+ specialists, <em>one trusted brand</em>',
-    text: 'Senior consultants across Obstetrics, IVF, Neonatology, Paediatric Surgery, and Reproductive Medicine — practicing under shared protocols, audit, and clinical governance across all Kinder hospitals.',
+    text: 'Specialist doctors across Obstetrics, IVF, Neonatology, Paediatric Surgery, and Reproductive Medicine — practicing under shared protocols, audit, and clinical governance across all Kinder hospitals.',
     ctas: [{ label: 'Meet Our Doctors →', className: 'btn btn-primary', href: '#doctors' }],
     imageUrl:
       'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=1920&q=80',

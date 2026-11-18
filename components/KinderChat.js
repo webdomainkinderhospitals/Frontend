@@ -151,7 +151,7 @@ function buildReply(text, content) {
   // 7. General doctors question.
   if (/doctor|specialist|consultant|physician/.test(q)) {
     return reply(
-      `We have ${doctors.length}+ senior consultants across obstetrics, IVF, paediatrics, neonatology and more — each profile lists their centre and speciality. You can browse them all, or tell me a speciality (for example "IVF doctors").`,
+      `We have ${doctors.length}+ specialist doctors across obstetrics, IVF, paediatrics, neonatology and more — each profile lists their centre and speciality. You can browse them all, or tell me a speciality (for example "IVF doctors").`,
       [
         { label: 'Browse all doctors', href: '/doctors' },
         { label: 'Our services', href: '/services' },
