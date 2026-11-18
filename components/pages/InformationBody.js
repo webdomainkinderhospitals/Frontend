@@ -1,6 +1,6 @@
 import ContentBody from '@/components/ContentBody';
 import { locationLabel } from '@/lib/locations';
-import { leaderPortrait } from '@/lib/leadership.mjs';
+import { leaderPortrait, portraitReplacesPhoto } from '@/lib/leadership.mjs';
 
 // One information page (privacy policy, visit notes, anything filed in the
 // Content Library). Reads the same on the corporate shelf and inside a
@@ -27,7 +27,7 @@ export default function InformationBody({ page, base = '', loc = null }) {
           {!loc && page.location && <p>{locationLabel(page)}</p>}
           {page.excerpt && <p className="editorial-lead">{page.excerpt}</p>}
         </header>
-        {page.imageUrl && /^https?:\/\//.test(page.imageUrl) ? (
+        {page.imageUrl && /^https?:\/\//.test(page.imageUrl) && !portraitReplacesPhoto(page) ? (
           <img className="editorial-cover" src={page.imageUrl} alt={page.title} />
         ) : leaderPortrait(page) && (
           <img className="editorial-portrait" src={leaderPortrait(page)} alt={page.title} width={800} height={1200} />
