@@ -90,7 +90,7 @@ export default function Doctors({ doctors: all = [], locations = [] }) {
           <div>
             <span className="section-eyebrow">Featured Specialists</span>
             <h2 className="section-title">
-              Meet our <em>senior consultants</em>
+              Meet our <em>doctors</em>
             </h2>
             <p className="section-intro">
               Skilled specialists from across the Kinder network — bringing decades of expertise

@@ -116,7 +116,7 @@ export default async function AboutPage() {
                   '6,00,000+ women treated',
                   '18,000+ births delivered',
                   '1,500+ IVF successes',
-                  '60+ senior consultants',
+                  '60+ specialist doctors',
                 ].map((h) => (
                   <li key={h}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
