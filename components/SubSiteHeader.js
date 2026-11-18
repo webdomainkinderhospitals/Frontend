@@ -122,8 +122,13 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, loca
       <header className="subsite-header">
         <div className="container">
           <div className="subsite-header-in">
-            <a href={home} className="subsite-brand" aria-label={`${name} — Home`}>
-              <img src={settings.logoUrl || '/logo.png'} alt="Kinder" className="subsite-logo" />
+            {/* The Kinder Hospitals logo always leads to the group's home page;
+                the hospital's name leads to this hospital's own home. */}
+            <div className="subsite-brand">
+              <a href="/" className="subsite-logo-link" aria-label="Kinder Hospitals — home page">
+                <img src={settings.logoUrl || '/logo.png'} alt="Kinder Hospitals" className="subsite-logo" />
+              </a>
+              <a href={home} className="subsite-brand-home" aria-label={`${name} — Home`}>
               <span className="subsite-brand-text">
                 <strong>{name}</strong>
                 {loc.accreditation || loc.accreditationLogoUrl ? (
@@ -141,7 +146,8 @@ export default function SubSiteHeader({ loc, settings, slug, sections = {}, loca
                   height="48"
                 />
               )}
-            </a>
+              </a>
+            </div>
 
             <nav className={`subsite-nav${open ? ' open' : ''}`} aria-label={`${name} menu`}>
               {items.map((item) => (

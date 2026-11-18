@@ -59,7 +59,7 @@ export default function Footer({ settings, locations: allLocations = [] }) {
           <div className="footer-grid">
             {/* Brand column */}
             <div className="footer-brand">
-              <div className="brand brand-footer">
+              <a href="/" className="brand brand-footer" aria-label={`${settings.siteName} — Home`}>
                 <span className="brand-pill">
                   <img
                     src={settings.logoUrl || '/logo.png'}
@@ -69,7 +69,7 @@ export default function Footer({ settings, locations: allLocations = [] }) {
                     height="276"
                   />
                 </span>
-              </div>
+              </a>
 
               <p className="footer-tagline">{settings.tagline}</p>
               <p>
