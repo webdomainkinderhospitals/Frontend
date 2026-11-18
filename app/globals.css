@@ -5882,3 +5882,27 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
 .subsite-logo-link { display: flex; flex: none; }
 .subsite-brand-home { display: flex; align-items: center; gap: inherit; text-decoration: none; color: inherit; min-width: 0; }
 .subsite-logo-link:hover, .subsite-brand-home:hover { opacity: .85; }
+
+/* ---- Read more (long leadership profiles) ----
+   Full text on tablets and desktops; on a phone the text opens at a teaser
+   height that fades out, with a button to read the rest. */
+.readmore-btn { display: none; }
+@media (max-width: 720px) {
+  .readmore { position: relative; }
+  .readmore.is-clamped { max-height: var(--rm-h, 160px); overflow: hidden; }
+  .readmore.is-clamped::after {
+    content: ''; position: absolute; inset: auto 0 0 0; height: 96px; pointer-events: none;
+    background: linear-gradient(to bottom, transparent, var(--rm-bg, #fff) 85%);
+  }
+  .readmore-btn {
+    display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 6px;
+    padding: 11px 20px; border-radius: 999px; border: 1.5px solid var(--primary);
+    background: #fff; color: var(--primary-dark); font: inherit; font-size: 14.5px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 6px 18px -10px rgba(27,58,115,.45);
+  }
+  .readmore-btn:hover { background: var(--primary); color: #fff; }
+  .readmore-btn svg { width: 16px; height: 16px; }
+
+  /* a leader's own page: the portrait fits the screen, face first */
+  .editorial-portrait { width: 100%; max-height: 62vh; aspect-ratio: 4 / 4.6; object-fit: cover; object-position: center 12%; margin-bottom: 22px; }
+}
