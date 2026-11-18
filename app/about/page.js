@@ -233,7 +233,7 @@ export default async function AboutPage() {
               <span className="section-eyebrow">Our management team</span>
               <h3>The people who lead <em>Kinder Hospitals</em></h3>
             </div>
-            <ManagementTeam />
+            <ManagementTeam doctors={content.doctors || []} />
           </div>
         </section>}
 

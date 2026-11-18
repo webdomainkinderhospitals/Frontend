@@ -64,3 +64,20 @@ test('the management team in the hospital\'s order, each with a portrait', async
   const anto = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', body: 'Mr. Anto Twinkle\n\nUnit Head\n\nHospital management.', published: true };
   assert.equal(centreLeaders([anto], 'Kochi')[0].role, 'Chief Operating Officer, Kinder Hospitals Kochi');
 });
+
+test('a team member who is also one of our doctors gets the new portrait and a profile link', async () => {
+  const { withTeamPhotos, doctorOfMember, MANAGEMENT_TEAM } = await import('../lib/management-team.mjs');
+  const doctors = [
+    { name: 'Dr. V K Pradeep Kumar', location: 'Cherthala', imageUrl: 'https://cdn/old.jpg' },
+    { name: 'Dr. Sijo Mathew', location: 'Kochi', imageUrl: '' },
+    { name: 'Dr. Prasanth K', location: 'Kochi' }, { name: 'Dr. Prasanth R', location: 'Kollam' },
+    { name: 'Dr. Anitha Joseph', location: 'Cherthala', imageUrl: 'https://cdn/a.jpg' },
+  ];
+  const out = withTeamPhotos(doctors);
+  assert.equal(out[0].imageUrl, '/leadership/team/dr-v-k-pradeep-kumar.webp');
+  assert.equal(out[1].imageUrl, '/leadership/team/sijo.webp');
+  // two doctors called Prasanth: no guess
+  assert.equal(out[2].imageUrl, undefined);
+  assert.equal(out[4].imageUrl, 'https://cdn/a.jpg');
+  assert.equal(doctorOfMember(MANAGEMENT_TEAM.find((m) => m.slug === 'abeesh'), doctors), null);
+});
