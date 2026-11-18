@@ -5850,3 +5850,29 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   .pdlg-body{ padding:24px 20px 24px; max-height:none; overflow:visible; }
   .pdlg-close{ position:fixed; top:36px; right:24px; }
 }
+
+/* ---- Kinder Hospitals logo: larger and crisper in every header ----
+   The logo carries the brand at a size where "Kindles life" stays legible:
+   about 64 px tall on desktop, easing to 52 px once the header is stuck,
+   and still 44–46 px on a phone. */
+@media (min-width: 1025px) {
+  .header .brand-logo { height: 64px; max-width: 132px; }
+  .header.is-stuck .brand-logo { height: 52px; }
+  .header-main { padding: 8px 0 !important; }
+}
+@media (max-width: 1024px) {
+  .header .brand-logo { height: 52px; max-width: 108px; }
+}
+@media (max-width: 560px) {
+  .header .brand-logo { height: 46px; max-width: 96px; }
+}
+
+.subsite-logo { height: 60px; max-width: 124px; object-fit: contain; }
+.subsite-brand { gap: 14px; }
+/* a fine rule between the Kinder logo and the hospital's own name */
+.subsite-brand .subsite-brand-text { border-left: 1px solid var(--line); padding-left: 14px; }
+@media (max-width: 720px) {
+  .subsite-logo { height: 46px; max-width: 96px; }
+  .subsite-brand { gap: 10px; }
+  .subsite-brand .subsite-brand-text { padding-left: 10px; }
+}
