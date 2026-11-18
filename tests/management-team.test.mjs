@@ -20,10 +20,10 @@ test('a photo chosen in the admin is kept over the studio and team portraits', a
   const plain = { name: 'Dr. Manju V K', location: 'Kollam', imageUrl: 'https://cdn/old.jpg' };
   assert.equal(withStudioPhotos([chosen])[0].imageUrl, 'https://cdn/new.jpg');
   assert.match(withStudioPhotos([plain])[0].imageUrl, /studio\/kollam\/manju-v-k/);
-  const sijo = { name: 'Dr. Sijo Thomas', location: 'Kochi', imageUrl: 'https://cdn/sijo.jpg', photoSetAt: '2026-11-18T08:00:00Z' };
+  const sijo = { name: 'Dr. Sojo Thomas', location: 'Kochi', imageUrl: 'https://cdn/sijo.jpg', photoSetAt: '2026-11-18T08:00:00Z' };
   assert.equal(withTeamPhotos([sijo])[0].imageUrl, 'https://cdn/sijo.jpg');
   assert.equal(teamAsDoctors([sijo]).find((d) => d.teamOf).imageUrl, 'https://cdn/sijo.jpg');
-  assert.match(withTeamPhotos([{ ...sijo, photoSetAt: null }])[0].imageUrl, /team\/sijo/);
+  assert.match(withTeamPhotos([{ ...sijo, photoSetAt: null }])[0].imageUrl, /team\/sojo/);
 });
 
 test('the Kochi studio shoot covers doctors named by first name only', async () => {
