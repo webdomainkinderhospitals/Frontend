@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DoctorCard from './DoctorCard';
 import ProfileDialog from './ProfileDialog';
 import { teamAsDoctors } from '@/lib/management-team.mjs';
+import { byHospitalOrder } from '@/lib/hospital-order.mjs';
 
 const norm = (s) => String(s || '').trim().toLowerCase();
 
@@ -38,7 +39,7 @@ export default function Doctors({ doctors: all = [], locations = [], profiles = 
       const inTeam = new Set(team.map((t) => t.teamOf).filter(Boolean));
       return [...team, ...featuredOrder(all.filter((d) => !inTeam.has(d)), locations)];
     }
-    return featuredOrder(all.filter((d) => locationsOf(d).length === 0 || atLocation(d, hospital)), locations);
+    return byHospitalOrder(featuredOrder(all.filter((d) => locationsOf(d).length === 0 || atLocation(d, hospital)), locations), hospital);
   }, [all, hospital, locations]);
   const pick = (name) => { setHospital(norm(name) === norm(hospital) ? '' : name); setPageIndex(0); };
   const [cardsPerView, setCardsPerView] = useState(4);
