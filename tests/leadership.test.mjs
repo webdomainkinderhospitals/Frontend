@@ -94,3 +94,12 @@ test('the doctor slider opens with the team in the hospital\'s order', async () 
   assert.equal(team[5].location, 'Kochi');
   assert.equal(team[6].profileHref, '/about#leadership');
 });
+
+test('Mr Basanta Kumar Dash shows the portrait the hospital sent, over the page photo', async () => {
+  const { leaderOf, leaderPortrait, portraitReplacesPhoto } = await import('../lib/leadership.mjs');
+  const page = { slug: 'leadership-mr-basanta-kumar-dash', title: 'Mr. Basanta Kumar Dash', category: 'Leadership', imageUrl: 'https://cdn/old.jpg', body: 'Mr. Basanta Kumar Dash\n\nA long enough biography paragraph for the summary to be taken from it.' };
+  assert.equal(leaderOf(page).photo, '/leadership/basanta-kumar-dash-head.webp');
+  assert.equal(leaderPortrait(page), '/leadership/basanta-kumar-dash.webp');
+  assert.equal(portraitReplacesPhoto(page), true);
+  assert.equal(portraitReplacesPhoto({ ...page, slug: 'leadership-mr-anto-twinkle' }), false);
+});
