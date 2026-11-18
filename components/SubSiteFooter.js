@@ -14,7 +14,9 @@ export default function SubSiteFooter({ loc, settings, slug, sections = {}, priv
       <div className="container">
         <div className="subsite-footer-grid">
           <div>
-            <img src={settings.logoUrl || '/logo.png'} alt="Kinder" className="subsite-footer-logo" />
+            <a href="/" aria-label="Kinder Hospitals — home page">
+              <img src={settings.logoUrl || '/logo.png'} alt="Kinder Hospitals" className="subsite-footer-logo" />
+            </a>
             <h4>{name}</h4>
             {loc.tagline && <p className="subsite-footer-tag">{loc.tagline}</p>}
             <p className="subsite-footer-addr">{loc.address}</p>

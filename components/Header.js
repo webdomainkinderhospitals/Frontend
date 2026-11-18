@@ -152,7 +152,7 @@ export default function Header({ settings, locations: allLocations = [], special
       <header className="header">
         <div className="container">
           <div className="header-main">
-            <a href="/#home" className="brand" aria-label={`${settings.siteName} — Home`}>
+            <a href="/" className="brand" aria-label={`${settings.siteName} — Home`}>
               <img
                 src={settings.logoUrl || '/logo.png'}
                 alt={`${settings.siteName} — Kindles life`}
