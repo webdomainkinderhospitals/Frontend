@@ -23,7 +23,7 @@ test('a profile gives its name, designation, summary and initials', () => {
   assert.equal(leaderOf(pages[1]).role, 'Group Financial Controller – Kinder Hospitals');
   assert.equal(leaderOf(pages[1]).initials, 'BD');
   assert.equal(leaderOf(pages[2]).initials, 'PK');
-  assert.equal(leaderOf(pages[0]).role, '');
+  assert.equal(leaderOf(pages[0]).role, 'Chief Operating Officer, Kinder Hospitals Kochi'); // confirmed by the hospital
   assert.match(leaderOf(pages[0]).summary, /distinguished professional/);
 });
 
@@ -53,4 +53,14 @@ test('Mr Anto Twinkle has his portrait on his card and his profile page', async 
   assert.equal(centreLeaders([page], 'Kochi')[0].photo, '/leadership/anto-twinkle-head.webp');
   assert.equal(leaderPortrait(page), '/leadership/anto-twinkle.webp');
   assert.equal(leaderPortrait({ slug: 'privacy', category: 'Policies' }), '');
+});
+
+test('the management team in the hospital\'s order, each with a portrait', async () => {
+  const fs = await import('node:fs');
+  const { MANAGEMENT_TEAM } = await import('../lib/management-team.mjs');
+  assert.deepEqual(MANAGEMENT_TEAM.map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Sreejith S', 'Jithin Raj', 'Sivadas', 'Anto Twinkle', 'Sijo', 'Prasanth', 'Abeesh']);
+  for (const m of MANAGEMENT_TEAM) assert.ok(fs.existsSync(`public${m.photo}`), m.photo);
+  const { centreLeaders } = await import('../lib/leadership.mjs');
+  const anto = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', body: 'Mr. Anto Twinkle\n\nUnit Head\n\nHospital management.', published: true };
+  assert.equal(centreLeaders([anto], 'Kochi')[0].role, 'Chief Operating Officer, Kinder Hospitals Kochi');
 });
