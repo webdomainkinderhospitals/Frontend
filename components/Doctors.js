@@ -4,7 +4,7 @@ import { atLocation, locationsOf } from '@/lib/locations';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DoctorCard from './DoctorCard';
 import ProfileDialog from './ProfileDialog';
-import { teamAsDoctors } from '@/lib/management-team.mjs';
+import { leadDoctorsFirst } from '@/lib/lead-doctors.mjs';
 import { byHospitalOrder } from '@/lib/hospital-order.mjs';
 
 const norm = (s) => String(s || '').trim().toLowerCase();
@@ -31,14 +31,11 @@ export default function Doctors({ doctors: all = [], locations = [], profiles = 
   const [pageIndex, setPageIndex] = useState(0);
   const [hospital, setHospital] = useState('');
   // Group-wide doctors ("" location) practise at every centre.
-  // "All hospitals" opens with the Kinder Hospitals team in the hospital's
-  // order (from Dr V. K. Pradeep Kumar), then every other doctor.
+  // "All hospitals" opens with Brigadier (Dr.) A P Radhakrishnan and
+  // Dr Ananthen K S, then every other doctor. The management team is shown
+  // under Leadership on About Us, not here.
   const doctors = useMemo(() => {
-    if (!hospital) {
-      const team = teamAsDoctors(all);
-      const inTeam = new Set(team.map((t) => t.teamOf).filter(Boolean));
-      return [...team, ...featuredOrder(all.filter((d) => !inTeam.has(d)), locations)];
-    }
+    if (!hospital) return leadDoctorsFirst(featuredOrder(all, locations));
     return byHospitalOrder(featuredOrder(all.filter((d) => locationsOf(d).length === 0 || atLocation(d, hospital)), locations), hospital);
   }, [all, hospital, locations]);
   const pick = (name) => { setHospital(norm(name) === norm(hospital) ? '' : name); setPageIndex(0); };
