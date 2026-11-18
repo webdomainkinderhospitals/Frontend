@@ -25,3 +25,15 @@ test('a photo chosen in the admin is kept over the studio and team portraits', a
   assert.equal(teamAsDoctors([sijo]).find((d) => d.teamOf).imageUrl, 'https://cdn/sijo.jpg');
   assert.match(withTeamPhotos([{ ...sijo, photoSetAt: null }])[0].imageUrl, /team\/sijo/);
 });
+
+test('the Kochi studio shoot covers doctors named by first name only', async () => {
+  const { withStudioPhotos } = await import('../lib/studio-photos.mjs');
+  const docs = [
+    { name: 'Dr. Afshana Sidhik', location: 'Kochi' }, { name: 'Dr. Reema Poyil Kunhammed', location: 'Kochi' },
+    { name: 'Dr. Akhil Ramesh', location: 'Cherthala' },
+  ];
+  const out = withStudioPhotos(docs).map((d) => d.imageUrl);
+  assert.equal(out[0], '/doctors/studio/kochi/dr-afshana.webp');
+  assert.equal(out[1], '/doctors/studio/kochi/dr-reema-poyil.webp');
+  assert.equal(out[2], undefined); // a Kochi photo is not given to a Cherthala doctor
+});
