@@ -12,3 +12,16 @@ test('team profiles open with the written text, a leader page without its name l
   assert.equal(teamProfiles([])['anto-twinkle'], undefined);
   assert.equal(teamAsDoctors([])[0].team, 'dr-v-k-pradeep-kumar');
 });
+
+test('a photo chosen in the admin is kept over the studio and team portraits', async () => {
+  const { withStudioPhotos } = await import('../lib/studio-photos.mjs');
+  const { withTeamPhotos, teamAsDoctors } = await import('../lib/management-team.mjs');
+  const chosen = { name: 'Dr. Manju V K', location: 'Kollam', imageUrl: 'https://cdn/new.jpg', photoSetAt: '2026-11-18T08:00:00Z' };
+  const plain = { name: 'Dr. Manju V K', location: 'Kollam', imageUrl: 'https://cdn/old.jpg' };
+  assert.equal(withStudioPhotos([chosen])[0].imageUrl, 'https://cdn/new.jpg');
+  assert.match(withStudioPhotos([plain])[0].imageUrl, /studio\/kollam\/manju-v-k/);
+  const sijo = { name: 'Dr. Sijo Thomas', location: 'Kochi', imageUrl: 'https://cdn/sijo.jpg', photoSetAt: '2026-11-18T08:00:00Z' };
+  assert.equal(withTeamPhotos([sijo])[0].imageUrl, 'https://cdn/sijo.jpg');
+  assert.equal(teamAsDoctors([sijo]).find((d) => d.teamOf).imageUrl, 'https://cdn/sijo.jpg');
+  assert.match(withTeamPhotos([{ ...sijo, photoSetAt: null }])[0].imageUrl, /team\/sijo/);
+});
