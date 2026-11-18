@@ -22,7 +22,9 @@ export function initials(name) {
 
 export default function DoctorCard({ doc, compact = false, hideHospitals = false, servicePages = [], base = '' }) {
   const locs = locationsOf(doc);
-  const profile = `${base}/doctors/${slugify(doc.name)}`;
+  // A team member who is not in the doctor list opens their profile on About
+  // Us and has no booking button.
+  const profile = doc.profileHref || `${base}/doctors/${slugify(doc.name)}`;
   const specSlug = doc.speciality ? slugify(doc.speciality) : '';
   // Inside a sub-site every speciality has its own page there, so the card
   // links to it whether or not the corporate catalogue lists one.
@@ -60,9 +62,11 @@ export default function DoctorCard({ doc, compact = false, hideHospitals = false
         {doc.designation && <p className="dcard-role">{doc.designation}</p>}
         {doc.bio && !compact && <p className="dcard-bio">{doc.bio}</p>}
         <div className="dcard-actions">
-          <a className="dcard-btn dcard-btn-primary" href={`${base}/book?doctor=${slugify(doc.name)}`}>
-            {compact ? 'Book' : 'Book appointment'}
-          </a>
+          {doc.bookable !== false && (
+            <a className="dcard-btn dcard-btn-primary" href={`${base}/book?doctor=${slugify(doc.name)}`}>
+              {compact ? 'Book' : 'Book appointment'}
+            </a>
+          )}
           <a className="dcard-btn" href={profile}>{compact ? 'Profile' : 'View profile'}</a>
         </div>
       </div>

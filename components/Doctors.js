@@ -3,6 +3,7 @@
 import { atLocation, locationsOf } from '@/lib/locations';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DoctorCard from './DoctorCard';
+import { teamAsDoctors } from '@/lib/management-team.mjs';
 
 const norm = (s) => String(s || '').trim().toLowerCase();
 
@@ -26,10 +27,16 @@ export default function Doctors({ doctors: all = [], locations = [] }) {
   const [pageIndex, setPageIndex] = useState(0);
   const [hospital, setHospital] = useState('');
   // Group-wide doctors ("" location) practise at every centre.
-  const doctors = useMemo(
-    () => featuredOrder(all.filter((d) => !hospital || locationsOf(d).length === 0 || atLocation(d, hospital)), locations),
-    [all, hospital, locations]
-  );
+  // "All hospitals" opens with the Kinder Hospitals team in the hospital's
+  // order (from Dr V. K. Pradeep Kumar), then every other doctor.
+  const doctors = useMemo(() => {
+    if (!hospital) {
+      const team = teamAsDoctors(all);
+      const inTeam = new Set(team.map((t) => t.teamOf).filter(Boolean));
+      return [...team, ...featuredOrder(all.filter((d) => !inTeam.has(d)), locations)];
+    }
+    return featuredOrder(all.filter((d) => locationsOf(d).length === 0 || atLocation(d, hospital)), locations);
+  }, [all, hospital, locations]);
   const pick = (name) => { setHospital(norm(name) === norm(hospital) ? '' : name); setPageIndex(0); };
   const [cardsPerView, setCardsPerView] = useState(4);
   const touchStartX = useRef(0);
