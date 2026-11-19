@@ -5906,3 +5906,15 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   /* a leader's own page: the portrait fits the screen, face first */
   .editorial-portrait { width: 100%; max-height: 62vh; aspect-ratio: 4 / 4.6; object-fit: cover; object-position: center 12%; margin-bottom: 22px; }
 }
+
+/* A speciality page the hospital wrote in full (e.g. Kochi General Medicine) */
+.svc-article { max-width: 880px; }
+.svc-article .cb-body h2, .svc-article h2 { margin-top: 34px; }
+.svc-faq-wrap { background: var(--bg-soft); }
+.svc-faqs { display: grid; gap: 12px; margin-top: 22px; }
+.svc-faq { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0 20px; }
+.svc-faq summary { cursor: pointer; list-style: none; padding: 18px 32px 18px 0; position: relative; font-weight: 700; color: var(--primary-dark); font-size: 16px; }
+.svc-faq summary::-webkit-details-marker { display: none; }
+.svc-faq summary::after { content: '+'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 22px; font-weight: 400; color: var(--accent); }
+.svc-faq[open] summary::after { content: '–'; }
+.svc-faq p { margin: 0 0 18px; color: var(--ink-soft); line-height: 1.75; }

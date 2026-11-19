@@ -6,6 +6,7 @@ import { byHospitalOrder } from '@/lib/hospital-order.mjs';
 import { atLocation, locationsOf } from '@/lib/locations';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
+import { centreServicePage, faqSchema } from '@/lib/centre-service-pages.mjs';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -24,18 +25,22 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
   // The page's own icon comes first; its related specialities each get another.
   const icons = iconsForList([svc.name, ...related.map((i) => i.name)]);
   const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
+  // A page the hospital has written in full for this speciality, if any.
+  const page = loc ? centreServicePage(loc, slugify(svc.name)) : null;
+  const fullDescription = page ? page.fullDescription : svc.fullDescription;
 
   return (
     <main>
       <PageHero
         crumb={svc.name}
         eyebrow={loc ? `${svc.group.title} · Kinder ${here}` : svc.group.title}
-        titleHtml={esc(svc.name)}
+        titleHtml={esc(page?.heading || svc.name)}
         icon={<SpecialityIcon name={svc.name} icon={icons.get(svc.name)} className="page-hero-icon" />}
         homeHref={base || '/'}
         homeLabel={loc ? `Kinder ${here}` : 'Home'}
         trail={[{ label: 'Specialities', href: loc ? `${base}#specialities` : '/services' }]}
         intro={
+          page?.intro ||
           svc.description ||
           (loc
             ? `${svc.name} at Kinder ${here} — part of our ${svc.group.title.toLowerCase()} care, delivered under the protocols shared across every Kinder centre.`
@@ -43,8 +48,26 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         }
       />
 
-      {svc.fullDescription && (
-        <section><div className="container"><ContentBody text={svc.fullDescription} /></div></section>
+      {fullDescription && (
+        <section><div className={`container${page ? ' svc-article' : ''}`}><ContentBody text={fullDescription} /></div></section>
+      )}
+
+      {page?.faqs?.length > 0 && (
+        <section className="svc-faq-wrap">
+          <div className="container svc-article">
+            <span className="section-eyebrow">{svc.name} at Kinder {here}</span>
+            <h2 className="section-title">Frequently asked <em>questions</em></h2>
+            <div className="svc-faqs">
+              {page.faqs.map(([question, answer]) => (
+                <details key={question} className="svc-faq">
+                  <summary>{question}</summary>
+                  <p>{answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(page.faqs)).replace(/</g, '\\u003c') }} />
+        </section>
       )}
 
       <section>
@@ -125,7 +148,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         <div className="container">
           <div className="cta-strip">
             <div>
-              <h3>Ready to talk to us about {svc.name}?</h3>
+              <h3>{page?.cta || `Ready to talk to us about ${svc.name}?`}</h3>
               <p>
                 {loc && loc.phone
                   ? `Call ${loc.phone} or message us on WhatsApp — our coordinators at Kinder ${here} will arrange your consultation.`

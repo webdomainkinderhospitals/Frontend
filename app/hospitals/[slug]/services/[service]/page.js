@@ -3,6 +3,7 @@ import { findHospitalService } from '@/lib/services';
 import { hospitalContext } from '@/lib/hospital';
 import SubSiteChrome from '@/components/SubSiteChrome';
 import ServiceBody from '@/components/pages/ServiceBody';
+import { centreServicePage } from '@/lib/centre-service-pages.mjs';
 
 export const revalidate = 60;
 
@@ -20,9 +21,11 @@ async function resolve(params) {
 export async function generateMetadata({ params }) {
   const found = await resolve(params);
   if (!found) return { title: 'Page not found' };
+  const page = centreServicePage(found.loc, (await params).service);
   return {
-    title: `${found.svc.name} · Kinder ${found.loc.name}`,
-    description: found.svc.description || `${found.svc.name} at Kinder ${found.loc.name}.`,
+    // a page the hospital wrote in full carries its own search title
+    title: page?.metaTitle ? { absolute: page.metaTitle } : `${found.svc.name} · Kinder ${found.loc.name}`,
+    description: page?.metaDescription || found.svc.description || `${found.svc.name} at Kinder ${found.loc.name}.`,
   };
 }
 
