@@ -166,3 +166,18 @@
   .profileFacts { gap: 10px; } .profileFacts div { padding: 14px; } .profileFacts dt { font-size: 21px; }
   .profileText .profileLead { font-size: 17px; }
 }
+
+/* Phones: the portrait fits the screen (face and shoulders), the name
+   sits beneath it, and the profile reads as a compact card. */
+@media (max-width: 720px) {
+  .profile, .profileFlip { gap: 22px; }
+  .profileMedia { max-width: none; border-radius: 56px 18px 18px 18px; }
+  .profileFlip .profileMedia { border-radius: 56px 18px 18px 18px; }
+  .profileMedia img { aspect-ratio: 4 / 4.4; max-height: 58vh; object-position: center 14%; }
+  .profileMedia figcaption { padding: 36px 18px 16px; }
+  .profileText h3 { margin-top: 12px; font-size: 28px; }
+  .profileText p { font-size: 15.5px; line-height: 1.75; }
+  .profileText .profileLead { font-size: 16.5px; line-height: 1.7; }
+  .profileQuote { margin: 22px 0; padding-left: 18px; }
+  .profileFacts { margin: 20px 0; }
+}

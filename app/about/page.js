@@ -2,6 +2,7 @@ import ContentPages from '@/components/ContentPages';
 import ManagementTeam from '@/components/ManagementTeam';
 import { SHOW_LEADERSHIP } from '@/lib/leadership.mjs';
 import { LEADERSHIP_PROFILES } from '@/lib/leadership-profiles.mjs';
+import ReadMore from '@/components/ReadMore';
 import Accreditations from '@/components/Accreditations';
 import { HubProse } from '@/components/Hub';
 import { getContent } from '@/lib/api';
@@ -222,7 +223,10 @@ export default async function AboutPage() {
                     </dl>
                     <p className={styles.profileLead}>{p.bio[0]}</p>
                     <blockquote className={styles.profileQuote}><p>{p.quote}</p></blockquote>
-                    {p.bio.slice(1).map((para) => <p key={para.slice(0, 32)}>{para}</p>)}
+                    {/* On a phone the rest of the profile opens on request */}
+                    <ReadMore height={150} bg="#f1f7f5">
+                      {p.bio.slice(1).map((para) => <p key={para.slice(0, 32)}>{para}</p>)}
+                    </ReadMore>
                   </div>
                 </article>
               ))}
