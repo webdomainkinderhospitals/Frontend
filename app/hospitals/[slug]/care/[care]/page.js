@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
   const found = await resolve(params);
   if (!found) return { title: 'Page not found' };
   return {
-    title: `${found.page.title} · Kinder ${found.loc.name}`,
+    title: found.page.metaTitle ? { absolute: found.page.metaTitle } : `${found.page.title} · Kinder ${found.loc.name}`,
     description: found.page.excerpt,
   };
 }
