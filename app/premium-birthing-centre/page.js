@@ -23,7 +23,7 @@ async function resolve() {
 export async function generateMetadata() {
   const found = await resolve();
   return found
-    ? { title: `${withoutCentre(found.selected.page.title)} · Kinder Hospitals`, description: withoutCentre(found.selected.page.excerpt) }
+    ? { title: found.selected.page.metaTitle ? { absolute: found.selected.page.metaTitle } : `${withoutCentre(found.selected.page.title)} · Kinder Hospitals`, description: withoutCentre(found.selected.page.excerpt) }
     : { title: 'Premium Birthing Centre · Kinder Hospitals' };
 }
 
