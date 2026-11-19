@@ -25,3 +25,6 @@ a.inner:hover .more i { transform: translateX(4px); }
   .role { font-size: 10.5px; letter-spacing: .06em; }
 }
 @media (prefers-reduced-motion: reduce) { .inner, .photo img, .more i { transition: none; } a.inner:hover { transform: none; } }
+
+/* a card that opens a profile over the page */
+.button { width: 100%; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }

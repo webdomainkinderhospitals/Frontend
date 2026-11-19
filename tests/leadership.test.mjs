@@ -58,7 +58,7 @@ test('Mr Anto Twinkle has his portrait on his card and his profile page', async 
 test('the management team in the hospital\'s order, each with a portrait', async () => {
   const fs = await import('node:fs');
   const { MANAGEMENT_TEAM } = await import('../lib/management-team.mjs');
-  assert.deepEqual(MANAGEMENT_TEAM.map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Sreejith S', 'Jithin Raj', 'Sivadas', 'Anto Twinkle', 'Sojo', 'Prasanth', 'Abeesh']);
+  assert.deepEqual(MANAGEMENT_TEAM.map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Sreejith S', 'Jithin Raj', 'Sivadas', 'Anto Twinkle', 'Sojo', 'Prasanth M. K.', 'Abeesh']);
   for (const m of MANAGEMENT_TEAM) assert.ok(fs.existsSync(`public${m.photo}`), m.photo);
   const { centreLeaders } = await import('../lib/leadership.mjs');
   const anto = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', body: 'Mr. Anto Twinkle\n\nUnit Head\n\nHospital management.', published: true };
@@ -86,7 +86,7 @@ test('the doctor slider opens with the team in the hospital\'s order', async () 
   const { teamAsDoctors } = await import('../lib/management-team.mjs');
   const doctors = [{ name: 'Dr. V K Pradeep Kumar', speciality: 'Neonatology', location: 'Kochi', imageUrl: 'https://cdn/old.jpg' }, { name: 'Dr. Mili Mohandas', location: 'Cherthala' }];
   const team = teamAsDoctors(doctors);
-  assert.deepEqual(team.map((t) => t.name), ['Dr. V K Pradeep Kumar', 'Renjith Krishnan', 'Sreejith S', 'Jithin Raj', 'Sivadas', 'Anto Twinkle', 'Sojo', 'Prasanth', 'Abeesh']);
+  assert.deepEqual(team.map((t) => t.name), ['Dr. V K Pradeep Kumar', 'Renjith Krishnan', 'Sreejith S', 'Jithin Raj', 'Sivadas', 'Anto Twinkle', 'Sojo', 'Prasanth M. K.', 'Abeesh']);
   assert.equal(team[0].teamOf, doctors[0]);
   assert.equal(team[0].imageUrl, '/leadership/team/dr-v-k-pradeep-kumar.webp');
   assert.equal(team[1].bookable, false);
