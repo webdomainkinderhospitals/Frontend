@@ -13,3 +13,12 @@ test('Kochi General Medicine carries the page the hospital wrote', () => {
   assert.equal(centreServicePage({ name: 'Kochi' }, 'neonatology'), null);
   assert.equal(faqSchema(page.faqs).mainEntity[0]['@type'], 'Question');
 });
+
+test('Kochi ENT carries the confirmed parts of the draft only', () => {
+  const page = centreServicePage({ name: 'Kochi' }, 'ent');
+  assert.equal(page.heading, 'ENT Care at Kinder Hospitals, Kochi');
+  assert.match(page.fullDescription, /### Nose & sinus\n\n- Sinusitis/);
+  assert.doesNotMatch(page.fullDescription + JSON.stringify(page.faqs), /confirm|VERIFY|FESS|cochlear|polysomnography|tonsillectomy/i);
+  assert.equal(page.faqs.length, 4);
+  assert.equal(centreServicePage({ name: 'Kochi' }, 'general-ent').heading, page.heading);
+});
