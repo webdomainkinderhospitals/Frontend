@@ -37,3 +37,13 @@ test('the Kochi studio shoot covers doctors named by first name only', async () 
   assert.equal(out[1], '/doctors/studio/kochi/dr-reema-poyil.webp');
   assert.equal(out[2], undefined); // a Kochi photo is not given to a Cherthala doctor
 });
+
+test('Mr Prasanth M. K. is the Chief Information Officer, with his profile, and never matched to a doctor', async () => {
+  const { MANAGEMENT_TEAM, doctorOfMember, teamProfiles } = await import('../lib/management-team.mjs');
+  const p = MANAGEMENT_TEAM.find((m) => m.slug === 'prasanth');
+  assert.equal(p.name, 'Prasanth M. K.');
+  assert.equal(p.role, 'Chief Information Officer');
+  assert.equal(doctorOfMember(p, [{ name: 'Dr. Prasanth K' }, { name: 'Dr. Prasanth' }]), null);
+  assert.match(teamProfiles([]).prasanth.text, /^Mr\. Prasanth M\. K\. is an accomplished/);
+  assert.match(teamProfiles([]).prasanth.text, /CIO Association, Kerala Chapter\.$/);
+});
