@@ -10,7 +10,7 @@ import styles from './ManagementTeam.module.css';
 // role. A member with a full profile links to it; a member who is also one
 // of our doctors links to their doctor profile; a member whose profile is
 // written here (Mr Prasanth M. K.) opens it over the page.
-export default function ManagementTeam({ team = MANAGEMENT_TEAM, doctors = [] }) {
+export default function ManagementTeam({ team = MANAGEMENT_TEAM.filter((m) => !m.hidden), doctors = [] }) {
   const [shown, setShown] = useState(null);
   return (
     <>
