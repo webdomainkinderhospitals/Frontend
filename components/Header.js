@@ -354,6 +354,11 @@ export default function Header({ settings, locations: allLocations = [], special
                     {serviceGroups[3].items.slice(0, 9).map((item) => (
                       <a key={item.name} className="mega-spec" href={`/services/${slugify(item.name)}`} onClick={onLeafClick}><SpecialityIcon name={item.name} icon={megaIcons.get(item.name)} /><span>{item.name}</span></a>
                     ))}
+                    {serviceGroups.some((g) => g.items.length > (g === serviceGroups[3] ? 9 : 8)) && (
+                      <a className="mega-all" href="/services" onClick={onLeafClick}>
+                        All {serviceGroups.reduce((n, g) => n + g.items.length, 0)} specialities →
+                      </a>
+                    )}
                     <div className="mega-cta">
                       <strong>Need a specialist?</strong>
                       <p>Our care coordinators will guide you to the right Kinder doctor.</p>
