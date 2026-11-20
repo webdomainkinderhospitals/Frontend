@@ -25,9 +25,14 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
   // The page's own icon comes first; its related specialities each get another.
   const icons = iconsForList([svc.name, ...related.map((i) => i.name)]);
   const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
-  // A page the hospital has written in full for this speciality, if any.
+  // A page the hospital has written in full for this speciality, if any. On
+  // the group's own page, Kinder Kochi's department text is shown — credited
+  // to Kochi, with a link to the department there — unless the speciality
+  // already has its own text in the admin.
   const page = loc ? centreServicePage(loc, slugify(svc.name)) : null;
+  const kochi = !loc && !svc.fullDescription ? centreServicePage({ slug: 'kochi' }, slugify(svc.name)) : null;
   const fullDescription = page ? page.fullDescription : svc.fullDescription;
+  const faqs = page?.faqs || kochi?.faqs || [];
 
   return (
     <main>
@@ -52,13 +57,27 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         <section><div className={`container${page ? ' svc-article' : ''}`}><ContentBody text={fullDescription} /></div></section>
       )}
 
-      {page?.faqs?.length > 0 && (
+      {kochi && (
+        <section>
+          <div className="container svc-article">
+            <span className="section-eyebrow">At Kinder Hospitals, Kochi</span>
+            <h2 className="section-title">{kochi.heading}</h2>
+            <p className="section-intro">{kochi.intro}</p>
+            <ContentBody text={kochi.fullDescription} />
+            <p className="svc-centre-link">
+              <a className="btn btn-primary" href={`/hospitals/kochi/services/${slugify(svc.name)}`}>{svc.name} at Kinder Kochi →</a>
+            </p>
+          </div>
+        </section>
+      )}
+
+      {faqs.length > 0 && (
         <section className="svc-faq-wrap">
           <div className="container svc-article">
-            <span className="section-eyebrow">{svc.name} at Kinder {here}</span>
+            <span className="section-eyebrow">{svc.name} at Kinder {here || 'Kochi'}</span>
             <h2 className="section-title">Frequently asked <em>questions</em></h2>
             <div className="svc-faqs">
-              {page.faqs.map(([question, answer]) => (
+              {faqs.map(([question, answer]) => (
                 <details key={question} className="svc-faq">
                   <summary>{question}</summary>
                   <p>{answer}</p>
@@ -66,7 +85,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
               ))}
             </div>
           </div>
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(page.faqs)).replace(/</g, '\\u003c') }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqs)).replace(/</g, '\\u003c') }} />
         </section>
       )}
 
