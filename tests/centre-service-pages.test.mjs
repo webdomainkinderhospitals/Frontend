@@ -10,17 +10,47 @@ test('Kochi General Medicine carries the page the hospital wrote', () => {
   assert.equal(page.faqs.length, 6);
   assert.ok(centreServicePage({ name: 'Cochin' }, 'general-medicine'));
   assert.equal(centreServicePage({ name: 'Cherthala' }, 'general-medicine'), null);
-  assert.equal(centreServicePage({ name: 'Kochi' }, 'neonatology'), null);
+  assert.equal(centreServicePage({ name: 'Kochi' }, 'emergency-and-trauma-care'), null);
   assert.equal(faqSchema(page.faqs).mainEntity[0]['@type'], 'Question');
 });
 
-test('Kochi ENT carries the confirmed parts of the draft only', () => {
+test('Kochi ENT carries the hospital\'s full department text', () => {
   const page = centreServicePage({ name: 'Kochi' }, 'ent');
   assert.equal(page.heading, 'ENT Care at Kinder Hospitals, Kochi');
   assert.match(page.fullDescription, /### Nose & sinus\n\n- Sinusitis/);
-  assert.doesNotMatch(page.fullDescription + JSON.stringify(page.faqs), /confirm|VERIFY|FESS|cochlear|polysomnography|tonsillectomy/i);
-  assert.equal(page.faqs.length, 4);
+  assert.match(page.fullDescription, /## Nose & sinus surgery\n\n- Endoscopic sinus surgery/);
+  assert.match(page.fullDescription, /Cochlear implants for children and adults/);
+  assert.doesNotMatch(page.fullDescription + JSON.stringify(page.faqs), /confirm|VERIFY/i);
+  assert.equal(page.faqs.length, 6);
   assert.equal(centreServicePage({ name: 'Kochi' }, 'general-ent').heading, page.heading);
+});
+
+test('every Kochi department the hospital wrote has its page, under either name', async () => {
+  const { KOCHI_DEPARTMENT_LIST } = await import('../lib/kochi-departments.mjs');
+  const { slugify } = await import('../lib/services.js');
+  const kochi = { name: 'Kochi' };
+  const written = KOCHI_DEPARTMENT_LIST.filter((d) => centreServicePage(kochi, slugify(d.name)));
+  assert.deepEqual(written.map((d) => d.name), [
+    'General Medicine & Diabetology', 'Orthopaedics & Sports Medicine', 'General & Laparoscopic Surgery', 'ENT',
+    'Urology', 'Pulmonology', 'Radiology', 'Dentistry', 'Dermatology & Cosmetology', 'Gastroenterology',
+    'Neurology', 'Ophthalmology', 'Cardiology', 'Geriatrics', 'Anaesthesiology & Critical Care',
+    'Psychiatry & Clinical Psychology', 'Obstetrics & Gynaecology', 'Reproductive Medicine', 'Paediatrics',
+    'Gynaecological Oncology', 'Fetomaternal Medicine', 'Neonatology with Level 3 NICU Care',
+  ]);
+  // the group's catalogue names lead to the same pages
+  for (const [group, kochiName] of [
+    ['Orthopaedics & Sports Med', 'Orthopaedics & Sports Medicine'], ['Neonatology', 'Neonatology with Level 3 NICU Care'],
+    ['Fetal Medicine', 'Fetomaternal Medicine'], ['Gynaec Oncology', 'Gynaecological Oncology'],
+    ['Dermatology', 'Dermatology & Cosmetology'], ['Anesthesiology & Pain', 'Anaesthesiology & Critical Care'],
+  ]) {
+    assert.equal(centreServicePage(kochi, slugify(group)).heading, centreServicePage(kochi, slugify(kochiName)).heading, group);
+  }
+  for (const d of written) {
+    const page = centreServicePage(kochi, slugify(d.name));
+    assert.ok(page.intro && page.metaTitle && page.metaDescription && page.fullDescription, d.name);
+    assert.doesNotMatch(page.fullDescription + page.intro, /best (gyn|hospital|centre)|among (one of )?the best|only hospital|first of its kind|kinderkochi\.com|undefined/i, d.name);
+  }
+  assert.equal(centreServicePage({ name: 'Cherthala' }, 'urology'), null);
 });
 
 test('Kochi final pages are always published with the approved text', async () => {

@@ -5927,6 +5927,8 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
 .svc-article { max-width: 880px; }
 .svc-article .cb-body h2, .svc-article h2 { margin-top: 34px; }
 .svc-faq-wrap { background: var(--bg-soft); }
+.svc-centre-link { margin-top: 28px; }
+.svc-article > .section-title { margin-top: 6px; }
 .svc-faqs { display: grid; gap: 12px; margin-top: 22px; }
 .svc-faq { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0 20px; }
 .svc-faq summary { cursor: pointer; list-style: none; padding: 18px 32px 18px 0; position: relative; font-weight: 700; color: var(--primary-dark); font-size: 16px; }
