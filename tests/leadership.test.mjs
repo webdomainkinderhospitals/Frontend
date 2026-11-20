@@ -59,7 +59,7 @@ test('the management team in the hospital\'s order, each with a portrait', async
   const fs = await import('node:fs');
   const { MANAGEMENT_TEAM } = await import('../lib/management-team.mjs');
   // shown in the leadership, in the hospital's order (20 Nov 2026)
-  assert.deepEqual(MANAGEMENT_TEAM.filter((m) => !m.hidden).map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas', 'Prasanth M. K.', 'Jithin Raj']);
+  assert.deepEqual(MANAGEMENT_TEAM.filter((m) => !m.hidden).map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas', 'Prasanth M. K.', 'Jithin Raj VR']);
   // kept for their portraits, not shown
   assert.deepEqual(MANAGEMENT_TEAM.filter((m) => m.hidden).map((m) => m.name), ['Sreejith S', 'Anto Twinkle', 'Sojo', 'Abeesh']);
   for (const m of MANAGEMENT_TEAM) assert.ok(fs.existsSync(`public${m.photo}`), m.photo);
@@ -89,7 +89,7 @@ test('the doctor slider opens with the team in the hospital\'s order', async () 
   const { teamAsDoctors } = await import('../lib/management-team.mjs');
   const doctors = [{ name: 'Dr. V K Pradeep Kumar', speciality: 'Neonatology', location: 'Kochi', imageUrl: 'https://cdn/old.jpg' }, { name: 'Dr. Mili Mohandas', location: 'Cherthala' }];
   const team = teamAsDoctors(doctors);
-  assert.deepEqual(team.map((t) => t.name), ['Dr. V K Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas', 'Prasanth M. K.', 'Jithin Raj', 'Sreejith S', 'Anto Twinkle', 'Sojo', 'Abeesh']);
+  assert.deepEqual(team.map((t) => t.name), ['Dr. V K Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas', 'Prasanth M. K.', 'Jithin Raj VR', 'Sreejith S', 'Anto Twinkle', 'Sojo', 'Abeesh']);
   assert.equal(team[0].teamOf, doctors[0]);
   assert.equal(team[0].imageUrl, '/leadership/team/dr-v-k-pradeep-kumar.webp');
   assert.equal(team[1].bookable, false);
