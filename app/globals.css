@@ -5907,6 +5907,22 @@ body:not(:has(.whatsapp-float)) .kc-panel { bottom: 24px; }
   .editorial-portrait { width: 100%; max-height: 62vh; aspect-ratio: 4 / 4.6; object-fit: cover; object-position: center 12%; margin-bottom: 22px; }
 }
 
+/* Read more on every screen size (the Chairman's and the CEO's profiles) */
+.rm-always .readmore { position: relative; }
+.rm-always .readmore.is-clamped { max-height: var(--rm-h, 160px); overflow: hidden; }
+.rm-always .readmore.is-clamped::after {
+  content: ''; position: absolute; inset: auto 0 0 0; height: 96px; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--rm-bg, #fff) 85%);
+}
+.rm-always .readmore-btn {
+  display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 6px;
+  padding: 11px 20px; border-radius: 999px; border: 1.5px solid var(--primary);
+  background: #fff; color: var(--primary-dark); font: inherit; font-size: 14.5px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 6px 18px -10px rgba(27,58,115,.45);
+}
+.rm-always .readmore-btn:hover { background: var(--primary); color: #fff; }
+.rm-always .readmore-btn svg { width: 16px; height: 16px; }
+
 /* A speciality page the hospital wrote in full (e.g. Kochi General Medicine) */
 .svc-article { max-width: 880px; }
 .svc-article .cb-body h2, .svc-article h2 { margin-top: 34px; }

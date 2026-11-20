@@ -1,7 +1,8 @@
 import ContentPages from '@/components/ContentPages';
 import ManagementTeam from '@/components/ManagementTeam';
 import { SHOW_LEADERSHIP } from '@/lib/leadership.mjs';
-import { LEADERSHIP_PROFILES } from '@/lib/leadership-profiles.mjs';
+import { LEADERSHIP_PROFILES, PROFILED } from '@/lib/leadership-profiles.mjs';
+import { MANAGEMENT_TEAM } from '@/lib/management-team.mjs';
 import ReadMore from '@/components/ReadMore';
 import Accreditations from '@/components/Accreditations';
 import { HubProse } from '@/components/Hub';
@@ -224,7 +225,7 @@ export default async function AboutPage() {
                     <p className={styles.profileLead}>{p.bio[0]}</p>
                     <blockquote className={styles.profileQuote}><p>{p.quote}</p></blockquote>
                     {/* On a phone the rest of the profile opens on request */}
-                    <ReadMore height={150} bg="#f1f7f5">
+                    <ReadMore height={150} bg="#f1f7f5" always>
                       {p.bio.slice(1).map((para) => <p key={para.slice(0, 32)}>{para}</p>)}
                     </ReadMore>
                   </div>
@@ -237,7 +238,8 @@ export default async function AboutPage() {
               <span className="section-eyebrow">Our management team</span>
               <h3>The people who lead <em>Kinder Hospitals</em></h3>
             </div>
-            <ManagementTeam doctors={content.doctors || []} />
+            {/* the Chairman and the CEO are profiled in full just above */}
+            <ManagementTeam team={MANAGEMENT_TEAM.filter((m) => !PROFILED.has(m.page))} doctors={content.doctors || []} />
           </div>
         </section>}
 
