@@ -3579,6 +3579,8 @@ body{ overflow-x: clip; }
 .mega-col a.mega-spec { display: flex; align-items: center; gap: 10px; padding: 6px 10px; }
 .mega-col a.mega-spec .spec-glyph { width: 28px; height: 28px; border-radius: 8px; }
 .mega-col a.mega-spec .spec-glyph svg { width: 16px; height: 16px; }
+.mega-col a.mega-all { display: inline-block; margin: 8px 10px 2px; font-weight: 700; font-size: 13.5px; color: #fff; border-bottom: 1px solid rgba(255,255,255,.45); }
+.mega-col a.mega-all:hover { color: #ffd27a; border-color: #ffd27a; }
 .mega-col a.mega-spec:hover { padding-left: 10px; }
 .mega-col a.mega-spec:hover .spec-glyph { background: var(--primary); color: #fff; }
 .mega-col h6 + a.mega-spec { margin-top: 2px; }
