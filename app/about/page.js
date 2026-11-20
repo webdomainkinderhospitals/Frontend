@@ -239,7 +239,7 @@ export default async function AboutPage() {
               <h3>The people who lead <em>Kinder Hospitals</em></h3>
             </div>
             {/* the Chairman and the CEO are profiled in full just above */}
-            <ManagementTeam team={MANAGEMENT_TEAM.filter((m) => !PROFILED.has(m.page))} doctors={content.doctors || []} />
+            <ManagementTeam team={MANAGEMENT_TEAM.filter((m) => !m.hidden && !PROFILED.has(m.page))} doctors={content.doctors || []} />
           </div>
         </section>}
 
