@@ -53,3 +53,13 @@ test('Mr Prasanth M. K.\'s management card shows the portrait from his profile',
   assert.equal(MANAGEMENT_TEAM.find((m) => m.slug === 'prasanth').photo, '/leadership/team/prasanth-coat.webp');
   assert.equal(MANAGEMENT_TEAM.find((m) => m.slug === 'sojo').photo, '/leadership/team/sojo.webp');
 });
+
+test('Jithin Raj VR, Head – Media & Branding, with his profile', async () => {
+  const { MANAGEMENT_TEAM, teamProfiles } = await import('../lib/management-team.mjs');
+  const j = MANAGEMENT_TEAM.find((m) => m.slug === 'jithin-raj');
+  assert.equal(j.name, 'Jithin Raj VR');
+  assert.equal(j.role, 'Head – Media & Branding');
+  assert.equal(j.photo, '/leadership/team/jithin-raj.webp');
+  assert.match(teamProfiles([])['jithin-raj'].text, /^Great brands are built on trust/);
+  assert.match(teamProfiles([])['jithin-raj'].text, /Manappuram Healthcare Pvt\. Ltd\./);
+});
