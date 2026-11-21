@@ -48,7 +48,7 @@ export default function ProfileDialog({ doc, profile, onClose }) {
             <p className="pdlg-where">
               {isTeam ? 'Kinder Hospitals management team' : centres.length ? centres.map((c) => `Kinder ${c}`).join(' · ') : 'All Kinder centres'}
             </p>
-            {!isTeam && doc.bio && !doc.fullBio && (
+            {!isTeam && doc.bio && (
               <p className="pdlg-quals"><strong>Qualifications</strong>{tidyQualifications(doc.bio)}</p>
             )}
             {profile?.facts?.length > 0 && (
