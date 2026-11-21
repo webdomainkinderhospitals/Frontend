@@ -106,3 +106,11 @@ test('Mr Basanta Kumar Dash shows the portrait the hospital sent, over the page 
   assert.equal(portraitReplacesPhoto(page), true);
   assert.equal(portraitReplacesPhoto({ ...page, slug: 'leadership-mr-anto-twinkle' }), false);
 });
+
+test('the Chairman\'s studio portrait replaces a photo already set on his page', async () => {
+  const { groupLeaders: leaders, leaderPortrait, portraitReplacesPhoto } = await import('../lib/leadership.mjs');
+  const page = { slug: 'leadership-dr-v-k-pradeep-kumar', category: 'Leadership', title: 'Dr. V K Pradeep Kumar', imageUrl: 'https://res.cloudinary.com/x/old.jpg', body: 'Dr. V K Pradeep Kumar\n\nChairman\n\nA long biography of the chairman that runs past sixty characters.' };
+  assert.equal(leaders([page])[0].photo, '/leadership/dr-v-k-pradeep-kumar-head.webp');
+  assert.equal(leaderPortrait(page), '/leadership/dr-v-k-pradeep-kumar.webp');
+  assert.ok(portraitReplacesPhoto(page));
+});

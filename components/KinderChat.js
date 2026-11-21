@@ -211,18 +211,17 @@ function buildReply(text, content) {
   );
 }
 
-// Kinder Maa — the assistant's portrait: a Kinder care guide with a headset
-// and phone, a child at her side, in the brand's speech bubble. Used on the
-// launcher and in the chat header, shown whole rather than cropped to a circle
-// so the bubble keeps its shape. She is a website guide, not a clinician, so
-// she carries no "Dr." title.
+// Kinder Maa — the assistant's portrait: a Kinder care guide in the hospital's
+// uniform with a headset (the hospital's own animation, 21 Nov 2026). Used on
+// the launcher and in the chat header, shown whole rather than cropped to a
+// circle. She is a website guide, not a clinician, so she carries no "Dr."
+// title.
 //
-// She waves and smiles (an animated WebP made from the hospital's own clip).
 // The still portrait shows first; the animation is fetched once the page has
 // finished loading, so it never slows the page down, and it is skipped
 // entirely for visitors who ask their device for less motion.
-const MAA_STILL = '/kinder-maa.webp';
-const MAA_ANIMATED = '/kinder-maa-animated.webp';
+const MAA_STILL = '/kinder-maa-guide.webp';
+const MAA_ANIMATED = '/kinder-maa-guide-animated.webp';
 
 function useAnimatedMaa() {
   const [src, setSrc] = useState(MAA_STILL);
