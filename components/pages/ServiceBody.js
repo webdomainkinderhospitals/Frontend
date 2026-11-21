@@ -7,6 +7,7 @@ import { atLocation, locationsOf } from '@/lib/locations';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
 import { centreServicePage, faqSchema } from '@/lib/centre-service-pages.mjs';
+import { groupServicePage } from '@/lib/group-service-pages.mjs';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -32,8 +33,11 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
   // the admin.
   const page = loc ? centreServicePage(loc, slugify(svc.name)) : null;
   const kochi = !page && !svc.fullDescription ? centreServicePage({ slug: 'kochi' }, slugify(svc.name)) : null;
-  const fullDescription = page ? page.fullDescription : svc.fullDescription;
-  const faqs = page?.faqs || kochi?.faqs || [];
+  // Where no hospital has written one, the group's own page for the
+  // speciality (lib/group-service-pages.mjs).
+  const general = !page && !kochi && !svc.fullDescription ? groupServicePage(slugify(svc.name)) : null;
+  const fullDescription = page ? page.fullDescription : svc.fullDescription || general?.fullDescription;
+  const faqs = page?.faqs || kochi?.faqs || general?.faqs || [];
   // the short description the group's site gives this speciality, where the
   // centre's own entry has none
   const description = svc.description || specialityDescription(svc.name);
@@ -51,6 +55,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         intro={
           page?.intro ||
           description ||
+          general?.intro ||
           (loc
             ? `${svc.name} at Kinder ${here} — part of our ${svc.group.title.toLowerCase()} care, delivered under the protocols shared across every Kinder centre.`
             : `${svc.name} at Kinder Hospitals — part of our ${svc.group.title.toLowerCase()} care, delivered under shared protocols across every Kinder centre.`)
@@ -58,7 +63,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
       />
 
       {fullDescription && (
-        <section><div className={`container${page ? ' svc-article' : ''}`}><ContentBody text={fullDescription} /></div></section>
+        <section><div className={`container${page || general ? ' svc-article' : ''}`}><ContentBody text={fullDescription} /></div></section>
       )}
 
       {kochi && (
@@ -78,7 +83,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
       {faqs.length > 0 && (
         <section className="svc-faq-wrap">
           <div className="container svc-article">
-            <span className="section-eyebrow">{svc.name} at Kinder {page ? here : 'Kochi'}</span>
+            <span className="section-eyebrow">{general ? `${svc.name} at Kinder Hospitals` : `${svc.name} at Kinder ${page ? here : 'Kochi'}`}</span>
             <h2 className="section-title">Frequently asked <em>questions</em></h2>
             <div className="svc-faqs">
               {faqs.map(([question, answer]) => (
@@ -171,7 +176,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         <div className="container">
           <div className="cta-strip">
             <div>
-              <h3>{page?.cta || `Ready to talk to us about ${svc.name}?`}</h3>
+              <h3>{page?.cta || general?.cta || `Ready to talk to us about ${svc.name}?`}</h3>
               <p>
                 {loc && loc.phone
                   ? `Call ${loc.phone} or message us on WhatsApp — our coordinators at Kinder ${here} will arrange your consultation.`
