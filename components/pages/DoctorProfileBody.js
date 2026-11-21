@@ -50,7 +50,7 @@ export default function DoctorProfileBody({ doc, content, base = '', loc = null 
             <div className="doc-profile-body">
               <span className="section-eyebrow">About the doctor</span>
               <h2 className="section-title">{doc.name}</h2>
-              <p className="doc-profile-role">{doc.designation}</p>
+              {doc.designation && <p className="doc-profile-role">{doc.designation}</p>}
               <div className="doc-profile-tags">
                 {doc.speciality && (
                   service ? (
