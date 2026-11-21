@@ -1,7 +1,7 @@
 import ContentBody from '@/components/ContentBody';
 import PageHero from '@/components/PageHero';
 import DoctorCard from '@/components/DoctorCard';
-import { doctorsForService, slugify } from '@/lib/services';
+import { doctorsForService, slugify, specialityDescription } from '@/lib/services';
 import { byHospitalOrder } from '@/lib/hospital-order.mjs';
 import { atLocation, locationsOf } from '@/lib/locations';
 import SpecialityIcon from '@/components/SpecialityIcon';
@@ -26,13 +26,17 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
   const icons = iconsForList([svc.name, ...related.map((i) => i.name)]);
   const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
   // A page the hospital has written in full for this speciality, if any. On
-  // the group's own page, Kinder Kochi's department text is shown — credited
-  // to Kochi, with a link to the department there — unless the speciality
-  // already has its own text in the admin.
+  // the group's own page and on any other centre's, Kinder Kochi's department
+  // text is shown — the same on every site, credited to Kochi, with a link to
+  // the department there — unless the speciality already has its own text in
+  // the admin.
   const page = loc ? centreServicePage(loc, slugify(svc.name)) : null;
-  const kochi = !loc && !svc.fullDescription ? centreServicePage({ slug: 'kochi' }, slugify(svc.name)) : null;
+  const kochi = !page && !svc.fullDescription ? centreServicePage({ slug: 'kochi' }, slugify(svc.name)) : null;
   const fullDescription = page ? page.fullDescription : svc.fullDescription;
   const faqs = page?.faqs || kochi?.faqs || [];
+  // the short description the group's site gives this speciality, where the
+  // centre's own entry has none
+  const description = svc.description || specialityDescription(svc.name);
 
   return (
     <main>
@@ -46,7 +50,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         trail={[{ label: 'Specialities', href: loc ? `${base}#specialities` : '/services' }]}
         intro={
           page?.intro ||
-          svc.description ||
+          description ||
           (loc
             ? `${svc.name} at Kinder ${here} — part of our ${svc.group.title.toLowerCase()} care, delivered under the protocols shared across every Kinder centre.`
             : `${svc.name} at Kinder Hospitals — part of our ${svc.group.title.toLowerCase()} care, delivered under shared protocols across every Kinder centre.`)
@@ -74,7 +78,7 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
       {faqs.length > 0 && (
         <section className="svc-faq-wrap">
           <div className="container svc-article">
-            <span className="section-eyebrow">{svc.name} at Kinder {here || 'Kochi'}</span>
+            <span className="section-eyebrow">{svc.name} at Kinder {page ? here : 'Kochi'}</span>
             <h2 className="section-title">Frequently asked <em>questions</em></h2>
             <div className="svc-faqs">
               {faqs.map(([question, answer]) => (

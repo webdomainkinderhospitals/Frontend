@@ -38,3 +38,12 @@ test('every Kochi department with a written page is a group speciality too', asy
   const fromDb = groupServices(db).find((g) => g.id === 'allied').items.filter((i) => i.name === 'Urology');
   assert.deepEqual(fromDb.map((i) => i.description), ['Ours']);
 });
+
+test('a speciality has the same short description at every centre', async () => {
+  const { specialityDescription } = await import('../lib/services.js');
+  assert.match(specialityDescription('Urology'), /^Kidney stones/);
+  assert.equal(specialityDescription('Neonatology'), specialityDescription('Neonatology with Level 3 NICU Care'));
+  assert.equal(specialityDescription('Radiology & Diagnostics'), specialityDescription('Radiology'));
+  assert.equal(specialityDescription('Gynaecology'), specialityDescription('Obstetrics & Gynaecology'));
+  assert.equal(specialityDescription('Emergency & Trauma Care'), '');
+});
