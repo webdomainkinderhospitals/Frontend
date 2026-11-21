@@ -315,6 +315,23 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </div>
       </section>
 
+      {/* Leadership, straight after About (the menu's About leads here):
+          the group's Chairman and MD & CEO, then the centre's own head and
+          any leader whose page is set to this centre */}
+      {leaders.length > 0 && (
+        <section id="leadership" className="hosp-leadership">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">Leadership</span>
+                <h2 className="section-title">Leading <em>{name}</em></h2>
+              </div>
+            </div>
+            <LeadershipTeam leaders={leaders} base={base} />
+          </div>
+        </section>
+      )}
+
       {/* The building itself. These are watercolour elevations on paper, so
           they are shown whole on a paper ground rather than cropped into a
           band or scrimmed behind text — a drawing of the place a family is
@@ -434,22 +451,6 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
                 </blockquote>
               ))}
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* Leadership: the group's Chairman and MD & CEO, then the centre's
-          own head and any leader whose page is set to this centre */}
-      {leaders.length > 0 && (
-        <section id="leadership" className="hosp-leadership">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <span className="section-eyebrow">Leadership</span>
-                <h2 className="section-title">Leading <em>{name}</em></h2>
-              </div>
-            </div>
-            <LeadershipTeam leaders={leaders} base={base} />
           </div>
         </section>
       )}
