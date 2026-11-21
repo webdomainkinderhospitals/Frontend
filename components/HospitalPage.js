@@ -15,7 +15,7 @@ import LeadershipTeam from '@/components/LeadershipTeam';
 import NewsCard from '@/components/news/NewsCard';
 import newsStyles from '@/components/news/News.module.css';
 import { sortedNews } from '@/lib/news.mjs';
-import { centreLeaders } from '@/lib/leadership.mjs';
+import { hospitalLeaders } from '@/lib/leadership.mjs';
 const WHATSAPP_BOOK =
   'https://api.whatsapp.com/send?phone=919746600600&text=' +
   encodeURIComponent('Hello Kinder Hospitals, I would like to book an appointment.');
@@ -92,7 +92,7 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
   // and Book Appointment opens its booking page with this centre's doctors.
   const base = `/hospitals/${hospitalSlug}`;
   const book = `${base}/book`;
-  const leaders = centreLeaders(featurePages, loc.name);
+  const leaders = hospitalLeaders(featurePages, loc.name);
   // "Kinder Hospitals Kochi": the name is set in the display face with the
   // place picked out, so split it into its lead-in and the place itself.
   const name = centreName(loc);
@@ -438,8 +438,8 @@ export default function HospitalPage({ loc, hospitalSlug, carePages = [], specia
         </section>
       )}
 
-      {/* The centre's own leadership (Content Library pages in the
-          Leadership category with this centre as their Location) */}
+      {/* Leadership: the group's Chairman and MD & CEO, then the centre's
+          own head and any leader whose page is set to this centre */}
       {leaders.length > 0 && (
         <section id="leadership" className="hosp-leadership">
           <div className="container">

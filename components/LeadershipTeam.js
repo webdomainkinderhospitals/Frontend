@@ -7,9 +7,10 @@ export default function LeadershipTeam({ leaders = [], base = '' }) {
   if (!leaders.length) return null;
   return <ul className={styles.grid}>
     {leaders.map((l) => {
-      const href = `${base}/information/${l.slug}`;
+      // a leader may link elsewhere (About Us) or have no profile page yet
+      const href = l.href === undefined ? `${base}/information/${l.slug}` : l.href;
       return <li key={l.slug} className={styles.card}>
-        <a href={href} className={styles.link} aria-label={`${l.name}${l.role ? `, ${l.role}` : ''} — read profile`} />
+        {href && <a href={href} className={styles.link} aria-label={`${l.name}${l.role ? `, ${l.role}` : ''} — read profile`} />}
         <span className={styles.portrait} aria-hidden="true">
           {l.photo ? <img src={l.photo} alt="" loading="lazy" /> : <span>{l.initials}</span>}
         </span>
@@ -17,7 +18,7 @@ export default function LeadershipTeam({ leaders = [], base = '' }) {
           <h3>{l.name}</h3>
           {l.role && <p className={styles.role}>{l.role}</p>}
           {l.summary && <p className={styles.summary}>{l.summary}</p>}
-          <span className={styles.more} aria-hidden="true">Read profile <i>→</i></span>
+          {href && <span className={styles.more} aria-hidden="true">Read profile <i>→</i></span>}
         </div>
       </li>;
     })}
