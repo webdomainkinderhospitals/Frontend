@@ -114,3 +114,27 @@ test('the Chairman\'s studio portrait replaces a photo already set on his page',
   assert.equal(leaderPortrait(page), '/leadership/dr-v-k-pradeep-kumar.webp');
   assert.ok(portraitReplacesPhoto(page));
 });
+
+test('every hospital is led by the Chairman and the CEO, then its own head', async () => {
+  const { hospitalLeaders } = await import('../lib/leadership.mjs');
+  const names = (centre, pages = []) => hospitalLeaders(pages, centre).map((l) => l.name);
+  assert.deepEqual(names('Kollam'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Abeesh']);
+  assert.deepEqual(names('Aranmula'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Sojo']);
+  assert.deepEqual(names('Cherthala'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar V']);
+  assert.deepEqual(names('Cochin'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Anto Twinkle']);
+  assert.deepEqual(names('Alappuzha'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan']);
+  const [chair, , kollam] = hospitalLeaders([], 'Kollam');
+  assert.equal(chair.href, '/about#leadership-dr-v-k-pradeep-kumar');
+  assert.equal(chair.photo, '/leadership/dr-v-k-pradeep-kumar-head.webp');
+  assert.equal(kollam.role, 'Kinder Hospitals Kollam');
+  assert.equal(kollam.href, null);
+  const rajesh = hospitalLeaders([], 'Cherthala')[2];
+  assert.equal(rajesh.photo, '');
+  assert.equal(rajesh.initials, 'RK');
+  // with his Leadership page, Anto's card is the page's (one card, linked)
+  const anto = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', location: 'Kochi', body: 'Mr. Anto Twinkle\n\nA long biography that runs well past sixty characters in all.' };
+  const kochi = hospitalLeaders([anto], 'Kochi');
+  assert.equal(kochi.length, 3);
+  assert.equal(kochi[2].href, undefined);
+  assert.equal(kochi[2].role, 'Chief Operating Officer, Kinder Hospitals Kochi');
+});
