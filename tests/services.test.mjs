@@ -47,3 +47,26 @@ test('a speciality has the same short description at every centre', async () => 
   assert.equal(specialityDescription('Gynaecology'), specialityDescription('Obstetrics & Gynaecology'));
   assert.equal(specialityDescription('Emergency & Trauma Care'), '');
 });
+
+test('a speciality link opens its page under any name the speciality has had', async () => {
+  const { findService } = await import('../lib/services.js');
+  const db = [
+    { name: 'Plastic & Cosmetic', category: 'Allied & Wellness' },
+    { name: 'Gynaec & Laparoscopic', category: 'Fertility & Gynaecology' },
+  ];
+  assert.equal(findService(db, 'plastic-and-cosmetic-surgery')?.name, 'Plastic & Cosmetic');
+  assert.equal(findService(db, 'plastic-and-cosmetic')?.name, 'Plastic & Cosmetic');
+  assert.equal(findService(db, 'gynecology-and-laparoscopic-surgery')?.name, 'Gynaec & Laparoscopic');
+  // the shipped catalogue's own name still opens its page
+  assert.equal(findService([], 'plastic-and-cosmetic-surgery')?.name, 'Plastic & Cosmetic Surgery');
+  assert.equal(findService(db, 'no-such-service'), undefined);
+});
+
+test('Plastic & Cosmetic Surgery has a page of its own', async () => {
+  const { groupServicePage } = await import('../lib/group-service-pages.mjs');
+  const page = groupServicePage('plastic-and-cosmetic');
+  assert.equal(page.key, 'plastic-and-cosmetic-surgery');
+  assert.match(page.fullDescription, /^## Reconstructive and aesthetic care/);
+  assert.equal(page.faqs.length, 4);
+  assert.equal(groupServicePage('urology'), null);
+});
