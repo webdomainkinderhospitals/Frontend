@@ -70,3 +70,17 @@ test('Plastic & Cosmetic Surgery has a page of its own', async () => {
   assert.equal(page.faqs.length, 4);
   assert.equal(groupServicePage('urology'), null);
 });
+
+test('a group speciality lists the doctors of the same department under its other names', async () => {
+  const { doctorsForService } = await import('../lib/services.js');
+  const docs = [
+    { name: 'A', speciality: 'ENT' }, { name: 'B', speciality: 'Orthopaedics & Sports Medicine' },
+    { name: 'C', speciality: 'Neonatology with Level 3 NICU Care' }, { name: 'D', speciality: 'Paediatric Orthopaedics' },
+    { name: 'E', speciality: 'Paediatric Surgery & Paediatric Urology' },
+  ];
+  const names = (svc) => doctorsForService(svc, docs).map((d) => d.name);
+  assert.deepEqual(names('General ENT'), ['A']);
+  assert.deepEqual(names('Orthopaedics & Sports Med'), ['B']);
+  assert.deepEqual(names('Neonatology'), ['C']);
+  assert.deepEqual(names('Urology'), []);
+});

@@ -4,7 +4,8 @@ import { atLocation, locationsOf } from '@/lib/locations';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import DoctorCard from './DoctorCard';
 import ProfileDialog from './ProfileDialog';
-import { leadDoctorsFirst } from '@/lib/lead-doctors.mjs';
+import { leadDoctorsFirst, departmentHeadsFirst } from '@/lib/lead-doctors.mjs';
+import { oneCardPerDoctor } from '@/lib/doctor-duplicates.mjs';
 import { byHospitalOrder } from '@/lib/hospital-order.mjs';
 
 const norm = (s) => String(s || '').trim().toLowerCase();
@@ -35,8 +36,8 @@ export default function Doctors({ doctors: all = [], locations = [], profiles = 
   // Dr Ananthen K S, then every other doctor. The management team is shown
   // under Leadership on About Us, not here.
   const doctors = useMemo(() => {
-    if (!hospital) return leadDoctorsFirst(featuredOrder(all, locations));
-    return byHospitalOrder(featuredOrder(all.filter((d) => locationsOf(d).length === 0 || atLocation(d, hospital)), locations), hospital);
+    if (!hospital) return leadDoctorsFirst(departmentHeadsFirst(oneCardPerDoctor(featuredOrder(all, locations))));
+    return departmentHeadsFirst(byHospitalOrder(featuredOrder(all.filter((d) => locationsOf(d).length === 0 || atLocation(d, hospital)), locations), hospital));
   }, [all, hospital, locations]);
   const pick = (name) => { setHospital(norm(name) === norm(hospital) ? '' : name); setPageIndex(0); };
   const [cardsPerView, setCardsPerView] = useState(4);

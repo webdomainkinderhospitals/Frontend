@@ -3,6 +3,8 @@ import PageHero from '@/components/PageHero';
 import DoctorCard from '@/components/DoctorCard';
 import { doctorsForService, slugify, specialityDescription } from '@/lib/services';
 import { byHospitalOrder } from '@/lib/hospital-order.mjs';
+import { departmentHeadsFirst } from '@/lib/lead-doctors.mjs';
+import { oneCardPerDoctor } from '@/lib/doctor-duplicates.mjs';
 import { atLocation, locationsOf } from '@/lib/locations';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
@@ -21,7 +23,7 @@ const enquire = (name, where) =>
 export default function ServiceBody({ svc, content, base = '', loc = null }) {
   const here = loc ? loc.name : '';
   const all = doctorsForService(svc.name, content.doctors);
-  const team = loc ? byHospitalOrder(all.filter((d) => atLocation(d, loc.name)), loc.name) : all;
+  const team = departmentHeadsFirst(loc ? byHospitalOrder(all.filter((d) => atLocation(d, loc.name)), loc.name) : oneCardPerDoctor(all), { oneDepartment: true });
   const related = svc.group.items.filter((i) => i.name !== svc.name);
   // The page's own icon comes first; its related specialities each get another.
   const icons = iconsForList([svc.name, ...related.map((i) => i.name)]);
