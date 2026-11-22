@@ -23,3 +23,15 @@ test('different people, other hospitals and doctors without any profile are kept
   ];
   assert.deepEqual(withoutDuplicateDoctors(list).map((d) => d.id), [1, 2, 3, 4, 5]);
 });
+
+test('a doctor with a record at two hospitals is one card where all hospitals are shown', async () => {
+  const { oneCardPerDoctor } = await import('../lib/doctor-duplicates.mjs');
+  const out = oneCardPerDoctor([
+    { name: 'Dr. Abhishek Radhakrishnan', location: 'Kochi', imageUrl: '' },
+    { name: 'Dr. Reshmy J R', location: 'Cherthala' },
+    { name: 'Dr Abhishek Radhakrishnan', location: 'Cherthala', imageUrl: '/a.webp' },
+    { name: 'Dr. Group', location: '' }, { name: 'Dr. Group', location: 'Kochi' },
+  ]);
+  assert.deepEqual(out.map((d) => [d.name, d.location]), [['Dr. Abhishek Radhakrishnan', 'Kochi, Cherthala'], ['Dr. Reshmy J R', 'Cherthala'], ['Dr. Group', '']]);
+  assert.equal(out[0].imageUrl, '/a.webp');
+});

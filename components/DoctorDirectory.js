@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import DoctorCard from './DoctorCard';
 import { atLocation, locationsOf } from '@/lib/locations';
-import { leadDoctorsFirst } from '@/lib/lead-doctors.mjs';
+import { leadDoctorsFirst, departmentHeadsFirst } from '@/lib/lead-doctors.mjs';
+import { oneCardPerDoctor } from '@/lib/doctor-duplicates.mjs';
 
 // Corporate "Our Doctors" directory: every published doctor from every
 // centre, filterable by hospital, speciality and name. A doctor entered
@@ -45,15 +46,17 @@ export default function DoctorDirectory({ doctors = [], locations = [], serviceP
   const atHospital = (d, name) => !name || locationsOf(d).length === 0 || atLocation(d, name);
 
   const countFor = (name) => doctors.filter((d) => atHospital(d, name)).length;
+  // all hospitals together: one card per doctor
+  const everyone = useMemo(() => oneCardPerDoctor(doctors), [doctors]);
 
   const list = useMemo(() => {
     const q = norm(query);
-    return (hospital ? doctors : leadDoctorsFirst(doctors)).filter((d) =>
+    return departmentHeadsFirst(hospital ? doctors : leadDoctorsFirst(everyone)).filter((d) =>
       atHospital(d, hospital) &&
       (!speciality || norm(d.speciality) === norm(speciality)) &&
       (!q || [d.name, d.designation, d.speciality, ...locationsOf(d)].some((v) => norm(v).includes(q)))
     );
-  }, [doctors, hospital, speciality, query]);
+  }, [doctors, everyone, hospital, speciality, query]);
 
   const filtered = hospital || speciality || query;
 
@@ -62,7 +65,7 @@ export default function DoctorDirectory({ doctors = [], locations = [], serviceP
       <div className="dd-bar" role="search">
         <div className="dd-chips" aria-label="Filter by hospital">
           <button type="button" className={`doctor-filter${hospital === '' ? ' active' : ''}`} onClick={() => setHospital('')}>
-            All hospitals <span className="dd-count">{doctors.length}</span>
+            All hospitals <span className="dd-count">{everyone.length}</span>
           </button>
           {locations.map((l) => (
             <button
@@ -99,13 +102,13 @@ export default function DoctorDirectory({ doctors = [], locations = [], serviceP
       <div className="dd-summary">
         <p>
           {filtered ? (
-            <>Showing <strong>{list.length}</strong> of {doctors.length} doctors
+            <>Showing <strong>{list.length}</strong> of {hospital ? countFor(hospital) : everyone.length} doctors
               {hospital ? <> at <strong>Kinder {hospital}</strong></> : null}
               {speciality ? <> in <strong>{speciality}</strong></> : null}
               {query ? <> matching “{query}”</> : null}
             </>
           ) : (
-            <><strong>{doctors.length}</strong> specialists across <strong>{locations.length}</strong> Kinder centres and <strong>{specialities.length}</strong> specialities</>
+            <><strong>{everyone.length}</strong> specialists across <strong>{locations.length}</strong> Kinder centres and <strong>{specialities.length}</strong> specialities</>
           )}
         </p>
         {filtered && (
