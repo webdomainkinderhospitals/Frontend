@@ -119,18 +119,25 @@ test('every hospital is led by the Chairman and the CEO, then its own head', asy
   const { hospitalLeaders } = await import('../lib/leadership.mjs');
   const names = (centre, pages = []) => hospitalLeaders(pages, centre).map((l) => l.name);
   assert.deepEqual(names('Kollam'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Abeesh']);
-  assert.deepEqual(names('Aranmula'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Sojo']);
-  assert.deepEqual(names('Cherthala'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar V']);
+  assert.deepEqual(names('Aranmula'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B', 'Sojo']);
+  assert.deepEqual(names('Cherthala'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B']);
   assert.deepEqual(names('Cochin'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Anto Twinkle']);
-  assert.deepEqual(names('Alappuzha'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan']);
+  assert.deepEqual(names('Alappuzha'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B']);
   const [chair, , kollam] = hospitalLeaders([], 'Kollam');
   assert.equal(chair.href, '/about#leadership-dr-v-k-pradeep-kumar');
   assert.equal(chair.photo, '/leadership/dr-v-k-pradeep-kumar-head.webp');
   assert.equal(kollam.role, 'Kinder Hospitals Kollam');
   assert.equal(kollam.href, null);
-  const rajesh = hospitalLeaders([], 'Cherthala')[2];
-  assert.equal(rajesh.photo, '');
-  assert.equal(rajesh.initials, 'RK');
+  // Rajesh Kumar B's profile page (supplied by the site) gives a linked card
+  const { withSuppliedLeaders } = await import('../lib/supplied-leaders.mjs');
+  const aranmula = hospitalLeaders(withSuppliedLeaders([]), 'Aranmula');
+  assert.deepEqual(aranmula.map((l) => l.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B', 'Sojo']);
+  const rajesh = aranmula[2];
+  assert.equal(rajesh.href, undefined);
+  assert.equal(rajesh.photo, '/leadership/rajesh-kumar-b-head.webp');
+  assert.match(rajesh.role, /^Chief Operating Officer – Cluster Head/);
+  assert.match(rajesh.summary, /^Rajesh Kumar B brings 23 years/);
+  assert.equal(hospitalLeaders(withSuppliedLeaders([]), 'Kollam').length, 3);
   // with his Leadership page, Anto's card is the page's (one card, linked)
   const anto = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', location: 'Kochi', body: 'Mr. Anto Twinkle\n\nA long biography that runs well past sixty characters in all.' };
   const kochi = hospitalLeaders([anto], 'Kochi');
