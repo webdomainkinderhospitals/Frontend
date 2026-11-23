@@ -50,3 +50,14 @@ test('degrees are shown as qualifications for every doctor, whichever field they
   assert.equal(tidy('MBBS, DNB, FMAS, DMAS · FELLOWSHIP IN ART'), 'MBBS, DNB, FMAS, DMAS · Fellowship in ART');
   assert.equal(tidy('MBBS, MS, FMAS,DNB'), 'MBBS, MS, FMAS, DNB');
 });
+
+test('FAMS, DAMS typed for FMAS, DMAS is corrected, in the card and the profile', async () => {
+  const { withQualificationsSorted } = await import('../lib/doctor-profile.mjs');
+  const [d, other] = withQualificationsSorted([
+    { name: 'Dr. Nasna Majeed', bio: 'MBBS, DGO, DNB, FAMS, DAMS, FIH, MCCG', fullBio: '### Qualifications\n\n- FAMS, DAMS, FIH' },
+    { name: 'Dr. X', bio: 'MBBS, MD, FAMS' },
+  ]);
+  assert.equal(d.bio, 'MBBS, DGO, DNB, FMAS, DMAS, FIH, MCCG');
+  assert.match(d.fullBio, /- FMAS, DMAS, FIH/);
+  assert.equal(other.bio, 'MBBS, MD, FAMS');
+});
