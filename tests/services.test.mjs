@@ -84,3 +84,17 @@ test('a group speciality lists the doctors of the same department under its othe
   assert.deepEqual(names('Neonatology'), ['C']);
   assert.deepEqual(names('Urology'), []);
 });
+
+test('maternity lists the gynaecology team, and IVF the reproductive medicine team', async () => {
+  const { doctorsForService } = await import('../lib/services.js');
+  const docs = [
+    { name: 'Dr. Smitha Surendran', speciality: 'Obstetrics & Gynaecology' }, { name: 'Dr. Sajitha', speciality: 'Gynaecological Oncology' },
+    { name: 'Dr. Abhishek Radhakrishnan', speciality: 'Reproductive Medicine' }, { name: 'Dr. Priyanka', speciality: 'Reproductive Medicine' },
+    { name: 'Dr. K', speciality: 'Infertility & IVF' }, { name: 'Dr. P', speciality: 'Paediatrics' },
+  ];
+  const names = (svc) => doctorsForService(svc, docs).map((d) => d.name);
+  assert.deepEqual(names('Maternity'), ['Dr. Smitha Surendran']);
+  assert.deepEqual(names('IVF'), ['Dr. Abhishek Radhakrishnan', 'Dr. Priyanka', 'Dr. K']);
+  assert.deepEqual(names('Infertility & IVF'), ['Dr. Abhishek Radhakrishnan', 'Dr. Priyanka', 'Dr. K']);
+  assert.deepEqual(names('ICSI'), ['Dr. Abhishek Radhakrishnan', 'Dr. Priyanka', 'Dr. K']);
+});
