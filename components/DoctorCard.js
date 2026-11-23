@@ -1,5 +1,6 @@
 import { slugify } from '@/lib/services';
 import { locationsOf } from '@/lib/locations';
+import { isQualifications } from '@/lib/doctor-profile.mjs';
 
 // The one doctor card used across the corporate site and every hospital
 // sub-site. Server-safe (no hooks) so it can render anywhere. `base` is '' on
@@ -65,7 +66,9 @@ export default function DoctorCard({ doc, compact = false, hideHospitals = false
         )}
         <h4 className="dcard-name"><a href={profile} onClick={open}>{doc.name}</a></h4>
         {doc.designation && <p className="dcard-role">{doc.designation}</p>}
-        {doc.bio && !compact && <p className="dcard-bio">{doc.bio}</p>}
+        {/* The compact cards of the home page slider show the qualifications
+            too (not a written paragraph), so no card is left blank there. */}
+        {doc.bio && (!compact || isQualifications(doc.bio)) && <p className="dcard-bio">{doc.bio}</p>}
         <div className="dcard-actions">
           {doc.bookable !== false && (
             <a className="dcard-btn dcard-btn-primary" href={`${base}/book?doctor=${slugify(doc.name)}`}>
