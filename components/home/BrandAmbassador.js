@@ -1,12 +1,12 @@
 import styles from './BrandAmbassador.module.css';
 
-// Kinder Hospitals' brand ambassador, Amala Paul.
+// Kinder Hospitals' brand ambassador, Amala Paul (portrait sent 23 Nov 2026).
 export default function BrandAmbassador() {
   return (
     <section id="brand-ambassador" className={styles.section} aria-labelledby="ambassador-title">
       <div className={`container ${styles.layout}`}>
         <figure className={styles.portrait}>
-          <img src="/home/amala-paul-portrait.webp" alt="Amala Paul, brand ambassador of Kinder Hospitals" loading="lazy" width={450} height={681} />
+          <img src="/home/amala-paul-ambassador.webp" alt="Amala Paul, brand ambassador of Kinder Hospitals" loading="lazy" width={900} height={1200} />
           <figcaption><strong>Amala Paul</strong><span>Brand Ambassador</span></figcaption>
         </figure>
         <div className={styles.copy}>
