@@ -24,7 +24,7 @@ export default async function CareersPage() {
           crumb="Careers"
           eyebrow="Careers"
           titleHtml="Build your career <em>around kindness</em>"
-          intro="Clinicians, nurses, allied health and support teams across five centres in India and Singapore."
+          intro="Clinicians, nurses, allied health and support teams across five centres in India and five clinics in Singapore."
         />
 
         <section id="openings">

@@ -103,7 +103,7 @@ export default async function AboutPage() {
                   Kinder began in Singapore in 2000 and grew into one of its largest paediatric
                   group practices. In 2011 we brought that experience home to Kerala, opening the
                   first NABH-accredited women &amp; children hospital in Alappuzha. Today the group
-                  has hospitals across Kerala, in Bengaluru and in Singapore — every centre
+                  has hospitals across Kerala and in Bengaluru, and five clinics in Singapore — every centre
                   practising under shared protocols, clinical audit and governance.
                 </p>
                 <p>
@@ -114,7 +114,7 @@ export default async function AboutPage() {
               <ul className={`hosp-highlights ${styles.highlights}`}>
                 {[
                   'NABH accredited · Nursing Excellence',
-                  '5 centres across India & Singapore',
+                  '5 centres across India · 5 clinics in Singapore',
                   '6,00,000+ women treated',
                   '18,000+ births delivered',
                   '1,500+ IVF successes',
