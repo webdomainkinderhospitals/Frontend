@@ -82,3 +82,21 @@ test('the Kochi surgery speciality page carries the final page', () => {
   assert.doesNotMatch(page.faqs.at(-1)[1], /Book a consultation/);
   assert.match(page.cta, /^Book a consultation with Kinder Hospitals' General & Minimally Invasive Surgery team, Kochi/);
 });
+
+test('other hospitals and the group site get the department text without the centre name', async () => {
+  const { withoutCentreName } = await import('../lib/centre-service-pages.mjs');
+  const { KOCHI_DEPARTMENT_LIST } = await import('../lib/kochi-departments.mjs');
+  const { slugify } = await import('../lib/services.js');
+  for (const d of KOCHI_DEPARTMENT_LIST) {
+    const page = withoutCentreName(centreServicePage({ name: 'Kochi' }, slugify(d.name)));
+    if (!page) continue;
+    const text = JSON.stringify(page);
+    assert.doesNotMatch(text, /kochi|cochin/i, d.name);
+    assert.doesNotMatch(text, /,\s*[—–,.]|\s,/, d.name);
+  }
+  const gm = withoutCentreName(centreServicePage({ name: 'Kochi' }, 'general-medicine'));
+  assert.equal(gm.heading, 'General Medicine (Internal Medicine)');
+  assert.match(gm.intro, /^The Department of General Medicine at Kinder Hospitals, also known as internal medicine/);
+  // Kochi's own page keeps its name
+  assert.match(centreServicePage({ name: 'Kochi' }, 'general-medicine').heading, /in Kochi$/);
+});
