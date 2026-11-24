@@ -8,7 +8,7 @@ import { oneCardPerDoctor } from '@/lib/doctor-duplicates.mjs';
 import { atLocation, locationsOf } from '@/lib/locations';
 import SpecialityIcon from '@/components/SpecialityIcon';
 import { iconsForList } from '@/lib/speciality-icons.mjs';
-import { centreServicePage, faqSchema } from '@/lib/centre-service-pages.mjs';
+import { centreServicePage, faqSchema, withoutCentreName } from '@/lib/centre-service-pages.mjs';
 import { groupServicePage } from '@/lib/group-service-pages.mjs';
 
 const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -29,17 +29,16 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
   const icons = iconsForList([svc.name, ...related.map((i) => i.name)]);
   const centres = [...new Set(team.flatMap((d) => locationsOf(d)))];
   // A page the hospital has written in full for this speciality, if any. On
-  // the group's own page and on any other centre's, Kinder Kochi's department
-  // text is shown — the same on every site, credited to Kochi, with a link to
-  // the department there — unless the speciality already has its own text in
-  // the admin.
-  const page = loc ? centreServicePage(loc, slugify(svc.name)) : null;
-  const kochi = !page && !svc.fullDescription ? centreServicePage({ slug: 'kochi' }, slugify(svc.name)) : null;
+  // the group's own page and on any other centre's, the department text
+  // Kinder Kochi wrote is shown as Kinder Hospitals' own, without the centre's
+  // name — unless the speciality already has its own text in the admin.
+  const own = loc ? centreServicePage(loc, slugify(svc.name)) : null;
+  const page = own || (!svc.fullDescription ? withoutCentreName(centreServicePage({ slug: 'kochi' }, slugify(svc.name))) : null);
   // Where no hospital has written one, the group's own page for the
   // speciality (lib/group-service-pages.mjs).
-  const general = !page && !kochi && !svc.fullDescription ? groupServicePage(slugify(svc.name)) : null;
+  const general = !page && !svc.fullDescription ? groupServicePage(slugify(svc.name)) : null;
   const fullDescription = page ? page.fullDescription : svc.fullDescription || general?.fullDescription;
-  const faqs = page?.faqs || kochi?.faqs || general?.faqs || [];
+  const faqs = page?.faqs || general?.faqs || [];
   // the short description the group's site gives this speciality, where the
   // centre's own entry has none
   const description = svc.description || specialityDescription(svc.name);
@@ -68,24 +67,10 @@ export default function ServiceBody({ svc, content, base = '', loc = null }) {
         <section><div className={`container${page || general ? ' svc-article' : ''}`}><ContentBody text={fullDescription} /></div></section>
       )}
 
-      {kochi && (
-        <section>
-          <div className="container svc-article">
-            <span className="section-eyebrow">At Kinder Hospitals, Kochi</span>
-            <h2 className="section-title">{kochi.heading}</h2>
-            <p className="section-intro">{kochi.intro}</p>
-            <ContentBody text={kochi.fullDescription} />
-            <p className="svc-centre-link">
-              <a className="btn btn-primary" href={`/hospitals/kochi/services/${slugify(svc.name)}`}>{svc.name} at Kinder Kochi →</a>
-            </p>
-          </div>
-        </section>
-      )}
-
       {faqs.length > 0 && (
         <section className="svc-faq-wrap">
           <div className="container svc-article">
-            <span className="section-eyebrow">{general ? `${svc.name} at Kinder Hospitals` : `${svc.name} at Kinder ${page ? here : 'Kochi'}`}</span>
+            <span className="section-eyebrow">{`${svc.name} at Kinder ${own ? here : 'Hospitals'}`}</span>
             <h2 className="section-title">Frequently asked <em>questions</em></h2>
             <div className="svc-faqs">
               {faqs.map(([question, answer]) => (
