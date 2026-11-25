@@ -35,9 +35,15 @@ const ymKey = ({ y, m }) => y * 12 + m;
 const dateOf = (iso) => new Date(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10));
 
 // A panel that opens from a field: on a doctor's card it floats over the
-// page (the card clips anything that overflows it), placed below the field
-// or scrolled into view, never under the site's sticky header; in the
-// booking form it opens in place. Escape and a click outside close it.
+// page (the card clips anything that overflows it); in the booking form it
+// opens in place. Escape and a click outside close it.
+//
+// It never moves the page (that made the whole site jump when a day was
+// picked near the bottom of the screen): it opens below the field when it
+// fits there, else above it (never under the site's sticky header), else on
+// the side with more room, scrolling inside itself. It is placed in page
+// coordinates, so it moves with the page as one while it stays open, and is
+// placed again only when the window is resized.
 function usePopover({ inline = false, width = 340 } = {}) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState(null);
@@ -45,42 +51,41 @@ function usePopover({ inline = false, width = 340 } = {}) {
   const [byKeyboard, setByKeyboard] = useState(false);
   const triggerRef = useRef(null);
   const panelRef = useRef(null);
-  const scrolled = useRef(false); // scrolled once to make room, this opening
+  const measured = useRef(false); // placed again once its real height is known
 
   const place = useCallback(() => {
     if (inline || !triggerRef.current) return;
     const r = triggerRef.current.getBoundingClientRect();
     const w = Math.min(width, window.innerWidth - 16);
-    const height = panelRef.current?.offsetHeight || 400;
+    const panel = panelRef.current;
+    // its full height, whatever room it was given last time
+    const height = panel ? panel.scrollHeight + (panel.offsetHeight - panel.clientHeight) : 400;
     const left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
     const headerBottom = Math.max(64, ...[...document.querySelectorAll('header, .hospitals-strip, .subsite-header')]
       .map((el) => el.getBoundingClientRect())
       .filter((b) => b.top < 10 && b.bottom > 0)
       .map((b) => b.bottom));
-    const fitsBelow = window.innerHeight - r.bottom >= height + 16;
-    const above = r.top - 8 - height;
-    // Not enough room below: scroll once, just enough (with a margin), then
-    // place it on the next frames — a scroll event may never come.
-    if (!fitsBelow && !scrolled.current) {
-      const delta = Math.ceil(r.bottom + 24 + height - window.innerHeight);
-      if (delta > 0 && r.top - delta >= headerBottom + 8) {
-        scrolled.current = true;
-        window.scrollBy({ top: delta, behavior: 'instant' });
-        requestAnimationFrame(() => requestAnimationFrame(() => place()));
-        return;
-      }
-    }
-    const roomBelow = window.innerHeight - r.bottom >= height + 8;
-    const top = fitsBelow || roomBelow ? r.bottom + 8 : above >= headerBottom + 8 ? above : r.bottom + 8;
+    const roomBelow = window.innerHeight - r.bottom - 16;
+    const roomAbove = r.top - headerBottom - 16;
+    const below = roomBelow >= height || (roomAbove < height && roomBelow >= roomAbove);
+    const room = below ? roomBelow : roomAbove;
+    const maxHeight = height > room ? Math.max(260, room) : undefined;
+    const top = below ? r.bottom + 8 : r.top - 8 - Math.min(height, maxHeight || height);
     // Page coordinates: the page wrapper may be transformed, which would
     // make a fixed position relative to it rather than to the window.
-    setPos({ top: top + window.scrollY, left: left + window.scrollX, width: w });
+    setPos({ top: top + window.scrollY, left: left + window.scrollX, width: w, maxHeight });
   }, [inline, width]);
 
   useLayoutEffect(() => { if (open) place(); }, [open, place]);
+  // Once drawn, its real height is known: place it again before it is seen.
+  useLayoutEffect(() => {
+    if (!open || inline || !pos || measured.current || !panelRef.current) return;
+    measured.current = true;
+    place();
+  }, [open, inline, pos, place]);
 
   const close = useCallback((refocus) => {
-    setOpen(false); setPos(null); scrolled.current = false;
+    setOpen(false); setPos(null); measured.current = false;
     if (refocus) triggerRef.current?.focus({ preventScroll: true });
   }, []);
 
@@ -93,12 +98,10 @@ function usePopover({ inline = false, width = 340 } = {}) {
     const onKey = (e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); } };
     document.addEventListener('pointerdown', onPointer);
     document.addEventListener('keydown', onKey, true);
-    window.addEventListener('scroll', place, true);
     window.addEventListener('resize', place);
     return () => {
       document.removeEventListener('pointerdown', onPointer);
       document.removeEventListener('keydown', onKey, true);
-      window.removeEventListener('scroll', place, true);
       window.removeEventListener('resize', place);
     };
   }, [open, place, close]);
@@ -109,7 +112,7 @@ function usePopover({ inline = false, width = 340 } = {}) {
     setOpen(true);
   };
   const ready = open && (inline || pos);
-  const style = inline || !pos ? undefined : { position: 'absolute', top: pos.top, left: pos.left, width: pos.width };
+  const style = inline || !pos ? undefined : { position: 'absolute', top: pos.top, left: pos.left, width: pos.width, ...(pos.maxHeight ? { maxHeight: pos.maxHeight, overflowY: 'auto' } : {}) };
   const render = (panel) => (inline ? panel : panel && typeof document !== 'undefined' ? createPortal(panel, document.body) : null);
   return { open, ready, toggle, close, triggerRef, panelRef, byKeyboard, setByKeyboard, style, render, place };
 }
