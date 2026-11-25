@@ -59,7 +59,7 @@ test('the management team in the hospital\'s order, each with a portrait', async
   const fs = await import('node:fs');
   const { MANAGEMENT_TEAM } = await import('../lib/management-team.mjs');
   // shown in the leadership, in the hospital's order (20 Nov 2026)
-  assert.deepEqual(MANAGEMENT_TEAM.filter((m) => !m.hidden).map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas', 'Prasanth M. K.', 'Jithin Raj VR']);
+  assert.deepEqual(MANAGEMENT_TEAM.filter((m) => !m.hidden).map((m) => m.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas T', 'Prasanth M. K.', 'Jithin Raj VR']);
   // kept for their portraits, not shown
   assert.deepEqual(MANAGEMENT_TEAM.filter((m) => m.hidden).map((m) => m.name), ['Sreejith S', 'Anto Twinkle', 'Sojo', 'Abeesh']);
   for (const m of MANAGEMENT_TEAM) assert.ok(fs.existsSync(`public${m.photo}`), m.photo);
@@ -89,7 +89,7 @@ test('the doctor slider opens with the team in the hospital\'s order', async () 
   const { teamAsDoctors } = await import('../lib/management-team.mjs');
   const doctors = [{ name: 'Dr. V K Pradeep Kumar', speciality: 'Neonatology', location: 'Kochi', imageUrl: 'https://cdn/old.jpg' }, { name: 'Dr. Mili Mohandas', location: 'Cherthala' }];
   const team = teamAsDoctors(doctors);
-  assert.deepEqual(team.map((t) => t.name), ['Dr. V K Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas', 'Prasanth M. K.', 'Jithin Raj VR', 'Sreejith S', 'Anto Twinkle', 'Sojo', 'Abeesh']);
+  assert.deepEqual(team.map((t) => t.name), ['Dr. V K Pradeep Kumar', 'Renjith Krishnan', 'Basanta Kumar Dash', 'Sivadas T', 'Prasanth M. K.', 'Jithin Raj VR', 'Sreejith S', 'Anto Twinkle', 'Sojo', 'Abeesh']);
   assert.equal(team[0].teamOf, doctors[0]);
   assert.equal(team[0].imageUrl, '/leadership/team/dr-v-k-pradeep-kumar.webp');
   assert.equal(team[1].bookable, false);
@@ -115,11 +115,19 @@ test('the Chairman\'s studio portrait replaces a photo already set on his page',
   assert.ok(portraitReplacesPhoto(page));
 });
 
+test('Sivadas T has his written profile on About Us', async () => {
+  const { MANAGEMENT_TEAM, teamProfiles } = await import('../lib/management-team.mjs');
+  const sivadas = MANAGEMENT_TEAM.find((m) => m.slug === 'sivadas');
+  assert.equal(sivadas.role, 'Group General Manager – Human Resources');
+  assert.equal(sivadas.notDoctor, true);
+  assert.match(teamProfiles([]).sivadas.text, /19 years of end-to-end leadership[\s\S]*inspired to succeed\.$/);
+});
+
 test('every hospital is led by the Chairman and the CEO, then its own head', async () => {
   const { hospitalLeaders } = await import('../lib/leadership.mjs');
   const names = (centre, pages = []) => hospitalLeaders(pages, centre).map((l) => l.name);
   assert.deepEqual(names('Kollam'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Abeesh']);
-  assert.deepEqual(names('Aranmula'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B', 'Sojo']);
+  assert.deepEqual(names('Aranmula'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B', 'Sojo P. Devaraj']);
   assert.deepEqual(names('Cherthala'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B']);
   assert.deepEqual(names('Cochin'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Anto Twinkle']);
   assert.deepEqual(names('Alappuzha'), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B']);
@@ -131,12 +139,18 @@ test('every hospital is led by the Chairman and the CEO, then its own head', asy
   // Rajesh Kumar B's profile page (supplied by the site) gives a linked card
   const { withSuppliedLeaders } = await import('../lib/supplied-leaders.mjs');
   const aranmula = hospitalLeaders(withSuppliedLeaders([]), 'Aranmula');
-  assert.deepEqual(aranmula.map((l) => l.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B', 'Sojo']);
+  assert.deepEqual(aranmula.map((l) => l.name), ['Dr V. K. Pradeep Kumar', 'Renjith Krishnan', 'Rajesh Kumar B', 'Sojo P. Devaraj']);
   const rajesh = aranmula[2];
   assert.equal(rajesh.href, undefined);
   assert.equal(rajesh.photo, '/leadership/rajesh-kumar-b-head.webp');
   assert.match(rajesh.role, /^Chief Operating Officer – Cluster Head/);
   assert.match(rajesh.summary, /^Rajesh Kumar B brings 23 years/);
+  // Sojo P. Devaraj's profile page (supplied by the site) likewise
+  const sojo = aranmula[3];
+  assert.equal(sojo.href, undefined);
+  assert.equal(sojo.role, 'Manager – Operations, Kinder Hospitals Aranmula');
+  assert.equal(sojo.photo, '/leadership/team/sojo.webp');
+  assert.match(sojo.summary, /^Sojo P\. Devaraj serves as Manager – Operations/);
   assert.equal(hospitalLeaders(withSuppliedLeaders([]), 'Kollam').length, 3);
   // with his Leadership page, Anto's card is the page's (one card, linked)
   const anto = { slug: 'leadership-mr-anto-twinkle', category: 'Leadership', title: 'Mr. Anto Twinkle', location: 'Kochi', body: 'Mr. Anto Twinkle\n\nA long biography that runs well past sixty characters in all.' };
