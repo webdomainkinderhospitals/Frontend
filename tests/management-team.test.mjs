@@ -63,3 +63,19 @@ test('Jithin Raj VR, Head – Media & Branding, with his profile', async () => {
   assert.match(teamProfiles([])['jithin-raj'].text, /^Great brands are built on trust/);
   assert.match(teamProfiles([])['jithin-raj'].text, /Manappuram Healthcare Pvt\. Ltd\./);
 });
+
+test('the portraits sent on 27 Nov 2026 find their doctors', async () => {
+  const { withStudioPhotos } = await import('../lib/studio-photos.mjs');
+  const docs = [
+    { name: 'Dr. Sethulakshmi S', location: 'Aranmula' }, { name: 'Dr. Chris Placid', location: 'Kochi' },
+    { name: 'Dr. Charlie Cherian', location: 'Kollam' }, { name: 'Dr. Simi Thomas K', location: 'Cherthala' },
+  ];
+  const out = withStudioPhotos(docs).map((d) => d.imageUrl);
+  assert.deepEqual(out, [
+    '/doctors/studio/aranmula/sethulakshmi-s.webp', '/doctors/studio/group/chris-placid.webp',
+    '/doctors/studio/group/charlie-cherian.webp', '/doctors/studio/group/simi-thomas.webp',
+  ]);
+  // two doctors who fit one portrait equally get neither
+  const twins = withStudioPhotos([{ name: 'Dr. Simi Thomas', location: 'Kochi' }, { name: 'Dr Simi Thomas', location: 'Kollam' }]);
+  assert.deepEqual(twins.map((d) => d.imageUrl), [undefined, undefined]);
+});
