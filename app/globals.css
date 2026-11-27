@@ -3958,6 +3958,9 @@ body{ overflow-x: clip; }
 
 /* Find Care is in the top bar on desktop; the menu keeps it for phones */
 @media (min-width: 1025px) { .nav-list > li.nav-findcare { display: none; } }
+/* Contact sits in the "Contact our hospitals" box above the menu on a computer
+   (the hospital's request, 27 Nov 2026); the phone menu keeps the link. */
+@media (min-width: 1025px) { .nav-list > li.nav-contact { display: none; } }
 
 /* Homepage pregnancy strip — same arrangement as the Kochi menu: one centred
    group, even gaps, same button sizes. */

@@ -394,7 +394,7 @@ export default function Header({ settings, locations: allLocations = [], special
 
               <li className={'nav-findcare' + act('find-care')}><a href="/find-care" onClick={onLeafClick}><NavIcon name="search" />Find Care</a></li>
 
-              <li className={act('contact')}><a href="/contact" onClick={onLeafClick}><NavIcon name="phone" />Contact</a></li>
+              <li className={'nav-contact' + act('contact')}><a href="/contact" onClick={onLeafClick}><NavIcon name="phone" />Contact</a></li>
 
               <li className="nav-cta-wrap">
                 <a href={BOOK} className="nav-cta" onClick={onLeafClick}>Book Appointment →</a>

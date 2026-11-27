@@ -2,7 +2,9 @@ import { specialityIconUrl } from '@/lib/speciality-icons.mjs';
 
 // The homepage's signature services, in the same deep-blue band as a
 // hospital's departments: each icon in a glass badge with the logo's red dot,
-// turning white with the brand colours when hovered or tapped.
+// turning white with the brand colours when hovered or tapped. Each shows
+// its name only (the hospital's request, 27 Nov 2026); the line about it is
+// kept as the link's tooltip.
 //
 // [title, one line about it, page it opens, icon from the hospital's icon set]
 const SERVICES = [
@@ -33,12 +35,11 @@ export default function CoeGrid() {
           <ul className="coe-badges">
             {SERVICES.map(([title, text, href, icon]) => (
               <li key={title}>
-                <a className="dept-item coe-item" href={href}>
+                <a className="dept-item coe-item" href={href} title={text}>
                   <span className="dept-badge" aria-hidden="true">
                     <span className="dept-ico" style={{ '--ico': `url(${specialityIconUrl(title, icon)})` }} />
                   </span>
                   <span className="dept-name">{title}</span>
-                  <span className="coe-text">{text}</span>
                 </a>
               </li>
             ))}
