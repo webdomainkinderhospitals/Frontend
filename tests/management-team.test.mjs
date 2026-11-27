@@ -79,3 +79,20 @@ test('the portraits sent on 27 Nov 2026 find their doctors', async () => {
   const twins = withStudioPhotos([{ name: 'Dr. Simi Thomas', location: 'Kochi' }, { name: 'Dr Simi Thomas', location: 'Kollam' }]);
   assert.deepEqual(twins.map((d) => d.imageUrl), [undefined, undefined]);
 });
+
+test('the profiles sent on 27 Nov 2026 fill in their doctors', async () => {
+  const { withSuppliedProfiles } = await import('../lib/doctor-profiles.mjs');
+  const [chris, simi, sethu, written, other] = withSuppliedProfiles([
+    { name: 'Dr Chris Placid', bio: '' }, { name: 'Dr. Simi Thomas K', bio: 'MBBS, MS' },
+    { name: 'Dr. Sethulakshmi S', designation: 'MBBS, DNB' },
+    { name: 'Dr. Ananthen K S', fullBio: 'A profile written in the admin.' }, { name: 'Dr. Simi Joseph' },
+  ]);
+  assert.equal(chris.bio, 'MBBS, MD (Pediatrics), Fellowship in Neonatology');
+  assert.match(chris.fullBio, /^Dr\. Chris Placid is a Consultant Pediatrician[\s\S]*### Areas of special interest\n\n- Newborn[\s\S]*clinical research\.$/);
+  assert.equal(simi.bio, 'MBBS, MS'); // no degrees sent, so the record's stay
+  assert.match(simi.fullBio, /^Dr\. Simi Thomas is a passionate[\s\S]*journeys of their lives\.$/);
+  assert.match(sethu.bio, /^MBBS, DNB, MNAMS, Diploma in Cosmetic Gynaecology/);
+  assert.doesNotMatch(sethu.fullBio, /Muthoot|Pathanamthitta/);
+  assert.equal(written.fullBio, 'A profile written in the admin.');
+  assert.equal(other.fullBio, undefined);
+});
