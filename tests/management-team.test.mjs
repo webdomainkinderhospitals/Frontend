@@ -91,7 +91,8 @@ test('the profiles sent on 27 Nov 2026 fill in their doctors', async () => {
   assert.match(chris.fullBio, /^Dr\. Chris Placid is a Consultant Pediatrician[\s\S]*### Areas of special interest\n\n- Newborn[\s\S]*clinical research\.$/);
   assert.equal(simi.bio, 'MBBS, MS'); // degrees on the record stay
   assert.match(simi.fullBio, /^Dr\. Simi Thomas is a passionate[\s\S]*journeys of their lives\.$/);
-  assert.match(sethu.bio, /^MBBS, DNB, MNAMS, Diploma in Cosmetic Gynaecology/);
+  assert.equal(sethu.bio, 'MBBS, DNB, MNAMS, FCGSM · Fellowship in Laparoscopy & Cosmetic Gynaecology');
+  assert.match(sethu.fullBio, /^Dr\. Sethulakshmi S is a dedicated Obstetrician[\s\S]*### Her philosophy of care[\s\S]*every stage of life\.$/);
   assert.doesNotMatch(sethu.fullBio, /Muthoot|Pathanamthitta/);
   assert.equal(written.fullBio, 'A profile written in the admin.');
   assert.equal(other.fullBio, undefined);
@@ -112,4 +113,17 @@ test('Dr Chris Placid, Dr Simi Thomas and Dr Charlie Cherian are listed at Aranm
   ]);
   assert.deepEqual(moved.map((d) => d.location), ['Kochi, Aranmula', 'Cherthala, Alappuzha, Aranmula', 'Aranmula']);
   assert.equal(moved.length, 3);
+});
+
+test('Dr Sethulakshmi S\'s updated degrees replace the ones first sent', async () => {
+  const { withSuppliedProfiles } = await import('../lib/doctor-profiles.mjs');
+  const old = 'MBBS, DNB, MNAMS · Diploma in Cosmetic Gynaecology · Fellowship in Laparoscopy & NDVH';
+  const [a, b, c] = withSuppliedProfiles([
+    { name: 'Dr. Sethulakshmi S', designation: old },
+    { name: 'Dr. Sethulakshmi S', bio: old.replace(/ ·/g, ',') },
+    { name: 'Dr. Sethulakshmi S', bio: 'MBBS, DNB (typed in the admin)' },
+  ]);
+  for (const d of [a, b]) assert.equal(d.bio, 'MBBS, DNB, MNAMS, FCGSM · Fellowship in Laparoscopy & Cosmetic Gynaecology');
+  assert.equal(a.designation, '');
+  assert.equal(c.bio, 'MBBS, DNB (typed in the admin)'); // anything else stays
 });
