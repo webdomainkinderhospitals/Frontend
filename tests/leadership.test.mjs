@@ -20,7 +20,7 @@ test('a profile gives its name, designation, summary and initials', () => {
   assert.equal(r.role, 'CEO – Kinder Hospitals Group');
   assert.match(r.summary, /^Mr\. Renjith Krishnan has over 15 years/);
   assert.equal(r.initials, 'RK');
-  assert.equal(leaderOf(pages[1]).role, 'Group Financial Controller – Kinder Hospitals');
+  assert.equal(leaderOf(pages[1]).role, 'Chief Financial Officer, Kinder Hospitals');
   assert.equal(leaderOf(pages[1]).initials, 'BD');
   assert.equal(leaderOf(pages[2]).initials, 'PK');
   assert.equal(leaderOf(pages[0]).role, 'Chief Operating Officer, Kinder Hospitals Kochi'); // confirmed by the hospital
@@ -158,4 +158,16 @@ test('every hospital is led by the Chairman and the CEO, then its own head', asy
   assert.equal(kochi.length, 3);
   assert.equal(kochi[2].href, undefined);
   assert.equal(kochi[2].role, 'Chief Operating Officer, Kinder Hospitals Kochi');
+});
+
+test('Mr Basanta Kumar Dash is the Chief Financial Officer everywhere', async () => {
+  const { MANAGEMENT_TEAM, teamProfiles } = await import('../lib/management-team.mjs');
+  const { withSuppliedLeaders } = await import('../lib/supplied-leaders.mjs');
+  assert.equal(MANAGEMENT_TEAM.find((m) => m.slug === 'basanta-kumar-dash').role, 'Chief Financial Officer');
+  assert.match(teamProfiles([])['basanta-kumar-dash'].text, /currently the Chief Financial Officer/);
+  const page = { slug: 'leadership-mr-basanta-kumar-dash', category: 'Leadership', title: 'Mr. Basanta Kumar Dash',
+    excerpt: 'Group Financial Controller', body: 'MR. BASANTA KUMAR DASH\n\nGROUP FINANCIAL CONTROLLER – Kinder Hospitals\n\nHe is the Group Financial Controller.' };
+  const [out] = withSuppliedLeaders([page]);
+  assert.doesNotMatch(`${out.body} ${out.excerpt}`, /Financial Controller/i);
+  assert.match(out.body, /Chief Financial Officer – Kinder Hospitals[\s\S]*He is the Chief Financial Officer\./);
 });
