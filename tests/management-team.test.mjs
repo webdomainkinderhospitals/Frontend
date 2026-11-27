@@ -89,10 +89,27 @@ test('the profiles sent on 27 Nov 2026 fill in their doctors', async () => {
   ]);
   assert.equal(chris.bio, 'MBBS, MD (Pediatrics), Fellowship in Neonatology');
   assert.match(chris.fullBio, /^Dr\. Chris Placid is a Consultant Pediatrician[\s\S]*### Areas of special interest\n\n- Newborn[\s\S]*clinical research\.$/);
-  assert.equal(simi.bio, 'MBBS, MS'); // no degrees sent, so the record's stay
+  assert.equal(simi.bio, 'MBBS, MS'); // degrees on the record stay
   assert.match(simi.fullBio, /^Dr\. Simi Thomas is a passionate[\s\S]*journeys of their lives\.$/);
   assert.match(sethu.bio, /^MBBS, DNB, MNAMS, Diploma in Cosmetic Gynaecology/);
   assert.doesNotMatch(sethu.fullBio, /Muthoot|Pathanamthitta/);
   assert.equal(written.fullBio, 'A profile written in the admin.');
   assert.equal(other.fullBio, undefined);
+});
+
+test('Dr Chris Placid, Dr Simi Thomas and Dr Charlie Cherian are listed at Aranmula', async () => {
+  const { withAranmulaDoctors } = await import('../lib/aranmula-doctors.mjs');
+  const atAranmula = (list) => list.filter((d) => /\bAranmula\b/.test(d.location)).map((d) => d.name);
+  // not on the site yet: added at Aranmula (Dr Charlie Cherian only once listed)
+  const added = withAranmulaDoctors([{ name: 'Dr. Ganga M P', location: 'Aranmula' }]);
+  assert.deepEqual(atAranmula(added), ['Dr. Ganga M P', 'Dr. Chris Placid', 'Dr. Simi Thomas']);
+  assert.equal(added[1].speciality, 'Paediatrics');
+  assert.equal(added[2].speciality, 'Obstetrics & Gynaecology');
+  // on the site at another hospital: Aranmula is added to their hospitals
+  const moved = withAranmulaDoctors([
+    { name: 'Dr Chris Placid', location: 'Kochi' }, { name: 'Dr. Charlie Cherian', location: 'Cherthala, Alappuzha' },
+    { name: 'Dr. Simi Thomas K', location: 'Aranmula' },
+  ]);
+  assert.deepEqual(moved.map((d) => d.location), ['Kochi, Aranmula', 'Cherthala, Alappuzha, Aranmula', 'Aranmula']);
+  assert.equal(moved.length, 3);
 });
